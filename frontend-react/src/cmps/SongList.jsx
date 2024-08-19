@@ -1,5 +1,5 @@
 import { userService } from '../services/user'
-import { CarPreview } from './CarPreview'
+import { SongPreview } from './SongPreview'
 
 export function SongList({ songs, onRemoveSong, onUpdateSong }) {
   function shouldShowActionBtns(song) {

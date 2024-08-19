@@ -22,10 +22,10 @@ export function AppHeader() {
     <header className='app-header full'>
       <nav>
         <NavLink to='/' className='logo'>
-          E2E Demo
+          Zenefy
         </NavLink>
         <NavLink to='about'>About</NavLink>
-        <NavLink to='song'>Cars</NavLink>
+        <NavLink to='song'>Songs</NavLink>
         <NavLink to='chat'>Chat</NavLink>
         <NavLink to='review'>Review</NavLink>
 

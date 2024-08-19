@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service'
 import { loadSong, addSongMsg } from '../store/actions/song.actions'
 
-export function CarDetails() {
+export function SongDetails() {
   const { songId } = useParams()
   const song = useSelector((storeState) => storeState.songModule.song)
 

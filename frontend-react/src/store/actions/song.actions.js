@@ -79,12 +79,7 @@ function getCmdSetSongs(songs) {
     songs,
   }
 }
-function getCmdSetSongs(song) {
-  return {
-    type: SET_SONG,
-    song,
-  }
-}
+
 function getCmdRemoveSong(songId) {
   return {
     type: REMOVE_SONG,
