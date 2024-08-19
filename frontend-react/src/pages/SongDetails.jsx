@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service'
-import { loadSong, addSongMsg } from '../store/actions/song.actions'
+import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
+import { loadSong, addSongMsg } from '../store/actions/song.actions.js'
 
 export function SongDetails() {
   const { songId } = useParams()

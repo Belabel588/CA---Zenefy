@@ -1,5 +1,5 @@
-import { songService } from '../../services/song'
-import { store } from '../store'
+import { stationService } from '../../services/stations.service.js'
+import { store } from '../store.js'
 import {
   ADD_SONG,
   REMOVE_SONG,
@@ -7,11 +7,11 @@ import {
   SET_SONG,
   UPDATE_SONG,
   ADD_SONG_MSG,
-} from '../reducers/song.reducer'
+} from '../reducers/song.reducer.js'
 
 export async function loadSongs(filterBy) {
   try {
-    const songs = await songService.query(filterBy)
+    const songs = await stationService.query(filterBy)
     store.dispatch(getCmdSetCars(songs))
   } catch (err) {
     console.log('Cannot load songs', err)
@@ -21,7 +21,7 @@ export async function loadSongs(filterBy) {
 
 export async function loadSong(songId) {
   try {
-    const song = await songService.getById(songId)
+    const song = await stationService.getById(songId)
     store.dispatch(getCmdSetSong(song))
   } catch (err) {
     console.log('Cannot load song', err)
@@ -31,7 +31,7 @@ export async function loadSong(songId) {
 
 export async function removeSong(songId) {
   try {
-    await songService.remove(songId)
+    await stationService.remove(songId)
     store.dispatch(getCmdRemoveSong(songId))
   } catch (err) {
     console.log('Cannot remove song', err)
@@ -41,7 +41,7 @@ export async function removeSong(songId) {
 
 export async function addSong(song) {
   try {
-    const savedSong = await songService.save(song)
+    const savedSong = await stationService.save(song)
     store.dispatch(getCmdAddSong(savedSong))
     return savedSong
   } catch (err) {
@@ -52,7 +52,7 @@ export async function addSong(song) {
 
 export async function updateSong(song) {
   try {
-    const savedSong = await songService.save(song)
+    const savedSong = await stationService.save(song)
     store.dispatch(getCmdUpdateSong(savedSong))
     return savedSong
   } catch (err) {
@@ -63,7 +63,7 @@ export async function updateSong(song) {
 
 export async function addSongMsg(songId, txt) {
   try {
-    const msg = await songService.addSongMsg(songId, txt)
+    const msg = await stationService.addSongMsg(songId, txt)
     store.dispatch(getCmdAddCarMsg(msg))
     return msg
   } catch (err) {
@@ -108,7 +108,7 @@ function getCmdAddSongMsg(msg) {
 // unitTestActions()
 async function unitTestActions() {
   await loadSongs()
-  await addSong(songService.getEmptySong())
+  await addSong(stationService.getEmptySong())
   await updateSong({
     _id: 'm1oC7',
     title: 'Song-Good',

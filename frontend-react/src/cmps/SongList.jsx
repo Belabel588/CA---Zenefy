@@ -1,5 +1,5 @@
-import { userService } from '../services/user'
-import { SongPreview } from './SongPreview'
+import { userService } from '../services/user.service.js'
+import { SongPreview } from './SongPreview.jsx'
 
 export function SongList({ songs, onRemoveSong, onUpdateSong }) {
   function shouldShowActionBtns(song) {

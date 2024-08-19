@@ -7,17 +7,17 @@ import {
   updateSong,
   removeSong,
   addSongMsg,
-} from '../store/actions/song.actions'
+} from '../store/actions/song.actions.js'
 
-import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service'
-import { songService } from '../services/song/'
-import { userService } from '../services/user'
+import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
+import { stationService } from '../services/stations.service.js'
+import { userService } from '../services/user.service.js'
 
-import { SongList } from '../cmps/SongList'
-import { SongFilter } from '../cmps/SongFilter'
+import { SongList } from '../cmps/SongList.jsx'
+import { SongFilter } from '../cmps/SongFilter.jsx'
 
 export function SongIndex() {
-  const [filterBy, setFilterBy] = useState(songService.getDefaultFilter())
+  const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
   const songs = useSelector((storeState) => storeState.songModule.songs)
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export function SongIndex() {
   }
 
   async function onAddSong() {
-    const song = songService.getEmptySong()
+    const song = stationService.getEmptySong()
     song.name = prompt('Name?')
     try {
       const savedSong = await addSong(song)
