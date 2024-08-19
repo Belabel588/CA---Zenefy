@@ -1,13 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import {
-  loadSongs,
-  addSong,
-  updateSong,
-  removeSong,
-  addSongMsg,
-} from '../store/actions/song.actions.js'
+import { SET_STATIONS, REMOVE_STATION, UPDATE_STATION, ADD_STATION } from '../store/reducers/station.reducer.js'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/stations.service.js'

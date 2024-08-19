@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
-import { loadSong, addSongMsg } from '../store/actions/song.actions.js'
+import { ADD_STATION , SET_STATIONS , UPDATE_STATION , REMOVE_STATION } from '../store/reducers/station.reducer.js'
 
 export function SongDetails() {
   const { songId } = useParams()
