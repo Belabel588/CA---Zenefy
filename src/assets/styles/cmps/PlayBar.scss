@@ -1,7 +1,7 @@
 .play-bar-container{
 
 
-background-color: $background-black;
+background-color: #000000;
 
 display: grid;
 grid-template-columns: auto 1fr auto;
@@ -43,17 +43,24 @@ justify-items: center;
 
 
         // justify-content: space-around;
-
+        display: flex;
+        align-items: center;
+        justify-items: center;
         // width: 400px;
         .play-button, .pause-button{
-            i{
 
+            i{
                 font-size: 2.5em;
+                color: $white;
+                &:hover{
+                    color: $grey-light;
+                    
+                }
             }
 
         }
         i{
-            font-size: 2em;
+            font-size: 1.5em;
             color: $grey-light;
             transition: 0.2s;
 
