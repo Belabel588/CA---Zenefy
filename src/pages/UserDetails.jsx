@@ -16,14 +16,12 @@ export function UserDetails() {
   const user = useSelector((storeState) => storeState.userModule.watchedUser)
 
   useEffect(() => {
-    logInUser(params.id)
-
-    socketService.emit(SOCKET_EMIT_USER_WATCH, params.id)
-    socketService.on(SOCKET_EVENT_USER_UPDATED, onUserUpdate)
-
-    return () => {
-      socketService.off(SOCKET_EVENT_USER_UPDATED, onUserUpdate)
-    }
+    // logInUser(params.id)
+    // socketService.emit(SOCKET_EMIT_USER_WATCH, params.id)
+    // socketService.on(SOCKET_EVENT_USER_UPDATED, onUserUpdate)
+    // return () => {
+    //   socketService.off(SOCKET_EVENT_USER_UPDATED, onUserUpdate)
+    // }
   }, [params.id])
 
   function onUserUpdate(user) {

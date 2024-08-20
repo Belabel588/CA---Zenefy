@@ -73,6 +73,7 @@ justify-items: center;
 
 
 
+
     .time-container{
 
   
@@ -138,6 +139,12 @@ justify-items: center;
   }
 }
 
+.buttons-volume-container{
+
+.buttons-container{
+    display: flex;
+
+}
 
   .volume-container{
     width: 100%;
@@ -211,6 +218,7 @@ justify-items: center;
     }
 
   }
+}
 }
 
 

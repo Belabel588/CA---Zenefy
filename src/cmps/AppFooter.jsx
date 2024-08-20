@@ -128,14 +128,16 @@ export function AppFooter() {
         </div>
       </div>
 
-      <div className='buttons-container'>
-        {buttonsContainer.map((button) => {
-          if (button.type === 'volumeMute' && volume !== 0) return
-          if (button.type === 'volumeHigh' && volume < 50) return
-          if (button.type === 'volumeLow' && volume >= 50) return
-          if (button.type === 'volumeLow' && volume === 0) return
-          return <button key={button.type}>{button.icon}</button>
-        })}
+      <div className='buttons-volume-container'>
+        <div className='buttons-container'>
+          {buttonsContainer.map((button) => {
+            if (button.type === 'volumeMute' && volume !== 0) return
+            if (button.type === 'volumeHigh' && volume < 50) return
+            if (button.type === 'volumeLow' && volume >= 50) return
+            if (button.type === 'volumeLow' && volume === 0) return
+            return <button key={button.type}>{button.icon}</button>
+          })}
+        </div>
         <VolumeBar volume={volume} setVolume={setVolume} />
       </div>
     </footer>
