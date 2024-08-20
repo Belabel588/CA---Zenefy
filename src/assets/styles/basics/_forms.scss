@@ -1,7 +1,9 @@
 button {
 	border: 0;
-	background-color: $clr1;
-	color: whitesmoke;
+	// background-color: $clr1;
+	background-color: transparent;
+
+	color: $white;
 	padding: 5px 10px;
 	margin: 5px;
 	cursor: pointer;
@@ -20,5 +22,5 @@ form > * {
 	transition: 0.5s;
 }
 .btn-link:hover {
-	background-color: $clr1;
+	// background-color: $clr1;
 }
