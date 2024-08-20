@@ -1,0 +1,51 @@
+.play-bar-container{
+
+
+background-color: $background-black;
+
+display: grid;
+grid-template-columns: repeat(3,1fr);
+
+.song-details-container{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 0.5em;
+
+    .play-bar-cover{
+        width: 60px;
+        border-radius: 5px;
+    }
+
+    .song-text-container{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+.time-container{
+    display: flex;
+    // align-items: center;
+    justify-items: center;
+
+    gap: 1em;
+
+}
+
+.progress-container {
+    width: 100%;
+    background-color: $grey-light;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 4px;
+    margin-top: 10px;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background-color: $white; /* Spotify Green */
+    transition: width 0.25s ease-in-out;
+  }
+
+}

@@ -1,82 +1,54 @@
-import { httpService } from './http.service.js'
-
-const BASE_URL = 'auth/'
-const STORAGE_KEY_LOGGEDIN = 'loggedinUser'
+import { storageService } from "./async-storage.service.js"
 
 export const userService = {
+    getLoggedinUser,
     login,
     logout,
     signup,
     getById,
-    getLoggedinUser,
-    updateLikedSongs,
-    getEmptyCredentials
+    query,
+    getEmptyCredentials,
+    updateUserPrefs
 }
 
-async function login({ username, password }) {
-    try {
-        const user = await httpService.post(`${BASE_URL}login`, { username, password })
-        if (user) return _setLoggedinUser(user)
-        else throw new Error('Invalid login')
-    } catch (err) {
-        return Promise.reject(err.message)
-    }
+const STORAGE_KEY_LOGGEDIN = 'loggedinUser'
+const STORAGE_KEY = 'userDB'
+
+function query() {
+    return storageService.query(STORAGE_KEY)
 }
 
-async function signup({ username, password, fullname }) {
+function getById(userId) {
+    return storageService.get(STORAGE_KEY, userId)
+}
+
+function login({ username, password }) {
+    return storageService.query(STORAGE_KEY)
+        .then(users => {
+            const user = users.find(user => user.username === username && user.password === password)
+            if (user) return _setLoggedinUser(user)
+            else return Promise.reject('Invalid login')
+        })
+}
+
+function signup({ username, password, fullname }) {
     const user = { 
         username, 
         password, 
         fullname, 
-        likedStations: [], // Represents stations the user has liked
-        likedSongIds: [],  // Represents songs the user has liked
-        isAdmin: false
+        likedStations: [],  // Represents stations the user has liked
+        likedSongIds: [],   // Represents songs the user has liked
+        prefs: { color: 'black', bgColor: 'black' },
+        createdAt: Date.now(), 
+        updatedAt: Date.now()
     }
-    try {
-        const newUser = await httpService.post(`${BASE_URL}signup`, user)
-        if (newUser) return _setLoggedinUser(newUser)
-        else throw new Error('Invalid signup')
-    } catch (err) {
-        return Promise.reject(err.message)
-    }
+    return storageService.post(STORAGE_KEY, user)
+        .then(_setLoggedinUser)
 }
 
-async function logout() {
-    try {
-        await httpService.post(`${BASE_URL}logout`)
-        sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN)
-    } catch (err) {
-        return Promise.reject('Logout failed')
-    }
-}
-
-async function updateLikedSongs(songId, action) {
-    const loggedinUser = getLoggedinUser()
-    if (!loggedinUser) return Promise.reject('User not logged in')
-
-    let likedSongIds = loggedinUser.likedSongIds || []
-    if (action === 'add') {
-        likedSongIds.push(songId)
-    } else if (action === 'remove') {
-        likedSongIds = likedSongIds.filter(id => id !== songId)
-    }
-
-    try {
-        const updatedUser = await httpService.put(`user/${loggedinUser._id}`, { likedSongIds })
-        _setLoggedinUser(updatedUser)
-        return updatedUser
-    } catch (err) {
-        return Promise.reject('Failed to update liked songs')
-    }
-}
-
-async function getById(userId) {
-    try {
-        const user = await httpService.get(`user/${userId}`)
-        return user
-    } catch (err) {
-        return Promise.reject('User not found')
-    }
+function logout() {
+    sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN)
+    return Promise.resolve()
 }
 
 function getLoggedinUser() {
@@ -87,8 +59,9 @@ function _setLoggedinUser(user) {
     const userToSave = { 
         _id: user._id, 
         fullname: user.fullname, 
-        likedStations: user.likedStations || [], 
-        likedSongIds: user.likedSongIds || [] 
+        likedStations: user.likedStations, 
+        likedSongIds: user.likedSongIds, 
+        prefs: user.prefs 
     }
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
     return userToSave
@@ -96,8 +69,24 @@ function _setLoggedinUser(user) {
 
 function getEmptyCredentials() {
     return {
+        fullname: '',
         username: '',
         password: '',
-        fullname: ''
     }
 }
+
+// Function to update user preferences in local storage
+function updateUserPrefs(prefs) {
+    const loggedinUser = getLoggedinUser()
+    if (!loggedinUser) return Promise.reject('User not logged in')
+    
+    // Update the prefs of the logged-in user
+    const updatedUser = { ...loggedinUser, prefs }
+    
+    return storageService.put(STORAGE_KEY, updatedUser)
+        .then(user => {
+            _setLoggedinUser(user) // Update sessionStorage as well
+            return user
+        })
+}
+
