@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import {
-  loadSongs,
-  addSong,
-  updateSong,
-  removeSong,
-  addSongMsg,
-} from '../store/actions/song.actions.js'
+  SET_STATIONS,
+  REMOVE_STATION,
+  UPDATE_STATION,
+  ADD_STATION,
+} from '../store/reducers/station.reducer.js'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/stations.service.js'
@@ -15,18 +14,22 @@ import { userService } from '../services/user.service.js'
 
 import { SongList } from '../cmps/SongList.jsx'
 import { SongFilter } from '../cmps/SongFilter.jsx'
+import {
+  loadStations,
+  removeStation,
+} from '../store/actions/station.actions.js'
 
 export function SongIndex() {
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
-  const songs = useSelector((storeState) => storeState.songModule.songs)
+  const songs = useSelector((storeState) => storeState.stationModule.stations)
 
   useEffect(() => {
-    loadSongs(filterBy)
+    loadStations(filterBy)
   }, [filterBy])
 
   async function onRemoveSong(songId) {
     try {
-      await removeSong(songId)
+      await removeStation(songId)
       showSuccessMsg('Song removed')
     } catch (err) {
       showErrorMsg('Cannot remove song')

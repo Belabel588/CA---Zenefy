@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { loadUser } from '../store/actions/user.actions.js'
+import { logInUser } from '../store/actions/user.actions.js'
 import { store } from '../store/store.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
 import {
@@ -16,7 +16,7 @@ export function UserDetails() {
   const user = useSelector((storeState) => storeState.userModule.watchedUser)
 
   useEffect(() => {
-    loadUser(params.id)
+    logInUser(params.id)
 
     socketService.emit(SOCKET_EMIT_USER_WATCH, params.id)
     socketService.on(SOCKET_EVENT_USER_UPDATED, onUserUpdate)

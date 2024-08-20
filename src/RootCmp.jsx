@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router'
 
 import { HomePage } from './pages/HomePage'
 import { AboutUs, AboutTeam, AboutVision } from './pages/AboutUs'
@@ -14,16 +14,12 @@ import { AppFooter } from './cmps/AppFooter'
 
 import { LoginSignup } from './pages/LoginSignup.jsx'
 
-// import renderRoutes from './Routes.jsx'
-
 export function RootCmp() {
   return (
-    <div className='main-container'>
+    <section className='app main-layout'>
       <AppHeader />
-
       <main>
         <Routes>
-          {/* {renderRoutes} */}
           <Route path='' element={<HomePage />} />
           <Route path='about' element={<AboutUs />}>
             <Route path='team' element={<AboutTeam />} />
@@ -37,6 +33,6 @@ export function RootCmp() {
         </Routes>
       </main>
       <AppFooter />
-    </div>
+    </section>
   )
 }

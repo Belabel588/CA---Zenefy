@@ -1,25 +1,15 @@
-import { legacy_createStore as createStore, combineReducers } from 'redux'
+import { stationReducer } from "./reducers/station.reducer.js";
+import { userReducer } from "./reducers/user.reducer.js";
 
-import { songReducer } from './reducers/song.reducer.js'
-import { userReducer } from './reducers/user.reducer.js'
-import { reviewReducer } from './reducers/review.reducer.js'
-import { systemReducer } from './reducers/system.reducer.js'
+import { legacy_createStore as createStore, combineReducers, compose } from 'redux';
 
 const rootReducer = combineReducers({
-  songModule: songReducer,
-  userModule: userReducer,
-  systemModule: systemReducer,
-  reviewModule: reviewReducer,
-})
+    stationModule: stationReducer,
+    userModule: userReducer
+});
 
-const middleware = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__()
-  : undefined
-export const store = createStore(rootReducer, middleware)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+export const store = createStore(rootReducer, composeEnhancers());
 
-// For debug:
-// store.subscribe(() => {
-//     console.log('**** Store state changed: ****')
-//     console.log('storeState:\n', store.getState())
-//     console.log('*******************************')
-// })
+// for DEBUGGING
+window.gStore = store;
