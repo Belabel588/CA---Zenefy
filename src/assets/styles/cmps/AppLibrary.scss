@@ -1,20 +1,42 @@
 .library-container{
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  // align-items: center;
+  // justify-content: space-between;
 
-  background-color: green;
+  background-color:$dark-mode-background;
   width:17.74rem;
-  height:7.625rem;
+  // height:7.625rem;
+    height:fit-content;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
   
 
-
-
-  .library-text{
-    color:$grey-light;
+  .library-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
+
+
+  .library-title{
+    display: flex;
+    flex-direction: row;
+    gap:0.5rem;
+
+    .library-icon{
+        width: 2rem;
+        height: 2rem;
+  
+        color:$grey-light;
+  
+    }
+  
+    .library-text{
+      color:$grey-light;
+    }
+  }
+
 
   .plus-icon{
     width: 1rem;
@@ -29,5 +51,11 @@
       color:$white;
       transition: 1s;
     }
+  }
+
+  .liked-songs-station{
+width:5rem;
+height:5rem;
+border-radius: 0.5rem;
   }
 }
