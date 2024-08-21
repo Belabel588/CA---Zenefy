@@ -13,7 +13,7 @@ export function AppLibrary() {
     loadStations(filterBy)
   }, [filterBy])
   
-  console.log(mainData);
+  console.log(mainData[0].songs); // songs are here.
 
   return (
     <div className="library-container">

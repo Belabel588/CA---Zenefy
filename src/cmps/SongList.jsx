@@ -9,17 +9,18 @@ export function SongList({ songs, onRemoveSong, onUpdateSong }) {
     if (user.isAdmin) return true
     return song.owner?._id === user._id
   }
+// console.log(songs);
 
   return (
     <section>
       <ul className='list'>
         {songs.map((song) => (
-          <li key={song._id}>
+          <li key={song.id}>
             <SongPreview song={song} />
             {shouldShowActionBtns(song) && (
               <div className='actions'>
                 <button onClick={() => onUpdateCar(song)}>Edit</button>
-                <button onClick={() => onRemoveCar(song._id)}>x</button>
+                <button onClick={() => onRemoveCar(song.id)}>x</button>
               </div>
             )}
           </li>
