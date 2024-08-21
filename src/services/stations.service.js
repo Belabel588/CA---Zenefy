@@ -21,19 +21,23 @@ export const stationService = {
 
 function query(filterBy = {}) {
   return stationStorageService.query(STATION_KEY).then((stations) => {
-    if (filterBy.subCategory) {
-      stations = stations.filter((station) =>
-        Object.keys(station.subCategory).includes(filterBy.subCategory)
-      )
-    }
-    if (filterBy.txt) {
-      const regExp = new RegExp(filterBy.txt, 'i')
-      stations = stations.filter((station) => regExp.test(station.name))
+    // Check if filterBy is empty (no filter conditions)
+    console.log(filterBy);
+
+    if (Object.keys(filterBy).length === 0) {
+      // If filterBy is empty, return all stations combined
+      const allStations = gatherAllStations(stations);
+      console.log('All Stations:', allStations);
+      return allStations;
     }
 
-    return stations
-  })
+    // If filterBy has criteria, gather stations according to the filter
+    const filteredStations = gatherAllStations(stations, filterBy);
+    console.log('Filtered Stations:', filteredStations);
+    return filteredStations;
+  });
 }
+
 
 function getById(stationId) {
   return stationStorageService.get(STATION_KEY, stationId).then((station) => {
@@ -101,7 +105,7 @@ function _createStations() {
 
   const demoMainData = [
     {
-      _id: "5lZfP", 
+      _id: "5lZfP",
       name: "Pop Hits",
       category: "Songs",
       subCategory: {
@@ -215,6 +219,38 @@ function _createStations() {
   // Save the demo stations to the storage
   stationUtilService.saveToStorage(STATION_KEY, demoMainData);
 }
+
+function gatherAllStations(stations, filterBy = {}) {
+  let allStations = [];
+  console.log(filterBy);
+
+  // Iterate over each station entry
+  stations.forEach((station) => {
+    // Iterate over each subCategory in the current station
+    Object.entries(station.subCategory).forEach(([subCategoryKey, stationArray]) => {
+      // If filterBy.subCategory exists, only include matching subCategories
+      if (!filterBy.subCategory || subCategoryKey === filterBy.subCategory) {
+        // If filterBy.txt exists, filter by text within the station title
+        const filteredStations = stationArray.filter((item) => {
+          if (filterBy.txt) {
+            const regExp = new RegExp(filterBy.txt, 'i');
+            return regExp.test(item.title);
+          }
+          return true; // If no text filter, include all stations
+        });
+
+        // Combine the filtered stations into the allStations array
+        allStations = allStations.concat(filteredStations);
+      }
+    });
+  });
+  console.log(allStations);
+
+  return allStations;
+}
+
+
+
 
 function _setNextPrevStationId(station) {
   return stationStorageService.query(STATION_KEY).then((stations) => {
