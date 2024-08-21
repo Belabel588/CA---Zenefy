@@ -1,17 +1,17 @@
 .nav-container{
   display: flex;
   align-items: center;
-  background-color: green;
+  background-color: $dark-mode-background;
   width:17.74rem;
   height:7.625rem;
-  padding: 0.5rem 0.75rem;
+  // padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
 
   .home-nav-container{
     display: flex;
     align-items: center;
-    width:23.25rem;
+    max-width:8rem;
     height:2.5rem;
 
           &:hover{
@@ -58,7 +58,7 @@
   .search-nav-container{
     display: flex;
     align-items: center;
-    width:23.25rem;
+    max-width:8rem;
     height:2.5rem;
 
 

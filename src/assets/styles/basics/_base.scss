@@ -4,7 +4,7 @@
 
 html {
     line-height: 1.6;
-    color: $clr2;
+    // color: $background-black;
 }
     
 body {
@@ -15,7 +15,7 @@ body {
     font-size: rem(18px);
 
 
-    background-color: $background-black;
+    background-color: #000000;    ;
     color: $white;
     font-family: gotham-book;
 }
