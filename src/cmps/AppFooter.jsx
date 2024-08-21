@@ -3,31 +3,38 @@ import { useSelector } from 'react-redux'
 import React, { useState, useEffect, useRef } from 'react'
 import ReactPlayer from 'react-player'
 
+import { stationService } from '../services/stations.service.js'
+
 import sample from '../../public/Pokémon Theme.mp3'
 
 export function AppFooter() {
   const [currentTime, setCurrentTime] = useState(0)
-  // const duration = 330 // Example duration (in seconds)
 
-  console.log(sample)
   const [volume, setVolume] = useState(50)
   const isPlayingNow = useRef()
   const [isPlaying, setIsPlaying] = useState()
 
   const playerRef = useRef()
 
-  const [duration, setDuration] = useState()
+  const [duration, setDuration] = useState(1)
 
-  useEffect(
-    () => {
+  // const currStation = useSelector(
+  //   (stateSelector) => stateSelector.stationModule.currStation
+  // )
+
+  const [currStation, setCurrStation] = useState([])
+
+  useEffect(() => {
+    async function getStation() {
+      const station = await stationService.query()
+      setCurrStation(station)
+      console.log(station)
       const durationToSet = playerRef.current.getDuration()
       console.log(durationToSet)
       setDuration(durationToSet)
-    },
-    [
-      /**song */
-    ]
-  )
+    }
+    getStation()
+  }, [currStation])
 
   useEffect(() => {
     if (!isPlaying) return
@@ -54,6 +61,9 @@ export function AppFooter() {
       icon: <i className='fa-solid fa-circle-play'></i>,
       onClick: () => {
         setIsPlaying(true)
+        const durationToSet = playerRef.current.getDuration()
+
+        setDuration(durationToSet)
       },
     },
     {
@@ -173,6 +183,8 @@ export function AppFooter() {
 
 const ProgressBar = ({ currentTime, duration, setCurrentTime, playerRef }) => {
   let progressPercentage = (currentTime / duration) * 100
+  console.log(progressPercentage)
+  console.log(duration)
   const timeRef = useRef()
   const [isHovered, setIsHovered] = useState(false)
 
