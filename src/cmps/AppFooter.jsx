@@ -1,14 +1,33 @@
 import { useSelector } from 'react-redux'
 
 import React, { useState, useEffect, useRef } from 'react'
+import ReactPlayer from 'react-player'
+
+import sample from '../../public/Pokémon Theme.mp3'
 
 export function AppFooter() {
   const [currentTime, setCurrentTime] = useState(0)
-  const duration = 330 // Example duration (in seconds)
+  // const duration = 330 // Example duration (in seconds)
 
+  console.log(sample)
   const [volume, setVolume] = useState(50)
   const isPlayingNow = useRef()
   const [isPlaying, setIsPlaying] = useState()
+
+  const playerRef = useRef()
+
+  const [duration, setDuration] = useState()
+
+  useEffect(
+    () => {
+      const durationToSet = playerRef.current.getDuration()
+      console.log(durationToSet)
+      setDuration(durationToSet)
+    },
+    [
+      /**song */
+    ]
+  )
 
   useEffect(() => {
     if (!isPlaying) return
@@ -123,6 +142,14 @@ export function AppFooter() {
             currentTime={currentTime}
             setCurrentTime={setCurrentTime}
             duration={duration}
+            playerRef={playerRef}
+          />
+
+          <ReactPlayer
+            url={'public/Pokémon Theme.mp3'}
+            style={{ display: 'none' }}
+            playing={isPlaying}
+            ref={playerRef}
           />
           <span>{duration}</span>
         </div>
@@ -144,7 +171,7 @@ export function AppFooter() {
   )
 }
 
-const ProgressBar = ({ currentTime, duration, setCurrentTime }) => {
+const ProgressBar = ({ currentTime, duration, setCurrentTime, playerRef }) => {
   let progressPercentage = (currentTime / duration) * 100
   const timeRef = useRef()
   const [isHovered, setIsHovered] = useState(false)
@@ -159,6 +186,8 @@ const ProgressBar = ({ currentTime, duration, setCurrentTime }) => {
   function onSetTime({ target }) {
     const timeToSet = +target.value
     progressPercentage = (timeToSet / duration) * 100
+    // console.log(playerRef)
+    playerRef.current.seekTo(timeToSet)
     setCurrentTime(timeToSet)
   }
 

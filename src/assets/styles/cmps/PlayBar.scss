@@ -144,6 +144,11 @@ justify-items: center;
 .buttons-container{
     display: flex;
 
+    i{
+
+        min-width: 17px;
+    }
+
 }
 
   .volume-container{
@@ -155,7 +160,8 @@ justify-items: center;
     margin-top: 10px;
     display: flex;
     align-items: center;
-    justify-items: center;
+    justify-items: center;   
+
     &:hover{
         div{
 
@@ -186,13 +192,15 @@ justify-items: center;
         background: linear-gradient(to right, $white 50%, $grey-medium 50%);
         border-radius: 5px;
         outline: none;
+        
 
-        i{
-            display: none;
-            position: relative;
-            left: 5px;
-            font-size: 0.8em;
-        }
+        // i{
+        //     display: none;
+        //     position: relative;
+        //     left: 5px;
+        //     font-size: 0.8em;
+      
+        // }
 
         &::-webkit-slider-thumb {
             -webkit-appearance: none;
