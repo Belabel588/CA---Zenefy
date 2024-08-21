@@ -1,7 +1,8 @@
 import { utilService as stationUtilService } from './util.service.js'
 import { storageService as stationStorageService } from './async-storage.service.js'
 
-const STATION_KEY = 'stationDB'
+const STATION_KEY = 'demoStations'
+
 _createStations()
 
 export const stationService = {
@@ -14,6 +15,7 @@ export const stationService = {
   getFilterFromSearchParams,
   getCategoryStats,
 }
+
 // For Debug (easy access from console):
 // window.cs = stationService
 
@@ -96,33 +98,136 @@ function getCategoryStats() {
 }
 
 function _createStations() {
-  let stations = stationUtilService.loadFromStorage(STATION_KEY)
-  if (!stations || !stations.length) {
-    stations = []
-    const names = ['Funky Monks', 'Classic Vibes', 'Jazz Masters']
-    const tags = [
-      ['Funk', 'Happy'],
-      ['Classical', 'Relaxing'],
-      ['Jazz', 'Smooth'],
-    ]
-    for (let i = 0; i < 10; i++) {
-      const name =
-        names[stationUtilService.getRandomIntInclusive(0, names.length - 1)]
-      const stationTags =
-        tags[stationUtilService.getRandomIntInclusive(0, tags.length - 1)]
-      stations.push(_createStation(name + ' ' + (i + 1), stationTags))
-    }
-    stationUtilService.saveToStorage(STATION_KEY, stations)
-  }
-}
+  const demoStations = [
+    {
+      _id: "5lZfP",
+      name: "Pop Hits",
+      tags: ["Pop", "Funk"],
+      createdBy: {
+        _id: "uY7JC",
+        fullname: "Demo User",
+        imgUrl: "http://some-photo-url.com",
+      },
+      likedByUsers: ["TmJoX", "hIT9J"],
+      category: "Songs",
+      createdAt: 1724180672981,
+      updatedAt: 1724180672981,
+      stations: [
+        {
+          id: "CevxZvSJLk8",
+          title: "Katy Perry",
+          url: [
+            "https://www.youtube.com/watch?v=CevxZvSJLk8",
+            "https://www.youtube.com/watch?v=ScG0cCUgjTY",
+            "https://www.youtube.com/watch?v=0KSOMA3QBU0"
+          ],
+          imgUrl: "https://i.ytimg.com/vi/CevxZvSJLk8/mqdefault.jpg",
+          addedAt: 1724180672981,
+        },
+        {
+          id: "3AtDnEC4zak",
+          title: "Ed Sheeran",
+          url: [
+            "https://www.youtube.com/watch?v=3AtDnEC4zak",
+            "https://www.youtube.com/watch?v=JGwWNGJdvx8",
+            "https://www.youtube.com/watch?v=_dK2tDK9grQ"
+          ],
+          imgUrl: "https://i.ytimg.com/vi/3AtDnEC4zak/mqdefault.jpg",
+          addedAt: 1724180672981,
+        },
+        {
+          id: "2Vv-BfVoq4g",
+          title: "Ed Sheeran",
+          url: [
+            "https://www.youtube.com/watch?v=2Vv-BfVoq4g",
+            "https://www.youtube.com/watch?v=lp-EO5I60KA",
+            "https://www.youtube.com/watch?v=y83x7MgzWOA"
+          ],
+          imgUrl: "https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg",
+          addedAt: 1724180672981,
+        },
+      ],
+    },
+    {
+      _id: "IaHoi",
+      name: "Tech Talks",
+      tags: ["Technology", "Innovation"],
+      createdBy: {
+        _id: "w3BaO",
+        fullname: "Demo User",
+        imgUrl: "http://some-photo-url.com",
+      },
+      likedByUsers: ["5qACl", "qTqFE", "Klids", "UXTCI"],
+      category: "Podcasts",
+      createdAt: 1724180672981,
+      updatedAt: 1724180672981,
+      stations: [
+        {
+          id: "1",
+          title: "AI Experts",
+          url: [
+            "https://podcast.com/episode1",
+            "https://podcast.com/episode2",
+            "https://podcast.com/episode3"
+          ],
+          imgUrl: "https://podcast.com/episode1.jpg",
+          addedAt: 1724180672981,
+        },
+        {
+          id: "2",
+          title: "Blockchain Explained",
+          url: [
+            "https://podcast.com/episode2",
+            "https://podcast.com/episode3",
+            "https://podcast.com/episode4"
+          ],
+          imgUrl: "https://podcast.com/episode2.jpg",
+          addedAt: 1724180672981,
+        },
+      ],
+    },
+    {
+      _id: "fI3lq",
+      name: "Health Matters",
+      tags: ["Health", "Wellness"],
+      createdBy: {
+        _id: "8wSj2",
+        fullname: "Demo User",
+        imgUrl: "http://some-photo-url.com",
+      },
+      likedByUsers: ["pvKz6", "Qk0qZ"],
+      category: "Educational",
+      createdAt: 1724180672981,
+      updatedAt: 1724180672981,
+      stations: [
+        {
+          id: "4",
+          title: "Mental Health",
+          url: [
+            "https://educational.com/lesson1",
+            "https://educational.com/lesson2",
+            "https://educational.com/lesson3"
+          ],
+          imgUrl: "https://educational.com/lesson1.jpg",
+          addedAt: 1724180672981,
+        },
+        {
+          id: "5",
+          title: "Nutrition Basics",
+          url: [
+            "https://educational.com/lesson2",
+            "https://educational.com/lesson3",
+            "https://educational.com/lesson4"
+          ],
+          imgUrl: "https://educational.com/lesson2.jpg",
+          addedAt: 1724180672981,
+        },
+      ],
+    },
+  ];
 
-function _createStation(name, tags) {
-  const station = getEmptyStation(name, tags)
-  station._id = stationUtilService.makeId()
-  station.createdAt = station.updatedAt =
-    Date.now() -
-    stationUtilService.getRandomIntInclusive(0, 1000 * 60 * 60 * 24)
-  return station
+  // Save the demo stations to the storage
+  stationUtilService.saveToStorage(STATION_KEY, demoStations);
 }
 
 function _setNextPrevStationId(station) {
@@ -152,36 +257,3 @@ function _getStationCountByTagMap(stations) {
   }, {})
   return stationCountByTagMap
 }
-
-// Data Model:
-// const station = {
-//     _id: "s101",
-//     name: "Funky Monks",
-//     tags: ["Funk", "Happy"],
-//     createdBy: {
-//         _id: "u101",
-//         fullname: "Puki Ben David",
-//         imgUrl: "http://some-photo/"
-//     },
-//     likedByUsers: ['u102', 'u103'],
-//     songs: [
-//         {
-//             id: "s1001",
-//             title: "The Meters - Cissy Strut",
-//             url: "youtube/song.mp4",
-//             imgUrl: "https://i.ytimg.com/vi/4_iC0MyIykM/mqdefault.jpg",
-//             addedBy: "u101",
-//             likedBy: ["u102", "u103"],
-//             addedAt: 162521765262
-//         }
-//     ],
-//     msgs: [
-//         {
-//             id: "m101",
-//             from: "u102",
-//             txt: "Great station!"
-//         }
-//     ],
-//     createdAt: 1631031801011,
-//     updatedAt: 1631031801011
-// }
