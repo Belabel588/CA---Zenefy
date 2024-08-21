@@ -6,7 +6,7 @@
   height:7.625rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
-
+  margin-bottom: 0.5rem;
 
   .home-nav-container{
     display: flex;
@@ -16,6 +16,7 @@
 
           &:hover{
         color:$white;
+        transition: 1s;
       }
 
     .home-btn{
@@ -33,6 +34,7 @@
 
       &:hover{
         color:$white;
+        transition: 1s;
       }
     }
 
@@ -46,6 +48,7 @@
 
       &:hover{
         color:$white;
+        transition: 1s;
       }
 
     }
@@ -75,6 +78,7 @@
 
       &:hover{
         color:$white;
+        transition: 1s;
       }
     }
 
@@ -87,6 +91,7 @@
 
       &:hover{
         color:$white;
+        transition: 1s;
       }
     }
   }
