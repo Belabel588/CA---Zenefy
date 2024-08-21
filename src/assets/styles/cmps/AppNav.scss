@@ -1,7 +1,100 @@
 .nav-container{
+  display: flex;
+  align-items: center;
   background-color: green;
   width:17.74rem;
   height:7.625rem;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  .home-nav-container{
+    display: flex;
+    align-items: center;
+    width:23.25rem;
+    height:2.5rem;
+
+          &:hover{
+        color:$white;
+        transition: 1s;
+      }
+
+    .home-btn{
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+    }
+
+    .home-icon{
+      width: 2rem;
+      height: 2rem;
+      margin-right: 0.5rem;
+
+      color:$grey-light;
+
+      &:hover{
+        color:$white;
+        transition: 1s;
+      }
+    }
+
+    
+    .home-text{
+      margin-top: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+
+      color:$grey-light;
+
+      &:hover{
+        color:$white;
+        transition: 1s;
+      }
+
+    }
+  }
+
+
+  .search-nav-container{
+    display: flex;
+    align-items: center;
+    width:23.25rem;
+    height:2.5rem;
+
+
+
+    .search-btn{
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+    }
+
+    .search-icon{
+      width: 2rem;
+      height: 2rem;
+      margin-right: 0.5rem;
+
+      color:$grey-light;
+
+      &:hover{
+        color:$white;
+        transition: 1s;
+      }
+    }
+
+    .search-text{
+      margin-top: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+
+      color:$grey-light;
+
+      &:hover{
+        color:$white;
+        transition: 1s;
+      }
+    }
+  }
+
 }
+
