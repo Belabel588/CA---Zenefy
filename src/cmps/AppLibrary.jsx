@@ -15,7 +15,6 @@ export function AppLibrary() {
   
   console.log(mainData);
 
-
   return (
     <div className="library-container">
 
