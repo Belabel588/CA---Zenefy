@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
+import { Link, NavLink } from 'react-router-dom'
+
 import {
   SET_STATIONS,
   REMOVE_STATION,
@@ -28,6 +30,12 @@ export function HomePage() {
   )
   console.log(stations)
 
+  function onSelectStation(stationId, ev) {
+    console.log(ev)
+    ev.preventDefault()
+    console.log(stationId)
+  }
+
   return (
     <section className='section home-container'>
       <div className='filter-container'>
@@ -38,13 +46,20 @@ export function HomePage() {
       <div className='stations-container'>
         {stations.map((station) => {
           return (
-            <div className='station-container' key={station.id}>
-              <img className='station-cover' src={station.imgUrl} alt='' />
-              <b>{station.title}</b>
-              <div className='play-button-container'>
-                <FaCirclePlay className='play-button' />
+            <Link to={`/song`}>
+              <div className='station-container' key={station.id}>
+                <img className='station-cover' src={station.imgUrl} alt='' />
+                <span>{station.title}</span>
+                <div
+                  className='play-button-container'
+                  onClick={() => {
+                    onSelectStation(station.id, event)
+                  }}
+                >
+                  <FaCirclePlay className='play-button' />
+                </div>
               </div>
-            </div>
+            </Link>
           )
         })}
       </div>
