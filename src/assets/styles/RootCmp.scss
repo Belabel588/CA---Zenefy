@@ -5,6 +5,7 @@
     display: grid;
     grid-template-columns: 1fr 3fr;
     min-height: 100vh;
+    
 
     header {
       grid-column: 1 / -1;
@@ -14,8 +15,8 @@
   .main-content{
     background-color:$background-black;
     border-radius: 0.5rem;
-    height:80vh;
+    height:calc(100vh - 70px);
     width:98%;
-    margin: 1rem 0;
+    // margin: 1rem 0;
   }
 }

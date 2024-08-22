@@ -22,18 +22,18 @@ export const stationService = {
 function query(filterBy = {}) {
   return stationStorageService.query(STATION_KEY).then((stations) => {
     // Check if filterBy is empty (no filter conditions)
-    console.log(filterBy)
+    // console.log(filterBy)
 
     if (Object.keys(filterBy).length === 0) {
       // If filterBy is empty, return all stations combined
       const allStations = gatherAllStations(stations)
-      console.log('All Stations:', allStations)
+      // console.log('All Stations:', allStations)
       return allStations
     }
 
     // If filterBy has criteria, gather stations according to the filter
     const filteredStations = gatherAllStations(stations, filterBy)
-    console.log('Filtered Stations:', filteredStations)
+    // console.log('Filtered Stations:', filteredStations)
     return filteredStations
   })
 }
@@ -223,7 +223,7 @@ function _createStations() {
 
 function gatherAllStations(stations, filterBy = {}) {
   let allStations = []
-  console.log(filterBy)
+  // console.log(filterBy)
 
   // Iterate over each station entry
   stations.forEach((station) => {
@@ -247,7 +247,7 @@ function gatherAllStations(stations, filterBy = {}) {
       }
     )
   })
-  console.log(allStations)
+  // console.log(allStations)
 
   return allStations
 }

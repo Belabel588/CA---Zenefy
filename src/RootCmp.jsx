@@ -18,10 +18,8 @@ export function RootCmp() {
       <AppHeader />
       <SideBar />
 
-
-
-      <div className="main-content">
-        <main >
+      <div className='main-content'>
+        <main>
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<AboutUs />} />
@@ -31,12 +29,9 @@ export function RootCmp() {
             <Route path='/login' element={<LoginSignup />} />
           </Routes>
         </main>
-
-
       </div>
 
-
-      <AppFooter className="app-footer" />
+      <AppFooter className='app-footer' />
     </section>
   )
 }
