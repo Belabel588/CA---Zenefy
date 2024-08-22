@@ -28,9 +28,9 @@ export function AppFooter() {
     async function getStation() {
       const station = await stationService.query()
       setCurrStation(station)
-      console.log(station)
+      // console.log(station)
       const durationToSet = playerRef.current.getDuration()
-      console.log(durationToSet)
+      // console.log(durationToSet)
       setDuration(durationToSet)
     }
     getStation()
@@ -157,6 +157,8 @@ export function AppFooter() {
 
           <ReactPlayer
             url={'public/Pokémon Theme.mp3'}
+            // url={currStation.currItem.url}
+            // url={currStation}
             style={{ display: 'none' }}
             playing={isPlaying}
             ref={playerRef}
@@ -183,8 +185,7 @@ export function AppFooter() {
 
 const ProgressBar = ({ currentTime, duration, setCurrentTime, playerRef }) => {
   let progressPercentage = (currentTime / duration) * 100
-  console.log(progressPercentage)
-  console.log(duration)
+
   const timeRef = useRef()
   const [isHovered, setIsHovered] = useState(false)
 
