@@ -61,6 +61,7 @@ export function AppFooter() {
       type: 'play',
       icon: <i className='fa-solid fa-circle-play'></i>,
       onClick: () => {
+        if (currentTime === duration) setCurrentTime(0)
         setIsPlaying(true)
         const durationToSet = playerRef.current.getDuration()
 
@@ -171,7 +172,7 @@ export function AppFooter() {
             ref={playerRef}
             volume={volume / 100}
           />
-          <span>{duration}</span>
+          <span>{`${Math.floor(duration / 60)}:${duration / 60}`}</span>
         </div>
       </div>
 

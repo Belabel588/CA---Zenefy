@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Link, NavLink } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 import {
   SET_STATIONS,
@@ -24,14 +25,19 @@ import { GoContainer } from 'react-icons/go'
 
 import { FaCirclePlay } from 'react-icons/fa6'
 
+// to do: prevent default Link
+
 export function HomePage() {
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
   console.log(stations)
+  const navigate = useNavigate()
+
+  let isPlay
 
   function onSelectStation(stationId, ev) {
-    console.log(ev)
+    ev.stopPropagation() // Stop the click from bubbling up to the Link
     ev.preventDefault()
     console.log(stationId)
   }
@@ -46,20 +52,28 @@ export function HomePage() {
       <div className='stations-container'>
         {stations.map((station) => {
           return (
-            <Link to={`/song`}>
-              <div className='station-container' key={station.id}>
-                <img className='station-cover' src={station.imgUrl} alt='' />
-                <span>{station.title}</span>
-                <div
-                  className='play-button-container'
-                  onClick={() => {
-                    onSelectStation(station.id, event)
-                  }}
-                >
-                  <FaCirclePlay className='play-button' />
-                </div>
+            <div
+              className='station-container'
+              key={station.id}
+              onClick={() => {
+                if (!isPlay) return
+                navigate(`/song`)
+              }}
+            >
+              <img className='station-cover' src={station.imgUrl} alt='' />
+              <span>{station.title}</span>
+
+              <div
+                className='play-button-container'
+                onClick={() => {
+                  isPlay = true
+                  onSelectStation(station.id, event)
+                  isPlay = false
+                }}
+              >
+                <FaCirclePlay className='play-button' />
               </div>
-            </Link>
+            </div>
           )
         })}
       </div>
