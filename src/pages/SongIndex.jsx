@@ -63,7 +63,6 @@ export function SongIndex() {
   return (
     <main className='song-index'>
       <header>
-        <h2>Songs</h2>
         {userService.getLoggedinUser() && (
           <button onClick={onAddSong}>Add a Song</button>
         )}

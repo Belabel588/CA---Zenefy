@@ -10,6 +10,7 @@ export const SET_IS_LOADING = 'SET_IS_LOADING'
 
 const initialState = {
   stations: [],
+  // filterBy: { subCategory: 'popStation', txt: 'Ed' },
   filterBy: stationService.getDefaultFilter(),
   isLoading: false,
 }

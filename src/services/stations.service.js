@@ -1,7 +1,7 @@
 import { utilService as stationUtilService } from './util.service.js'
 import { storageService as stationStorageService } from './async-storage.service.js'
 
-const STATION_KEY = 'demoStations'
+const STATION_KEY = 'demoMainData'
 
 _createStations()
 
@@ -21,17 +21,20 @@ export const stationService = {
 
 function query(filterBy = {}) {
   return stationStorageService.query(STATION_KEY).then((stations) => {
-    if (filterBy.tag) {
-      stations = stations.filter((station) =>
-        station.tags.includes(filterBy.tag)
-      )
-    }
-    if (filterBy.txt) {
-      const regExp = new RegExp(filterBy.txt, 'i')
-      stations = stations.filter((station) => regExp.test(station.name))
+    // Check if filterBy is empty (no filter conditions)
+    console.log(filterBy)
+
+    if (Object.keys(filterBy).length === 0) {
+      // If filterBy is empty, return all stations combined
+      const allStations = gatherAllStations(stations)
+      console.log('All Stations:', allStations)
+      return allStations
     }
 
-    return stations
+    // If filterBy has criteria, gather stations according to the filter
+    const filteredStations = gatherAllStations(stations, filterBy)
+    console.log('Filtered Stations:', filteredStations)
+    return filteredStations
   })
 }
 
@@ -56,10 +59,10 @@ function save(station) {
   }
 }
 
-function getEmptyStation(name = '', tags = []) {
+function getEmptyStation(name = '', subCategory = {}) {
   return {
     name,
-    tags,
+    subCategory,
     songs: [],
     likedByUsers: [],
     msgs: [],
@@ -74,7 +77,7 @@ function getEmptyStation(name = '', tags = []) {
 }
 
 function getDefaultFilter() {
-  return { txt: '', tag: '' }
+  return { txt: '', subCategory: '' }
 }
 
 function getFilterFromSearchParams(searchParams) {
@@ -88,146 +91,165 @@ function getFilterFromSearchParams(searchParams) {
 
 function getCategoryStats() {
   return stationStorageService.query(STATION_KEY).then((stations) => {
-    const stationCountByTagMap = _getStationCountByTagMap(stations)
-    const data = Object.keys(stationCountByTagMap).map((tagName) => ({
-      title: tagName,
-      value: stationCountByTagMap[tagName],
-    }))
+    const stationCountBySubCategoryMap =
+      _getStationCountBySubCategoryMap(stations)
+    const data = Object.keys(stationCountBySubCategoryMap).map(
+      (subCategoryName) => ({
+        title: subCategoryName,
+        value: stationCountBySubCategoryMap[subCategoryName],
+      })
+    )
     return data
   })
 }
 
 function _createStations() {
-  const demoStations = [
+  const demoMainData = [
     {
       _id: '5lZfP',
       name: 'Pop Hits',
-      tags: ['Pop', 'Funk'],
-      createdBy: {
-        _id: 'uY7JC',
-        fullname: 'Demo User',
-        imgUrl: 'http://some-photo-url.com',
-      },
-      likedByUsers: ['TmJoX', 'hIT9J'],
       category: 'Songs',
-      createdAt: 1724180672981,
-      updatedAt: 1724180672981,
-      stations: [
-        {
-          id: 'CevxZvSJLk8',
-          title: 'Katy Perry',
-          url: [
-            'https://www.youtube.com/watch?v=CevxZvSJLk8',
-            'https://www.youtube.com/watch?v=ScG0cCUgjTY',
-            'https://www.youtube.com/watch?v=0KSOMA3QBU0',
-          ],
-          imgUrl: 'https://i.ytimg.com/vi/CevxZvSJLk8/mqdefault.jpg',
-          addedAt: 1724180672981,
-        },
-        {
-          id: '3AtDnEC4zak',
-          title: 'Ed Sheeran',
-          url: [
-            'https://www.youtube.com/watch?v=3AtDnEC4zak',
-            'https://www.youtube.com/watch?v=JGwWNGJdvx8',
-            'https://www.youtube.com/watch?v=_dK2tDK9grQ',
-          ],
-          imgUrl: 'https://i.ytimg.com/vi/3AtDnEC4zak/mqdefault.jpg',
-          addedAt: 1724180672981,
-        },
-        {
-          id: '2Vv-BfVoq4g',
-          title: 'Ed Sheeran',
-          url: [
-            'https://www.youtube.com/watch?v=2Vv-BfVoq4g',
-            'https://www.youtube.com/watch?v=lp-EO5I60KA',
-            'https://www.youtube.com/watch?v=y83x7MgzWOA',
-          ],
-          imgUrl: 'https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg',
-          addedAt: 1724180672981,
-        },
-      ],
+      subCategory: {
+        popStation: [
+          {
+            id: 'CevxZvSJLk8',
+            title: 'Katy Perry',
+            songs: [
+              'https://www.youtube.com/watch?v=CevxZvSJLk8',
+              'https://www.youtube.com/watch?v=ScG0cCUgjTY',
+              'https://www.youtube.com/watch?v=0KSOMA3QBU0',
+            ],
+            imgUrl: 'https://i.ytimg.com/vi/CevxZvSJLk8/mqdefault.jpg',
+            addedAt: 1724180672981,
+          },
+          {
+            id: '3AtDnEC4zak',
+            title: 'Ed Sheeran',
+            songs: [
+              'https://www.youtube.com/watch?v=3AtDnEC4zak',
+              'https://www.youtube.com/watch?v=JGwWNGJdvx8',
+              'https://www.youtube.com/watch?v=_dK2tDK9grQ',
+            ],
+            imgUrl: 'https://i.ytimg.com/vi/3AtDnEC4zak/mqdefault.jpg',
+            addedAt: 1724180672981,
+          },
+          {
+            id: '2Vv-BfVoq4g',
+            title: 'Ed Sheeran',
+            songs: [
+              'https://www.youtube.com/watch?v=2Vv-BfVoq4g',
+              'https://www.youtube.com/watch?v=lp-EO5I60KA',
+              'https://www.youtube.com/watch?v=y83x7MgzWOA',
+            ],
+            imgUrl: 'https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+        rockStation: [],
+      },
     },
     {
       _id: 'IaHoi',
       name: 'Tech Talks',
-      tags: ['Technology', 'Innovation'],
-      createdBy: {
-        _id: 'w3BaO',
-        fullname: 'Demo User',
-        imgUrl: 'http://some-photo-url.com',
-      },
-      likedByUsers: ['5qACl', 'qTqFE', 'Klids', 'UXTCI'],
       category: 'Podcasts',
-      createdAt: 1724180672981,
-      updatedAt: 1724180672981,
-      stations: [
-        {
-          id: '1',
-          title: 'AI Experts',
-          url: [
-            'https://podcast.com/episode1',
-            'https://podcast.com/episode2',
-            'https://podcast.com/episode3',
-          ],
-          imgUrl: 'https://podcast.com/episode1.jpg',
-          addedAt: 1724180672981,
-        },
-        {
-          id: '2',
-          title: 'Blockchain Explained',
-          url: [
-            'https://podcast.com/episode2',
-            'https://podcast.com/episode3',
-            'https://podcast.com/episode4',
-          ],
-          imgUrl: 'https://podcast.com/episode2.jpg',
-          addedAt: 1724180672981,
-        },
-      ],
+      likedByUsers: ['5qACl', 'qTqFE', 'Klids', 'UXTCI'],
+      subCategory: {
+        technologyStation: [
+          {
+            id: '1',
+            title: 'AI Experts',
+            songs: [
+              'https://podcast.com/episode1',
+              'https://podcast.com/episode2',
+              'https://podcast.com/episode3',
+            ],
+            imgUrl: 'https://podcast.com/episode1.jpg',
+            addedAt: 1724180672981,
+          },
+          {
+            id: '2',
+            title: 'Blockchain Explained',
+            songs: [
+              'https://podcast.com/episode2',
+              'https://podcast.com/episode3',
+              'https://podcast.com/episode4',
+            ],
+            imgUrl: 'https://podcast.com/episode2.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+        innovationStation: [],
+      },
     },
     {
       _id: 'fI3lq',
       name: 'Health Matters',
-      tags: ['Health', 'Wellness'],
-      createdBy: {
-        _id: '8wSj2',
-        fullname: 'Demo User',
-        imgUrl: 'http://some-photo-url.com',
-      },
-      likedByUsers: ['pvKz6', 'Qk0qZ'],
       category: 'Educational',
-      createdAt: 1724180672981,
-      updatedAt: 1724180672981,
-      stations: [
-        {
-          id: '4',
-          title: 'Mental Health',
-          url: [
-            'https://educational.com/lesson1',
-            'https://educational.com/lesson2',
-            'https://educational.com/lesson3',
-          ],
-          imgUrl: 'https://educational.com/lesson1.jpg',
-          addedAt: 1724180672981,
-        },
-        {
-          id: '5',
-          title: 'Nutrition Basics',
-          url: [
-            'https://educational.com/lesson2',
-            'https://educational.com/lesson3',
-            'https://educational.com/lesson4',
-          ],
-          imgUrl: 'https://educational.com/lesson2.jpg',
-          addedAt: 1724180672981,
-        },
-      ],
+      likedByUsers: ['pvKz6', 'Qk0qZ'],
+      subCategory: {
+        healthStation: [
+          {
+            id: '4',
+            title: 'Mental Health',
+            songs: [
+              'https://educational.com/lesson1',
+              'https://educational.com/lesson2',
+              'https://educational.com/lesson3',
+            ],
+            imgUrl: 'https://educational.com/lesson1.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+        wellnessStation: [
+          {
+            id: '5',
+            title: 'Nutrition Basics',
+            songs: [
+              'https://educational.com/lesson2',
+              'https://educational.com/lesson3',
+              'https://educational.com/lesson4',
+            ],
+            imgUrl: 'https://educational.com/lesson2.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+      },
     },
   ]
 
   // Save the demo stations to the storage
-  stationUtilService.saveToStorage(STATION_KEY, demoStations)
+  stationUtilService.saveToStorage(STATION_KEY, demoMainData)
+}
+
+function gatherAllStations(stations, filterBy = {}) {
+  let allStations = []
+  console.log(filterBy)
+
+  // Iterate over each station entry
+  stations.forEach((station) => {
+    // Iterate over each subCategory in the current station
+    Object.entries(station.subCategory).forEach(
+      ([subCategoryKey, stationArray]) => {
+        // If filterBy.subCategory exists, only include matching subCategories
+        if (!filterBy.subCategory || subCategoryKey === filterBy.subCategory) {
+          // If filterBy.txt exists, filter by text within the station title
+          const filteredStations = stationArray.filter((item) => {
+            if (filterBy.txt) {
+              const regExp = new RegExp(filterBy.txt, 'i')
+              return regExp.test(item.title)
+            }
+            return true // If no text filter, include all stations
+          })
+
+          // Combine the filtered stations into the allStations array
+          allStations = allStations.concat(filteredStations)
+        }
+      }
+    )
+  })
+  console.log(allStations)
+
+  return allStations
 }
 
 function _setNextPrevStationId(station) {
@@ -247,13 +269,13 @@ function _setNextPrevStationId(station) {
   })
 }
 
-function _getStationCountByTagMap(stations) {
-  const stationCountByTagMap = stations.reduce((map, station) => {
-    station.tags.forEach((tag) => {
-      if (!map[tag]) map[tag] = 0
-      map[tag]++
+function _getStationCountBySubCategoryMap(stations) {
+  const stationCountBySubCategoryMap = stations.reduce((map, station) => {
+    Object.keys(station.subCategory).forEach((subCategory) => {
+      if (!map[subCategory]) map[subCategory] = 0
+      map[subCategory]++
     })
     return map
   }, {})
-  return stationCountByTagMap
+  return stationCountBySubCategoryMap
 }
