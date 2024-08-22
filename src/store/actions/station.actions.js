@@ -5,6 +5,7 @@ import {
   SET_IS_LOADING,
   SET_STATIONS,
   UPDATE_STATION,
+  SET_CURRENTLY_PLAYED_STATION
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -34,4 +35,8 @@ export function saveStation(station) {
   return stationService
     .save(station)
     .then((savedStation) => store.dispatch({ type, station: savedStation }))
+}
+
+export function setCurrentlyPlayedStation(station) {
+  return { type: SET_CURRENTLY_PLAYED_STATION, station }
 }

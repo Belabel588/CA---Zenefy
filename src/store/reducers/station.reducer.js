@@ -1,5 +1,7 @@
 import { stationService } from '../../services/stations.service'
 
+export const SET_CURRENTLY_PLAYED_STATION = 'SET_CURRENTLY_PLAYED_STATION';
+
 export const SET_STATIONS = 'SET_STATIONS'
 export const REMOVE_STATION = 'REMOVE_STATION'
 export const ADD_STATION = 'ADD_STATION'
@@ -10,6 +12,7 @@ export const SET_IS_LOADING = 'SET_IS_LOADING'
 
 const initialState = {
   stations: [],
+  currentlyPlayedStation: stationService.getEmptyStation(),
   // filterBy: { subCategory: 'popStation', txt: 'Ed' },
   filterBy: stationService.getDefaultFilter(),
   isLoading: false,
@@ -35,6 +38,8 @@ export function stationReducer(state = initialState, action = {}) {
       return { ...state, filterBy: action.filterBy }
     case SET_IS_LOADING:
       return { ...state, isLoading: action.isLoading }
+    case SET_CURRENTLY_PLAYED_STATION:
+      return { ...state, currentlyPlayedStation: action.station };
     default:
       return state
   }
