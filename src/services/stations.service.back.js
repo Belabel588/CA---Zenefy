@@ -5,7 +5,7 @@ const BASE_URL = 'station/'
 
 export const stationService = {
     query,
-    getById,
+    getCategoryById,
     save,
     remove,
     getEmptyStation,
@@ -19,7 +19,7 @@ function query(filterBy = {}) {
     return stationHttpService.get(BASE_URL, filterBy); // Adjusted to station context
 }
 
-function getById(stationId) {
+function getCategoryById(stationId) {
     console.log(stationId);
     return stationHttpService.get(BASE_URL + stationId)
         .then(station => setNextPrevStationId(station));

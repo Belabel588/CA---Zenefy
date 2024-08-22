@@ -7,17 +7,23 @@ _createStations()
 
 export const stationService = {
   query,
-  getById,
+  getCategoryById,
+  getStationById,
   remove,
   save,
   getEmptyStation,
   getDefaultFilter,
   getFilterFromSearchParams,
   getCategoryStats,
+  playStation,
 }
 
 // For Debug (easy access from console):
 // window.cs = stationService
+
+// playStation('CevxZvSJLk8').then(station => {
+//   console.log('Currently playing station:', station);
+// });
 
 function query(filterBy = {}) {
   return stationStorageService.query(STATION_KEY).then((stations) => {
@@ -38,11 +44,41 @@ function query(filterBy = {}) {
   })
 }
 
-function getById(stationId) {
-  return stationStorageService.get(STATION_KEY, stationId).then((station) => {
+function getCategoryById(categoryId) {
+  return stationStorageService.get(STATION_KEY, categoryId).then((station) => {
     station = _setNextPrevStationId(station)
     return station
   })
+}
+
+function getStationById(stationId) {
+  // Query the storage for the station data
+  return stationStorageService
+    .query(STATION_KEY)
+    .then((stations) => {
+      let foundStation = null
+
+      // Iterate over each station
+      stations.forEach((station) => {
+        // Iterate over each subCategory in the station
+        Object.values(station.subCategory).forEach((subCategoryArray) => {
+          // Find the station with the matching stationId in the subCategory array
+          const stationItem = subCategoryArray.find(
+            (item) => item.stationId === stationId
+          )
+          if (stationItem) {
+            foundStation = stationItem
+          }
+        })
+      })
+
+      if (!foundStation) throw new Error('Station not found')
+      return foundStation
+    })
+    .catch((error) => {
+      console.error('Error fetching station by ID:', error)
+      throw error // Rethrow the error for further handling
+    })
 }
 
 function remove(stationId) {
@@ -59,20 +95,13 @@ function save(station) {
   }
 }
 
-function getEmptyStation(name = '', subCategory = {}) {
+function getEmptyStation() {
   return {
-    name,
-    subCategory,
-    songs: [],
-    likedByUsers: [],
-    msgs: [],
-    createdBy: {
-      _id: '',
-      fullname: '',
-      imgUrl: '',
-    },
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    stationId: '', // Unique identifier for the station
+    title: '', // Title of the station, e.g., "Katy Perry"
+    songs: [], // Array of song URLs
+    imgUrl: '', // Image URL for the station
+    addedAt: Date.now(), // Timestamp for when the station was added
   }
 }
 
@@ -103,6 +132,20 @@ function getCategoryStats() {
   })
 }
 
+function playStation(stationId) {
+  console.log('stationId is:', stationId)
+
+  // Fetch the station using getStationById
+  return getStationById(stationId)
+    .then((station) => {
+      console.log('Station found:', station) // Log the station after it is resolved
+      return station // Return the station if needed for further operations
+    })
+    .catch((error) => {
+      console.error('Error fetching station:', error) // Handle any errors
+    })
+}
+
 function _createStations() {
   const demoMainData = [
     {
@@ -112,7 +155,7 @@ function _createStations() {
       subCategory: {
         popStation: [
           {
-            id: 'CevxZvSJLk8',
+            stationId: 'CevxZvSJLk8',
             title: 'Katy Perry',
             songs: [
               'https://www.youtube.com/watch?v=CevxZvSJLk8',
@@ -123,7 +166,7 @@ function _createStations() {
             addedAt: 1724180672981,
           },
           {
-            id: '3AtDnEC4zak',
+            stationId: '3AtDnEC4zak',
             title: 'Ed Sheeran',
             songs: [
               'https://www.youtube.com/watch?v=3AtDnEC4zak',
@@ -134,7 +177,7 @@ function _createStations() {
             addedAt: 1724180672981,
           },
           {
-            id: '2Vv-BfVoq4g',
+            stationId: '2Vv-BfVoq4g',
             title: 'Ed Sheeran',
             songs: [
               'https://www.youtube.com/watch?v=2Vv-BfVoq4g',
@@ -156,7 +199,7 @@ function _createStations() {
       subCategory: {
         technologyStation: [
           {
-            id: '1',
+            stationId: '1',
             title: 'AI Experts',
             songs: [
               'https://podcast.com/episode1',
@@ -167,7 +210,7 @@ function _createStations() {
             addedAt: 1724180672981,
           },
           {
-            id: '2',
+            stationId: '2',
             title: 'Blockchain Explained',
             songs: [
               'https://podcast.com/episode2',
@@ -189,7 +232,7 @@ function _createStations() {
       subCategory: {
         healthStation: [
           {
-            id: '4',
+            stationId: '4',
             title: 'Mental Health',
             songs: [
               'https://educational.com/lesson1',
@@ -202,7 +245,7 @@ function _createStations() {
         ],
         wellnessStation: [
           {
-            id: '5',
+            stationId: '5',
             title: 'Nutrition Basics',
             songs: [
               'https://educational.com/lesson2',
@@ -220,10 +263,9 @@ function _createStations() {
   // Save the demo stations to the storage
   stationUtilService.saveToStorage(STATION_KEY, demoMainData)
 }
-
 function gatherAllStations(stations, filterBy = {}) {
   let allStations = []
-  // console.log(filterBy)
+  console.log(filterBy)
 
   // Iterate over each station entry
   stations.forEach((station) => {
@@ -247,7 +289,7 @@ function gatherAllStations(stations, filterBy = {}) {
       }
     )
   })
-  // console.log(allStations)
+  // console.log(allStations);
 
   return allStations
 }
