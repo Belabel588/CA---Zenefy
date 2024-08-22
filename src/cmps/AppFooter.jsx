@@ -19,22 +19,28 @@ export function AppFooter() {
 
   const [duration, setDuration] = useState(1)
 
-  // const currStation = useSelector(
-  //   (stateSelector) => stateSelector.stationModule.currStation
-  // )
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
+  )
 
-  const [currStation, setCurrStation] = useState([])
+  const [station, setStation] = useState([])
+  const urlToPlay = useRef()
 
   useEffect(() => {
     async function getStation() {
-      const station = await stationService.query()
-      setCurrStation(station)
-      // console.log(station)
+      // const stationToSet = await stationService.query()
+
+      setStation(currStation)
       const durationToSet = playerRef.current.getDuration()
-      // console.log(durationToSet)
       setDuration(durationToSet)
     }
-    getStation()
+    // getStation()
+    setStation(currStation)
+    const durationToSet = playerRef.current.getDuration()
+    setDuration(durationToSet)
+    setCurrentTime(0)
+    urlToPlay.current = currStation.songs[0]
+    setIsPlaying(true)
   }, [currStation])
 
   useEffect(() => {
@@ -56,6 +62,7 @@ export function AppFooter() {
     {
       type: 'back',
       icon: <i className='fa-solid fa-backward-step'></i>,
+      onClick: () => {},
     },
     {
       type: 'play',
@@ -164,9 +171,9 @@ export function AppFooter() {
           />
 
           <ReactPlayer
-            url={'public/Pokémon Theme.mp3'}
+            // url={'public/Pokémon Theme.mp3'}
             // url={currStation.currItem.url}
-            // url={currStation}
+            url={urlToPlay.current}
             style={{ display: 'none' }}
             playing={isPlaying}
             ref={playerRef}

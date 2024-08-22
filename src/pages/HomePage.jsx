@@ -21,9 +21,13 @@ import {
   loadStations,
   removeStation,
 } from '../store/actions/station.actions.js'
+
+import { setCurrentlyPlayedStation } from '../store/actions/station.actions.js'
+
 import { GoContainer } from 'react-icons/go'
 
 import { FaCirclePlay } from 'react-icons/fa6'
+import playingAnimation from '../../public/img/playing.gif'
 
 // to do: prevent default Link
 
@@ -34,12 +38,16 @@ export function HomePage() {
   console.log(stations)
   const navigate = useNavigate()
 
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
+  )
+
   let isPlay
 
   function onSelectStation(stationId, ev) {
     ev.stopPropagation() // Stop the click from bubbling up to the Link
     ev.preventDefault()
-    console.log(stationId)
+    setCurrentlyPlayedStation(stationId)
   }
 
   return (
@@ -54,10 +62,10 @@ export function HomePage() {
           return (
             <div
               className='station-container'
-              key={station.id}
+              key={station.stationId}
               onClick={() => {
-                if (!isPlay) return
-                navigate(`/song`)
+                // if (!isPlay) return
+                // navigate(`/song`)
               }}
             >
               <img className='station-cover' src={station.imgUrl} alt='' />
@@ -67,12 +75,20 @@ export function HomePage() {
                 className='play-button-container'
                 onClick={() => {
                   isPlay = true
-                  onSelectStation(station.id, event)
+                  onSelectStation(station.stationId, event)
                   isPlay = false
                 }}
               >
                 <FaCirclePlay className='play-button' />
               </div>
+              {currStation.stationId === station.stationId && (
+                <img
+                  className='playing-animation'
+                  style={{ width: '35px' }}
+                  src={playingAnimation}
+                  alt=''
+                />
+              )}
             </div>
           )
         })}

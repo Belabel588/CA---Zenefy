@@ -265,7 +265,6 @@ function _createStations() {
 }
 function gatherAllStations(stations, filterBy = {}) {
   let allStations = []
-  console.log(filterBy)
 
   // Iterate over each station entry
   stations.forEach((station) => {

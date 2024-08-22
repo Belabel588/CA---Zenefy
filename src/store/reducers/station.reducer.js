@@ -1,6 +1,6 @@
 import { stationService } from '../../services/stations.service'
 
-export const SET_CURRENTLY_PLAYED_STATION = 'SET_CURRENTLY_PLAYED_STATION';
+export const SET_CURRENTLY_PLAYED_STATION = 'SET_CURRENTLY_PLAYED_STATION'
 
 export const SET_STATIONS = 'SET_STATIONS'
 export const REMOVE_STATION = 'REMOVE_STATION'
@@ -39,7 +39,7 @@ export function stationReducer(state = initialState, action = {}) {
     case SET_IS_LOADING:
       return { ...state, isLoading: action.isLoading }
     case SET_CURRENTLY_PLAYED_STATION:
-      return { ...state, currentlyPlayedStation: action.station };
+      return { ...state, currentlyPlayedStation: action.currentlyPlayedStation }
     default:
       return state
   }

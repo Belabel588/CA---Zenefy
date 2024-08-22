@@ -37,7 +37,10 @@
 
             .play-button-container{
                 display: flex;
-            }
+            }  
+             .playing-animation{
+                display: none;
+    }
         }
 
         b{
@@ -99,5 +102,8 @@
             transform: scale(1.05);
 
         }
+
+
     }
+ 
 }

@@ -5,7 +5,7 @@ import {
   SET_IS_LOADING,
   SET_STATIONS,
   UPDATE_STATION,
-  SET_CURRENTLY_PLAYED_STATION
+  SET_CURRENTLY_PLAYED_STATION,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -37,6 +37,15 @@ export function saveStation(station) {
     .then((savedStation) => store.dispatch({ type, station: savedStation }))
 }
 
-export function setCurrentlyPlayedStation(station) {
-  return { type: SET_CURRENTLY_PLAYED_STATION, station }
+export async function setCurrentlyPlayedStation(stationId) {
+  try {
+    const station = await stationService.getStationById(stationId)
+    store.dispatch({
+      type: SET_CURRENTLY_PLAYED_STATION,
+      currentlyPlayedStation: station,
+    })
+    return station
+  } catch (err) {
+    console.log(err)
+  }
 }
