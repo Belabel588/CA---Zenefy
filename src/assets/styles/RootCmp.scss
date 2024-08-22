@@ -11,10 +11,14 @@
     }
   }
 
+
+  .main{
+    height:100%;
+  }
   .main-content{
     background-color:$background-black;
     border-radius: 0.5rem;
-    height:80vh;
+    height:75vh;
     width:98%;
     margin: 1rem 0;
   }

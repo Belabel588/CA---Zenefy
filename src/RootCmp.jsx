@@ -22,7 +22,7 @@ export function RootCmp() {
 
 
       <div className="main-content">
-        <main >
+        <main className='main' >
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<AboutUs />} />
