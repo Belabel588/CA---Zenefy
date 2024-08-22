@@ -140,15 +140,15 @@ justify-items: center;
 }
 
 .buttons-volume-container{
-
-.buttons-container{
     display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 0.5em;
 
-    i{
 
-        min-width: 17px;
-    }
+i{
 
+    min-width: 17px;
 }
 
   .volume-container{

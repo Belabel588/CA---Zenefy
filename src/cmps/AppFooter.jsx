@@ -11,6 +11,7 @@ export function AppFooter() {
   const [currentTime, setCurrentTime] = useState(0)
 
   const [volume, setVolume] = useState(50)
+  const latestVolume = useRef(volume)
   const isPlayingNow = useRef()
   const [isPlaying, setIsPlaying] = useState()
 
@@ -98,18 +99,24 @@ export function AppFooter() {
     {
       type: 'volumeHigh',
       icon: <i className='fa-solid fa-volume-high'></i>,
+      onClick: () => {
+        console.log(volume)
+        setVolume(0)
+      },
     },
     {
       type: 'volumeLow',
       icon: <i className='fa-solid fa-volume-low'></i>,
+      onClick: () => {
+        setVolume(0)
+      },
     },
     {
       type: 'volumeMute',
       icon: <i className='fa-solid fa-volume-xmark'></i>,
-    },
-    {
-      type: 'expend',
-      icon: <i className='fa-solid fa-up-right-and-down-left-from-center'></i>,
+      onClick: () => {
+        setVolume(latestVolume.current)
+      },
     },
   ]
 
@@ -162,22 +169,34 @@ export function AppFooter() {
             style={{ display: 'none' }}
             playing={isPlaying}
             ref={playerRef}
+            volume={volume / 100}
           />
           <span>{duration}</span>
         </div>
       </div>
 
       <div className='buttons-volume-container'>
-        <div className='buttons-container'>
-          {buttonsContainer.map((button) => {
-            if (button.type === 'volumeMute' && volume !== 0) return
-            if (button.type === 'volumeHigh' && volume < 50) return
-            if (button.type === 'volumeLow' && volume >= 50) return
-            if (button.type === 'volumeLow' && volume === 0) return
-            return <button key={button.type}>{button.icon}</button>
-          })}
-        </div>
-        <VolumeBar volume={volume} setVolume={setVolume} />
+        {/* <div className='buttons-container'> */}
+        {buttonsContainer.map((button) => {
+          if (button.type === 'volumeMute' && volume !== 0) return
+          if (button.type === 'volumeHigh' && volume < 50) return
+          if (button.type === 'volumeLow' && volume >= 50) return
+          if (button.type === 'volumeLow' && volume === 0) return
+          return (
+            <button key={button.type} onClick={button.onClick}>
+              {button.icon}
+            </button>
+          )
+        })}
+        {/* </div> */}
+        <VolumeBar
+          volume={volume}
+          setVolume={setVolume}
+          latestVolume={latestVolume}
+        />
+        <button>
+          <i className='fa-solid fa-up-right-and-down-left-from-center'></i>
+        </button>
       </div>
     </footer>
   )
@@ -221,7 +240,7 @@ const ProgressBar = ({ currentTime, duration, setCurrentTime, playerRef }) => {
   )
 }
 
-const VolumeBar = ({ volume, setVolume }) => {
+const VolumeBar = ({ volume, setVolume, latestVolume }) => {
   const volumeRef = useRef()
   const [isHovered, setIsHovered] = useState(false)
 
@@ -232,8 +251,11 @@ const VolumeBar = ({ volume, setVolume }) => {
     volumeRef.current.style.background = `linear-gradient(to right, ${progressColor} ${volume}%, ${trackColor} ${volume}%)`
   }, [volume, isHovered])
 
-  function onSetVolume({ target }) {
+  function onSetVolume(ev) {
+    const target = ev.target
     const volumeToSet = +target.value
+
+    latestVolume.current = volumeToSet
     setVolume(volumeToSet)
   }
 
@@ -241,7 +263,9 @@ const VolumeBar = ({ volume, setVolume }) => {
     <div className='volume-container'>
       <input
         type='range'
-        onChange={onSetVolume}
+        onChange={(event) => {
+          onSetVolume(event)
+        }}
         value={volume}
         className='volume-progress'
         ref={volumeRef}
