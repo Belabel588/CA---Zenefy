@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { stationService } from "../services/stations.service";
 import { loadStations } from "../store/actions/station.actions";
-
+import { Link, NavLink } from 'react-router-dom'
 
 export function AppLibrary() {
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
@@ -35,9 +35,11 @@ export function AppLibrary() {
       </div>
 
       <div className="library-stations">
-        <button>
-          <img className="liked-songs-station" src="src/assets/styles/imgs/liked-songs.png" alt="liked songs playlist" />
-        </button>
+        <NavLink to='/likedSongs'>
+          <button>
+            <img className="liked-songs-station" src="src/assets/styles/imgs/liked-songs.png" alt="liked songs playlist" />
+          </button>
+        </NavLink>
       </div>
 
     </div >
