@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import ReactPlayer from 'react-player'
 
 import { stationService } from '../services/stations.service.js'
+import { utilService } from '../services/util.service.js'
 
 import sample from '../../public/Pokémon Theme.mp3'
 
@@ -25,6 +26,9 @@ export function AppFooter() {
 
   const [station, setStation] = useState([])
   const urlToPlay = useRef()
+
+  const [currTimeMinutes, setCurrTimeMinutes] = useState()
+  const [currTimeSeconds, setCurrTimeSeconds] = useState()
 
   useEffect(() => {
     async function getStation() {
@@ -52,7 +56,7 @@ export function AppFooter() {
     }, 1000) // Simulate progress every second
 
     return () => clearInterval(interval)
-  }, [duration, isPlaying])
+  }, [duration, isPlaying, currentTime])
 
   const controlButtons = [
     {
@@ -162,12 +166,18 @@ export function AppFooter() {
           })}
         </div>
         <div className='time-container'>
-          <span>{currentTime}</span>
+          {/* <span>{`${currTimeMinutes}:${currTimeSeconds}`}</span> */}
+          <span>{utilService.formatSongTime(currentTime)}</span>
+
           <ProgressBar
             currentTime={currentTime}
             setCurrentTime={setCurrentTime}
             duration={duration}
             playerRef={playerRef}
+            currTimeMinutes={currTimeMinutes}
+            currTimeSeconds={currTimeSeconds}
+            setCurrTimeMinutes={setCurrTimeMinutes}
+            setCurrTimeSeconds={setCurrTimeSeconds}
           />
 
           <ReactPlayer
@@ -179,7 +189,10 @@ export function AppFooter() {
             ref={playerRef}
             volume={volume / 100}
           />
-          <span>{`${Math.floor(duration / 60)}:${duration / 60}`}</span>
+          <span>{utilService.formatSongTime(Math.ceil(duration))}</span>
+          {/* <span>{`${Math.floor(duration / 60)}:${Math.ceil(
+            (duration / 60 - Math.floor(duration / 60)) * 60
+          )}`}</span> */}
         </div>
       </div>
 
@@ -210,7 +223,16 @@ export function AppFooter() {
   )
 }
 
-const ProgressBar = ({ currentTime, duration, setCurrentTime, playerRef }) => {
+const ProgressBar = ({
+  currentTime,
+  duration,
+  setCurrentTime,
+  playerRef,
+  currTimeMinutes,
+  currTimeSeconds,
+  setCurrTimeMinutes,
+  setCurrTimeSeconds,
+}) => {
   let progressPercentage = (currentTime / duration) * 100
 
   const timeRef = useRef()
@@ -228,6 +250,7 @@ const ProgressBar = ({ currentTime, duration, setCurrentTime, playerRef }) => {
     progressPercentage = (timeToSet / duration) * 100
     // console.log(playerRef)
     playerRef.current.seekTo(timeToSet)
+
     setCurrentTime(timeToSet)
   }
 

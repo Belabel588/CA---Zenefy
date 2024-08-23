@@ -17,7 +17,7 @@ export function Sort() {
     <div className='filter-container'>
       {labels.map((label) => {
         return (
-          <div className='label-container' key={label}>
+          <div className='label-container' key={label.name}>
             <input
               type='checkbox'
               id={label.name}

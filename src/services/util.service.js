@@ -7,6 +7,7 @@ export const utilService = {
   animateCSS,
   shuffleArray,
   capitalizeFirstLetter,
+  formatSongTime,
 }
 
 function makeId(length = 6) {
@@ -113,4 +114,12 @@ function shuffleArray(array) {
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+function formatSongTime(seconds) {
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+  const formattedSeconds =
+    remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds
+  return `${minutes}:${formattedSeconds}`
 }
