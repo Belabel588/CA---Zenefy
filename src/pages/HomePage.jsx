@@ -66,8 +66,9 @@ export function HomePage() {
               }}
             >
               <img className='station-cover' src={station.imgUrl} alt='' />
-              <span>{station.title}</span>
-
+              <Link to={`/station/${station.stationId}`}>
+                <span>{station.title}</span>
+              </Link>
               <div
                 className='play-button-container'
                 onClick={() => {
