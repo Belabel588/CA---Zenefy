@@ -22,6 +22,7 @@ import {
   removeStation,
 } from '../store/actions/station.actions.js'
 
+import { Sort } from '../cmps/Sort.jsx'
 import { setCurrentlyPlayedStation } from '../store/actions/station.actions.js'
 
 import { GoContainer } from 'react-icons/go'
@@ -52,11 +53,7 @@ export function HomePage() {
 
   return (
     <section className='section home-container'>
-      <div className='filter-container'>
-        <button>bla</button>
-        <button>bla</button>
-        <button>bla</button>
-      </div>
+      <Sort />
       <div className='stations-container'>
         {stations.map((station) => {
           return (

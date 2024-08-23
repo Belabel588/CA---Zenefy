@@ -6,6 +6,34 @@
 
 }
 
+.filter-container{
+
+    display: flex;
+    gap: 1em;
+    padding: 1em;
+
+    .sort-label{
+        background-color: rgba(255, 255, 255, 0.15);
+        padding: 0.1em 0.8em 0.1em;
+        border-radius: 50px;
+        cursor: pointer;
+
+    }
+
+
+    .label-container:has(input:checked){
+        .sort-label{
+            color: $background-black;
+            background-color: $white;
+        }
+    }
+
+
+    input{
+        display: none;
+    }
+}
+
 .stations-container{
 
     display: grid;
