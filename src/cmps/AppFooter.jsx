@@ -55,6 +55,7 @@ export function AppFooter() {
     setStation(currStation)
     const currSong = currStation.songs[0]
     setUrlToPlay(currSong)
+    setCurrentTime(0)
 
     setTimeout(() => {
       const durationToSet = playerRef.current.getDuration()

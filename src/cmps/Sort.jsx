@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { utilService } from '../services/util.service.js'
 
 export function Sort() {
-  const [checkedLabel, setCheckedLabel] = useState()
+  const [checkedLabel, setCheckedLabel] = useState('all')
 
   function onSetCheckedLabel({ target }) {
     console.log(target.id)
