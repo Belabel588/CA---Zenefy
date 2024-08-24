@@ -28,26 +28,22 @@ export function AppFooter() {
   )
 
   const [station, setStation] = useState([])
-  const urlToPlay = useRef()
+  // const urlToPlay = useRef()
+  const [urlToPlay, setUrlToPlay] = useState()
 
   const [currTimeMinutes, setCurrTimeMinutes] = useState()
   const [currTimeSeconds, setCurrTimeSeconds] = useState()
 
   useEffect(() => {
-    async function getStation() {
-      // const stationToSet = await stationService.query()
+    setIsPlaying(true)
+    setStation(currStation)
+    const currSong = currStation.songs[0]
+    setUrlToPlay(currSong)
 
-      setStation(currStation)
+    setTimeout(() => {
       const durationToSet = playerRef.current.getDuration()
       setDuration(durationToSet)
-    }
-    // getStation()
-    setStation(currStation)
-    const durationToSet = playerRef.current.getDuration()
-    setDuration(durationToSet)
-    setCurrentTime(0)
-    urlToPlay.current = currStation.songs[0]
-    setIsPlaying(true)
+    }, 1000)
   }, [currStation])
 
   useEffect(() => {
@@ -144,7 +140,7 @@ export function AppFooter() {
           alt=''
         />
         <div className='song-text-container'>
-          <span className='song-name'>Bla bla</span>
+          <b className='song-name'>Bla bla</b>
           <span className='song-artist'>By Blo blo</span>
         </div>
         <button>
@@ -186,7 +182,7 @@ export function AppFooter() {
           <ReactPlayer
             // url={'public/Pokémon Theme.mp3'}
             // url={currStation.currItem.url}
-            url={urlToPlay.current}
+            url={urlToPlay}
             style={{ display: 'none' }}
             playing={isPlaying}
             ref={playerRef}
