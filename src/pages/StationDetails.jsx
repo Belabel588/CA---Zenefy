@@ -95,7 +95,7 @@ export function StationDetails() {
                 <span>{1}</span>
                 <img src={station.imgUrl} alt='' />
                 <div className='name-artist-container'>
-                  <span>{song.songName}</span>
+                  <span className='song-name'>{song.songName}</span>
                   <span>{song.artist}</span>
                 </div>
               </div>
