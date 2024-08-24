@@ -67,7 +67,6 @@ export function SongIndex() {
           <button onClick={onAddSong}>Add a Song</button>
         )}
       </header>
-      <SongFilter filterBy={filterBy} setFilterBy={setFilterBy} />
       <SongList
         songs={songs}
         onRemoveSong={onRemoveSong}

@@ -12,6 +12,8 @@ import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { BiSkipNext } from 'react-icons/bi'
 import { BiSkipPrevious } from 'react-icons/bi'
+import { BiRepeat } from 'react-icons/bi'
+import { TiArrowShuffle } from 'react-icons/ti'
 
 import sample from '../../public/Pokémon Theme.mp3'
 
@@ -74,7 +76,7 @@ export function AppFooter() {
   const controlButtons = [
     {
       type: 'shuffle',
-      icon: <i className='fa-solid fa-shuffle'></i>,
+      icon: <TiArrowShuffle />,
     },
     {
       type: 'back',
@@ -105,7 +107,7 @@ export function AppFooter() {
     },
     {
       type: 'repeat',
-      icon: <i className='fa-solid fa-repeat'></i>,
+      icon: <BiRepeat />,
     },
   ]
   const buttonsContainer = [
@@ -171,7 +173,7 @@ export function AppFooter() {
               <button
                 key={button.type}
                 onClick={button.onClick}
-                className={`${button.type}-button`}
+                className={`button ${button.type}-button`}
               >
                 {button.icon}
               </button>

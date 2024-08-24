@@ -86,16 +86,22 @@ padding: 0px 0.5em 1em 0.5em;
 
             padding: 7.5px;
         }
-        i{
+
+        .button:not(.pause-button, .play-button){
             font-size: 1.5em;
             color: $grey-light;
             transition: 0.2s;
-
+            
             &:hover{
                 transform: scale(1.1);
                 color: $white;
             }
         }
+        .button.next-button, .button.back-button{
+
+            font-size: 2em;
+        }
+        
     }
 
 

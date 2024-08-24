@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Link, NavLink } from 'react-router-dom'
@@ -48,6 +48,8 @@ export function HomePage() {
 
   let isPlay
 
+  const isHover = useRef(false)
+
   function onSelectStation(stationId, ev) {
     ev.stopPropagation() // Stop the click from bubbling up to the Link
     ev.preventDefault()
@@ -61,17 +63,18 @@ export function HomePage() {
         {stations.map((station) => {
           return (
             <div
+              to={`/station/${station.stationId}`}
               className='station-container'
               key={station.stationId}
               onClick={() => {
-                // if (!isPlay) return
-                // navigate(`/song`)
+                if (isHover.current) return
+                navigate(`/station/${station.stationId}`)
               }}
             >
               <img className='station-cover' src={station.imgUrl} alt='' />
-              <Link to={`/station/${station.stationId}`}>
-                <span>{station.title}</span>
-              </Link>
+              <span>{station.title}</span>
+              {/* <Link to={`/station/${station.stationId}`}>
+              </Link> */}
               {/* <div
                 className='play-button-container'
                 onClick={() => {
@@ -82,7 +85,15 @@ export function HomePage() {
               ></div> */}
               {currStation.stationId === station.stationId ? (
                 <div className='playing-container'>
-                  <BiPause className='pause-button' />
+                  <BiPause
+                    className='pause-button'
+                    onMouseEnter={() => {
+                      isHover.current = true
+                    }}
+                    onMouseLeave={() => {
+                      isHover.current = false
+                    }}
+                  />
 
                   <img
                     className='playing-animation'
@@ -99,7 +110,15 @@ export function HomePage() {
                     isPlay = false
                   }}
                 >
-                  <BiPlay className='play-button' />
+                  <BiPlay
+                    className='play-button'
+                    onMouseEnter={() => {
+                      isHover.current = true
+                    }}
+                    onMouseLeave={() => {
+                      isHover.current = false
+                    }}
+                  />
                 </div>
               )}
             </div>
