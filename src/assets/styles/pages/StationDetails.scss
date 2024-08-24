@@ -74,6 +74,9 @@
       
       .station-title{
           font-size: calc(4vw);
+          @media (min-width:1200px) {
+            font-size: 3em;
+          }
           justify-self: end;
           height: fit-content;
           line-height: 1em;
