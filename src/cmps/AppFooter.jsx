@@ -36,9 +36,9 @@ export function AppFooter() {
   const currSongIndex = useSelector((stateSelector) => stateSelector.stationModule.currentSongIndex)
   console.log('CURR SONG INDEX IS : ' , currSongIndex);
   
-  const currSongUrl = useSelector((stateSelector) => stateSelector.stationModule.currentSongURL);
-  const nextSongUrl = useSelector((stateSelector) => stateSelector.stationModule.nextSongURL);
-  const prevSongUrl = useSelector((stateSelector) => stateSelector.stationModule.prevSongURL);
+  const currSongUrl = useSelector((stateSelector) => stateSelector.stationModule.songOrder.currentSongURL?.url);
+  const nextSongUrl = useSelector((stateSelector) => stateSelector.stationModule.songOrder.nextSongURL?.url);
+  const prevSongUrl = useSelector((stateSelector) => stateSelector.stationModule.songOrder.prevSongURL?.url);
   
   console.log('Current Song URL:', currSongUrl);
   console.log('Next Song URL:', nextSongUrl);
@@ -76,7 +76,7 @@ export function AppFooter() {
     const durationToSet = playerRef.current.getDuration()
     setDuration(durationToSet)
     setCurrentTime(0)
-    urlToPlay.current = currStation.songs[0]
+    urlToPlay.current = currSongUrl
     setIsPlaying(true)
   }, [currStation])
 
