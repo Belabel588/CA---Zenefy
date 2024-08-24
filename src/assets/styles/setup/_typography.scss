@@ -8,8 +8,23 @@
 }
 
 @font-face {
-    font-family: gotham-book;
-    src: url('../fonts/Spotify-Font/GothamMediumItalic.ttf');
+    font-family: 'GothamLight';
+    src: url('public/fonts/Gotham-Light.otf') format('opentype');
 }
+@font-face {
+    font-family: 'GothamBook';
+    src: url('public/fonts/Gotham-Book.otf') format('opentype');
+}
+@font-face {
+    font-family: 'GothamMedium';
+    src: url('public/fonts/Gotham-Medium.otf') format('opentype');
+}
+@font-face {
+    font-family: 'GothamBlackBold';
+    src: url('public/fonts/Gotham-Black.otf') format('opentype');
+}
+
+
+
 
 

@@ -22,11 +22,15 @@ import {
   removeStation,
 } from '../store/actions/station.actions.js'
 
+import { Sort } from '../cmps/Sort.jsx'
 import { setCurrentlyPlayedStation } from '../store/actions/station.actions.js'
 
 import { GoContainer } from 'react-icons/go'
 
 import { FaCirclePlay } from 'react-icons/fa6'
+import { BiPlay } from 'react-icons/bi'
+import { BiPause } from 'react-icons/bi'
+
 import playingAnimation from '../../public/img/playing.gif'
 
 // to do: prevent default Link
@@ -52,11 +56,7 @@ export function HomePage() {
 
   return (
     <section className='section home-container'>
-      <div className='filter-container'>
-        <button>bla</button>
-        <button>bla</button>
-        <button>bla</button>
-      </div>
+      <Sort />
       <div className='stations-container'>
         {stations.map((station) => {
           return (
@@ -69,25 +69,38 @@ export function HomePage() {
               }}
             >
               <img className='station-cover' src={station.imgUrl} alt='' />
-              <span>{station.title}</span>
-
-              <div
+              <Link to={`/station/${station.stationId}`}>
+                <span>{station.title}</span>
+              </Link>
+              {/* <div
                 className='play-button-container'
                 onClick={() => {
                   isPlay = true
                   onSelectStation(station.stationId, event)
                   isPlay = false
                 }}
-              >
-                <FaCirclePlay className='play-button' />
-              </div>
-              {currStation.stationId === station.stationId && (
-                <img
-                  className='playing-animation'
-                  style={{ width: '35px' }}
-                  src={playingAnimation}
-                  alt=''
-                />
+              ></div> */}
+              {currStation.stationId === station.stationId ? (
+                <div className='playing-container'>
+                  <BiPause className='pause-button' />
+
+                  <img
+                    className='playing-animation'
+                    src={playingAnimation}
+                    alt=''
+                  />
+                </div>
+              ) : (
+                <div
+                  className='play-button-container'
+                  onClick={() => {
+                    isPlay = true
+                    onSelectStation(station.stationId, event)
+                    isPlay = false
+                  }}
+                >
+                  <BiPlay className='play-button' />
+                </div>
               )}
             </div>
           )
