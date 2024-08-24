@@ -46,7 +46,7 @@
     grid-template-rows: repeat(2,1fr);
     grid-template-columns: repeat(4,1fr);
     gap: 1em;
-    @container (max-width: 700px) {
+    @container (max-width: 900px) {
 
         grid-template-columns: repeat(2,1fr);
       }
