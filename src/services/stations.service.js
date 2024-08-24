@@ -111,7 +111,7 @@ function getEmptyStation() {
   return {
     stationId: '', // Unique identifier for the station
     title: '', // Title of the station, e.g., "Katy Perry"
-    songs: [], // Array of song URLs
+    songs: [{ artist: '', id: '', songName: '', url: '' }], // Array of song URLs
     imgUrl: '', // Image URL for the station
     addedAt: Date.now(), // Timestamp for when the station was added
   }
@@ -180,224 +180,223 @@ function setNextPrevSong(station, currentSongIndex) {
 
 // Create demo stations for initial setup
 function _createStations() {
-  
-const demoMainData = [
-  {
-    _id: '5lZfP',
-    name: 'Pop Hits',
-    category: 'Songs',
-    subCategory: {
-      popStation: [
-        {
-          stationId: 'CevxZvSJLk8',
-          title: 'Katy Perry',
-          songs: [
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=CevxZvSJLk8',
-              songName: 'Roar',
-              artist: 'Katy Perry'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=ScG0cCUgjTY',
-              songName: 'Firework',
-              artist: 'Katy Perry'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=0KSOMA3QBU0',
-              songName: 'Dark Horse',
-              artist: 'Katy Perry'
-            }
-          ],
-          imgUrl: 'https://i.ytimg.com/vi/CevxZvSJLk8/mqdefault.jpg',
-          addedAt: 1724180672981
-        },
-        {
-          stationId: '3AtDnEC4zak',
-          title: 'Ed Sheeran',
-          songs: [
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=3AtDnEC4zak',
-              songName: 'Shape of You',
-              artist: 'Ed Sheeran'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8',
-              songName: 'Perfect',
-              artist: 'Ed Sheeran'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=_dK2tDK9grQ',
-              songName: 'Galway Girl',
-              artist: 'Ed Sheeran'
-            }
-          ],
-          imgUrl: 'https://i.ytimg.com/vi/3AtDnEC4zak/mqdefault.jpg',
-          addedAt: 1724180672981
-        },
-        {
-          stationId: '2Vv-BfVoq4g',
-          title: 'Ed Sheeran',
-          songs: [
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=2Vv-BfVoq4g',
-              songName: 'Thinking Out Loud',
-              artist: 'Ed Sheeran'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=lp-EO5I60KA',
-              songName: 'Photograph',
-              artist: 'Ed Sheeran'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://www.youtube.com/watch?v=y83x7MgzWOA',
-              songName: 'Castle on the Hill',
-              artist: 'Ed Sheeran'
-            }
-          ],
-          imgUrl: 'https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg',
-          addedAt: 1724180672981
-        }
-      ],
-      rockStation: []
-    }
-  },
-  {
-    _id: 'IaHoi',
-    name: 'Tech Talks',
-    category: 'Podcasts',
-    likedByUsers: ['5qACl', 'qTqFE', 'Klids', 'UXTCI'],
-    subCategory: {
-      technologyStation: [
-        {
-          stationId: '1',
-          title: 'AI Experts',
-          songs: [
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://podcast.com/episode1',
-              songName: 'The Future of AI',
-              artist: 'Tech Guru'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://podcast.com/episode2',
-              songName: 'AI in Healthcare',
-              artist: 'Tech Guru'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://podcast.com/episode3',
-              songName: 'Ethics of AI',
-              artist: 'Tech Guru'
-            }
-          ],
-          imgUrl: 'https://podcast.com/episode1.jpg',
-          addedAt: 1724180672981
-        },
-        {
-          stationId: '2',
-          title: 'Blockchain Explained',
-          songs: [
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://podcast.com/episode2',
-              songName: 'Blockchain 101',
-              artist: 'Crypto Expert'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://podcast.com/episode3',
-              songName: 'Smart Contracts',
-              artist: 'Crypto Expert'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://podcast.com/episode4',
-              songName: 'Decentralization',
-              artist: 'Crypto Expert'
-            }
-          ],
-          imgUrl: 'https://podcast.com/episode2.jpg',
-          addedAt: 1724180672981
-        }
-      ],
-      innovationStation: []
-    }
-  },
-  {
-    _id: 'fI3lq',
-    name: 'Health Matters',
-    category: 'Educational',
-    likedByUsers: ['pvKz6', 'Qk0qZ'],
-    subCategory: {
-      healthStation: [
-        {
-          stationId: '4',
-          title: 'Mental Health',
-          songs: [
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://educational.com/lesson1',
-              songName: 'Understanding Mental Health',
-              artist: 'Health Coach'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://educational.com/lesson2',
-              songName: 'Coping Strategies',
-              artist: 'Health Coach'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://educational.com/lesson3',
-              songName: 'Mindfulness',
-              artist: 'Health Coach'
-            }
-          ],
-          imgUrl: 'https://educational.com/lesson1.jpg',
-          addedAt: 1724180672981
-        }
-      ],
-      wellnessStation: [
-        {
-          stationId: '5',
-          title: 'Nutrition Basics',
-          songs: [
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://educational.com/lesson2',
-              songName: 'Healthy Eating',
-              artist: 'Nutrition Expert'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://educational.com/lesson3',
-              songName: 'Meal Planning',
-              artist: 'Nutrition Expert'
-            },
-            {
-              id: stationUtilService.makeId(),
-              url: 'https://educational.com/lesson4',
-              songName: 'Supplements',
-              artist: 'Nutrition Expert'
-            }
-          ],
-          imgUrl: 'https://educational.com/lesson2.jpg',
-          addedAt: 1724180672981
-        }
-      ]
-    }
-  }
-]
+  const demoMainData = [
+    {
+      _id: '5lZfP',
+      name: 'Pop Hits',
+      category: 'Songs',
+      subCategory: {
+        popStation: [
+          {
+            stationId: 'CevxZvSJLk8',
+            title: 'Katy Perry',
+            songs: [
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=CevxZvSJLk8',
+                songName: 'Roar',
+                artist: 'Katy Perry',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=ScG0cCUgjTY',
+                songName: 'Firework',
+                artist: 'Katy Perry',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=0KSOMA3QBU0',
+                songName: 'Dark Horse',
+                artist: 'Katy Perry',
+              },
+            ],
+            imgUrl: 'https://i.ytimg.com/vi/CevxZvSJLk8/mqdefault.jpg',
+            addedAt: 1724180672981,
+          },
+          {
+            stationId: '3AtDnEC4zak',
+            title: 'Ed Sheeran',
+            songs: [
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=3AtDnEC4zak',
+                songName: 'Shape of You',
+                artist: 'Ed Sheeran',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=JGwWNGJdvx8',
+                songName: 'Perfect',
+                artist: 'Ed Sheeran',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=_dK2tDK9grQ',
+                songName: 'Galway Girl',
+                artist: 'Ed Sheeran',
+              },
+            ],
+            imgUrl: 'https://i.ytimg.com/vi/3AtDnEC4zak/mqdefault.jpg',
+            addedAt: 1724180672981,
+          },
+          {
+            stationId: '2Vv-BfVoq4g',
+            title: 'Ed Sheeran',
+            songs: [
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=2Vv-BfVoq4g',
+                songName: 'Thinking Out Loud',
+                artist: 'Ed Sheeran',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=lp-EO5I60KA',
+                songName: 'Photograph',
+                artist: 'Ed Sheeran',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://www.youtube.com/watch?v=y83x7MgzWOA',
+                songName: 'Castle on the Hill',
+                artist: 'Ed Sheeran',
+              },
+            ],
+            imgUrl: 'https://i.ytimg.com/vi/2Vv-BfVoq4g/mqdefault.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+        rockStation: [],
+      },
+    },
+    {
+      _id: 'IaHoi',
+      name: 'Tech Talks',
+      category: 'Podcasts',
+      likedByUsers: ['5qACl', 'qTqFE', 'Klids', 'UXTCI'],
+      subCategory: {
+        technologyStation: [
+          {
+            stationId: '1',
+            title: 'AI Experts',
+            songs: [
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://podcast.com/episode1',
+                songName: 'The Future of AI',
+                artist: 'Tech Guru',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://podcast.com/episode2',
+                songName: 'AI in Healthcare',
+                artist: 'Tech Guru',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://podcast.com/episode3',
+                songName: 'Ethics of AI',
+                artist: 'Tech Guru',
+              },
+            ],
+            imgUrl: 'https://podcast.com/episode1.jpg',
+            addedAt: 1724180672981,
+          },
+          {
+            stationId: '2',
+            title: 'Blockchain Explained',
+            songs: [
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://podcast.com/episode2',
+                songName: 'Blockchain 101',
+                artist: 'Crypto Expert',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://podcast.com/episode3',
+                songName: 'Smart Contracts',
+                artist: 'Crypto Expert',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://podcast.com/episode4',
+                songName: 'Decentralization',
+                artist: 'Crypto Expert',
+              },
+            ],
+            imgUrl: 'https://podcast.com/episode2.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+        innovationStation: [],
+      },
+    },
+    {
+      _id: 'fI3lq',
+      name: 'Health Matters',
+      category: 'Educational',
+      likedByUsers: ['pvKz6', 'Qk0qZ'],
+      subCategory: {
+        healthStation: [
+          {
+            stationId: '4',
+            title: 'Mental Health',
+            songs: [
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://educational.com/lesson1',
+                songName: 'Understanding Mental Health',
+                artist: 'Health Coach',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://educational.com/lesson2',
+                songName: 'Coping Strategies',
+                artist: 'Health Coach',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://educational.com/lesson3',
+                songName: 'Mindfulness',
+                artist: 'Health Coach',
+              },
+            ],
+            imgUrl: 'https://educational.com/lesson1.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+        wellnessStation: [
+          {
+            stationId: '5',
+            title: 'Nutrition Basics',
+            songs: [
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://educational.com/lesson2',
+                songName: 'Healthy Eating',
+                artist: 'Nutrition Expert',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://educational.com/lesson3',
+                songName: 'Meal Planning',
+                artist: 'Nutrition Expert',
+              },
+              {
+                id: stationUtilService.makeId(),
+                url: 'https://educational.com/lesson4',
+                songName: 'Supplements',
+                artist: 'Nutrition Expert',
+              },
+            ],
+            imgUrl: 'https://educational.com/lesson2.jpg',
+            addedAt: 1724180672981,
+          },
+        ],
+      },
+    },
+  ]
 
   // Save the demo stations to the storage
   stationUtilService.saveToStorage(STATION_KEY, demoMainData)

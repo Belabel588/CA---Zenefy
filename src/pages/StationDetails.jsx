@@ -1,3 +1,4 @@
+import { React } from 'react'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
@@ -20,6 +21,7 @@ import { BsThreeDots } from 'react-icons/bs'
 import { IoListSharp } from 'react-icons/io5'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
+import { utilService } from '../services/util.service.js'
 
 export function StationDetails() {
   const currStation = useSelector(
@@ -28,7 +30,7 @@ export function StationDetails() {
   const { stationId } = useParams()
   console.log(stationId)
   // const song = useSelector((storeState) => storeState.songModule.song)
-  const [station, setStation] = useState({})
+  const [station, setStation] = useState({ songs: [] })
 
   useEffect(() => {
     // loadSong(songId)
@@ -40,6 +42,8 @@ export function StationDetails() {
     console.log(stationToSet)
     setStation(stationToSet)
   }
+
+  function onPlaySong(sondId) {}
 
   return (
     <section className='station-details-container'>
@@ -78,8 +82,31 @@ export function StationDetails() {
           </div>
           <span>Album</span>
           <span className='date-added span'>Date Added</span>
-          <LuClock3 />
+          <LuClock3 className='time' />
         </div>
+        {station.songs.map((song) => {
+          return (
+            <div
+              className='song-container'
+              key={song.id}
+              onClick={() => onPlaySong(song.id)}
+            >
+              <div key={song.name} className='song-title-container'>
+                <span>{1}</span>
+                <img src={station.imgUrl} alt='' />
+                <div className='name-artist-container'>
+                  <span>{song.songName}</span>
+                  <span>{song.artist}</span>
+                </div>
+              </div>
+              <span key={utilService.makeId()}>{song.artist}</span>
+              <span key={utilService.makeId()}>{station.addedAt}</span>
+              <span className='time' key={utilService.makeId()}>
+                {'3:33'}
+              </span>
+            </div>
+          )
+        })}
       </div>
     </section>
   )

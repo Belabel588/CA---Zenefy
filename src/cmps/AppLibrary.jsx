@@ -15,7 +15,7 @@ export function AppLibrary() {
     loadStations(filterBy)
   }, [filterBy])
 
-  console.log(mainData)
+  // console.log(mainData)
 
   return (
     <div className='library-container'>

@@ -50,18 +50,29 @@ export function AppFooter() {
   const [currTimeMinutes, setCurrTimeMinutes] = useState()
   const [currTimeSeconds, setCurrTimeSeconds] = useState()
 
+  const currIdx = useRef()
+  const [currSong, setCurrSong] = useState({ songName: '', artist: '' })
+
   useEffect(() => {
+    if (!currIdx.current) currIdx.current = 0
     setIsPlaying(true)
     setStation(currStation)
-    const currSong = currStation.songs[0]
-    setUrlToPlay(currSong)
+
+    if (currStation) {
+      console.log(currStation)
+      setCurrSong(currStation.songs[currIdx.current])
+      if (currStation.songs[currIdx.current].url) {
+        setUrlToPlay(currStation.songs[currIdx.current].url)
+      }
+      console.log(currStation.songs[currIdx.current])
+    }
     setCurrentTime(0)
 
     setTimeout(() => {
       const durationToSet = playerRef.current.getDuration()
       setDuration(durationToSet)
     }, 1000)
-  }, [currStation])
+  }, [currStation, currIdx.current])
 
   useEffect(() => {
     if (!isPlaying) return
@@ -82,7 +93,13 @@ export function AppFooter() {
     {
       type: 'back',
       icon: <BiSkipPrevious />,
-      onClick: () => {},
+      onClick: () => {
+        if (currIdx.current - 1 < 0) {
+          currIdx.current = currStation.songs.length - 1
+        } else {
+          currIdx.current--
+        }
+      },
     },
     {
       type: 'play',
@@ -105,6 +122,14 @@ export function AppFooter() {
     {
       type: 'next',
       icon: <BiSkipNext />,
+      onClick: () => {
+        console.log(currIdx.current)
+        if (currIdx.current + 1 === currStation.songs.length) {
+          currIdx.current = 0
+        } else {
+          currIdx.current++
+        }
+      },
     },
     {
       type: 'repeat',
@@ -151,14 +176,10 @@ export function AppFooter() {
   return (
     <footer className='app-footer play-bar-container'>
       <div className='song-details-container'>
-        <img
-          src='https://static.euronews.com/articles/stories/07/84/14/80/808x808_cmsv2_40962530-93b0-5765-87ff-a1f821e8801f-7841480.jpg'
-          className='play-bar-cover'
-          alt=''
-        />
+        <img src={station.imgUrl} className='play-bar-cover' alt='' />
         <div className='song-text-container'>
-          <b className='song-name'>Bla bla</b>
-          <span className='song-artist'>By Blo blo</span>
+          <b className='song-name'>{currSong.songName}</b>
+          <span className='song-artist'>{currSong.artist}</span>
         </div>
         <button>
           <i className='fa-solid fa-circle-plus'></i>
