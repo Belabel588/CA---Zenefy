@@ -1,7 +1,12 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { setCurrentlyPlayedStation } from '../store/actions/station.actions';
+
 
 import React, { useState, useEffect, useRef } from 'react'
 import ReactPlayer from 'react-player'
+
+
 
 import { stationService } from '../services/stations.service.js'
 
@@ -19,9 +24,34 @@ export function AppFooter() {
 
   const [duration, setDuration] = useState(1)
 
+
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
   )
+
+  const currSongIndex = useSelector((stateSelector) => stateSelector.stationModule.currentSongIndex)
+  console.log('CURR SONG INDEX IS : ' , currSongIndex);
+  
+  const currSongUrl = useSelector((stateSelector) => stateSelector.stationModule.currentSongURL);
+  const nextSongUrl = useSelector((stateSelector) => stateSelector.stationModule.nextSongURL);
+  const prevSongUrl = useSelector((stateSelector) => stateSelector.stationModule.prevSongURL);
+  
+  console.log('Current Song URL:', currSongUrl);
+  console.log('Next Song URL:', nextSongUrl);
+  console.log('Previous Song URL:', prevSongUrl);
+  
+
+
+  useEffect(() => {
+    // Trigger the action to set a currently played station
+    setCurrentlyPlayedStation('2Vv-BfVoq4g'); // sets the current station to be played
+  }, []);
+
+
+  console.log(currStation);
+
+  console.log(currStation.songs);
+
 
   const [station, setStation] = useState([])
   const urlToPlay = useRef()
@@ -62,7 +92,7 @@ export function AppFooter() {
     {
       type: 'back',
       icon: <i className='fa-solid fa-backward-step'></i>,
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       type: 'play',
