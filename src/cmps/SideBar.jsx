@@ -4,7 +4,7 @@ import { AppLibrary } from "./AppLibrary";
 export function SideBar() {
   return (
     <div className="side-bar">
-      <AppNav />
+      {/* <AppNav /> */}
       <AppLibrary />
 
     </div>
