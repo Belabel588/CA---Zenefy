@@ -49,15 +49,27 @@ justify-items: center;
         // width: 400px;
         .play-button, .pause-button{
 
-            i{
-                font-size: 2.5em;
-                color: $white;
-                &:hover{
-                    color: $grey-light;
-                    
-                }
+            background-color: $white;
+            color: black;
+            font-size: 2em;
+            border: none;
+            border-radius: 50%;
+            padding: 7.5px 2.5px 7.5px 7.5px;
+            // padding: 10px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: 0.1s;
+            &:hover{
+                background-color: $grey-light;
+                transform: scale(1.05);
             }
+            
+            
+        }
+        .pause-button{
 
+            padding: 7.5px;
         }
         i{
             font-size: 1.5em;

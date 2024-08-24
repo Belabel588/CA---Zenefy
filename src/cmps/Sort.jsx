@@ -8,6 +8,10 @@ export function Sort() {
 
   function onSetCheckedLabel({ target }) {
     console.log(target.id)
+    if (target.id === checkedLabel) {
+      setCheckedLabel('all')
+      return
+    }
     setCheckedLabel(target.id)
   }
 

@@ -6,6 +6,9 @@ import ReactPlayer from 'react-player'
 import { stationService } from '../services/stations.service.js'
 import { utilService } from '../services/util.service.js'
 
+import { BiPlay } from 'react-icons/bi'
+import { BiPause } from 'react-icons/bi'
+
 import sample from '../../public/Pokémon Theme.mp3'
 
 export function AppFooter() {
@@ -70,7 +73,7 @@ export function AppFooter() {
     },
     {
       type: 'play',
-      icon: <i className='fa-solid fa-circle-play'></i>,
+      icon: <BiPlay />,
       onClick: () => {
         if (currentTime === duration) setCurrentTime(0)
         setIsPlaying(true)
@@ -81,7 +84,7 @@ export function AppFooter() {
     },
     {
       type: 'pause',
-      icon: <i className='fa-solid fa-circle-pause'></i>,
+      icon: <BiPause />,
       onClick: () => {
         setIsPlaying(false)
       },

@@ -14,8 +14,17 @@ import {
 import { stationService } from '../services/stations.service.js'
 
 import { LuClock3 } from 'react-icons/lu'
+import { FaCirclePlay } from 'react-icons/fa6'
+import { RxPlusCircled } from 'react-icons/rx'
+import { BsThreeDots } from 'react-icons/bs'
+import { IoListSharp } from 'react-icons/io5'
+import { BiPlay } from 'react-icons/bi'
+import { BiPause } from 'react-icons/bi'
 
 export function StationDetails() {
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
+  )
   const { stationId } = useParams()
   console.log(stationId)
   // const song = useSelector((storeState) => storeState.songModule.song)
@@ -39,24 +48,39 @@ export function StationDetails() {
 
         <div className='title-container'>
           <span>Playlist</span>
-          <h3 className='station-title'>{station.title}</h3>
+          <b className='station-title'>{station.title}</b>
+          <p className='playlist-summery'>Playlist summery here</p>
+          <span className='playlist-artist'>Playlist artist here</span>
         </div>
       </header>
-
-      <table className='liked-songs-table'>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Album</th>
-            <th>Date Added</th>
-            <th>
-              <LuClock3 />
-            </th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <div className='buttons-container'>
+        <div className='play-container'>
+          <div className='play-button-container'>
+            {currStation.stationId === station.stationId ? (
+              <BiPause className='pause-button' />
+            ) : (
+              <BiPlay className='play-button' />
+            )}
+          </div>
+          <RxPlusCircled className='option-button plus-button' />
+          <BsThreeDots className='option-button more-button' />
+        </div>
+        <div className='list-container'>
+          <span>List</span>
+          <IoListSharp />
+        </div>
+      </div>
+      <div className='items-container'>
+        <div className='info-container'>
+          <div className='title-container'>
+            <span>#</span>
+            <span>Title</span>
+          </div>
+          <span>Album</span>
+          <span className='date-added span'>Date Added</span>
+          <LuClock3 />
+        </div>
+      </div>
     </section>
   )
 }
