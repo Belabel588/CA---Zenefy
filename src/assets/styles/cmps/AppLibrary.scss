@@ -58,4 +58,82 @@ width:5rem;
 height:5rem;
 border-radius: 0.5rem;
   }
+
+  .station-container{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1em;
+    font-family: 'GothamBook';
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 0.8em;
+    cursor: pointer;
+    text-decoration: none;
+
+
+    &:hover{
+      background-color: rgba(255, 255, 255, 0.1);
+
+      .img-container{
+
+        .pause-button-container, .play-button-container{
+          display: flex;
+        }
+      }
+    }
+    
+    .img-container{
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      
+      height: 50px;
+      width: 50px;
+      img{
+        width: 50px;
+        height: 50px;
+        object-fit:scale-down;
+      }
+      
+      background-color: $green;
+      border-radius: 5px;
+      
+      .pause-button-container, .play-button-container{
+        justify-self: center;
+        background-color: rgba(0, 0, 0, 0.583);
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        
+        display: none;
+        align-items: center;
+        justify-items: center;
+        position: absolute;
+        font-size: 2em;
+        color: $white;
+        
+        .play-button, .pause-button{
+          width: 30px;
+          height: 30px;
+          margin: 0 auto;
+
+        }
+
+      }
+    }
+
+    .info-container{
+
+      display: flex;
+      flex-direction: column;
+      b{
+        color: $white;
+      }
+
+      span{
+        color: $grey-light;
+      }
+    }
+  }
 }

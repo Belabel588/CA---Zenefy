@@ -1,21 +1,39 @@
 import { FaPlus } from 'react-icons/fa6'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { stationService } from '../services/stations.service'
 import { loadStations } from '../store/actions/station.actions'
 import { Link, NavLink } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
+
+import {
+  setIsPlaying,
+  setCurrentlyPlayedStation,
+} from '../store/actions/station.actions.js'
+
+import { BiPlay } from 'react-icons/bi'
+import { BiPause } from 'react-icons/bi'
 
 export function AppLibrary() {
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
-  const mainData = useSelector(
+  const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
+  )
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadStations(filterBy)
   }, [filterBy])
 
-  // console.log(mainData)
+  const isPlaying = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaying
+  )
+
+  const isHover = useRef(false)
 
   return (
     <div className='library-container'>
@@ -44,16 +62,66 @@ export function AppLibrary() {
         </button>
       </div>
 
-      <div className='library-stations'>
-        <NavLink to='/likedSongs'>
-          <button>
-            <img
-              className='liked-songs-station'
-              src='src/assets/styles/imgs/liked-songs.png'
-              alt='liked songs playlist'
-            />
-          </button>
-        </NavLink>
+      <div className='library-stations-container'>
+        {stations.map((station) => {
+          return (
+            <div
+              className='station-container'
+              key={station.stationId}
+              onClick={() => {
+                if (isHover.current) return
+                navigate(`station/${station.stationId}`)
+              }}
+            >
+              <div className='img-container'>
+                {(isPlaying && currStation.stationId === station.stationId && (
+                  <div
+                    className='pause-button-container'
+                    onMouseEnter={() => {
+                      console.log(isHover.current)
+                      isHover.current = true
+                    }}
+                    onMouseLeave={() => {
+                      isHover.current = false
+                    }}
+                  >
+                    <BiPause
+                      className='pause-button'
+                      onClick={() => setIsPlaying(false)}
+                    />
+                  </div>
+                )) || (
+                  <div
+                    className='play-button-container'
+                    onMouseEnter={() => {
+                      isHover.current = true
+                    }}
+                    onMouseLeave={() => {
+                      isHover.current = false
+                    }}
+                  >
+                    {' '}
+                    <BiPlay
+                      className='play-button'
+                      onClick={() => {
+                        setCurrentlyPlayedStation(station.stationId)
+                        setIsPlaying(true)
+                      }}
+                    />
+                  </div>
+                )}
+                <img src={station.imgUrl} alt='' />
+              </div>
+              <div className='info-container'>
+                <b>{station.title}</b>
+                <div className='playlist-details'>
+                  <span>Playlist</span>
+                  <span>{station.songs.length} songs</span>
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
