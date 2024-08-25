@@ -47,14 +47,13 @@ export function HomePage() {
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
   )
-
-  let isPlay
+  const isPlaying = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaying
+  )
 
   const isHover = useRef(false)
 
   function onSelectStation(stationId, ev) {
-    ev.stopPropagation() // Stop the click from bubbling up to the Link
-    ev.preventDefault()
     setCurrentlyPlayedStation(stationId)
   }
 
@@ -75,17 +74,8 @@ export function HomePage() {
             >
               <img className='station-cover' src={station.imgUrl} alt='' />
               <span>{station.title}</span>
-              {/* <Link to={`/station/${station.stationId}`}>
-              </Link> */}
-              {/* <div
-                className='play-button-container'
-                onClick={() => {
-                  isPlay = true
-                  onSelectStation(station.stationId, event)
-                  isPlay = false
-                }}
-              ></div> */}
-              {currStation.stationId === station.stationId ? (
+
+              {isPlaying && currStation.stationId === station.stationId ? (
                 <div className='playing-container'>
                   <BiPause
                     className='pause-button'
@@ -95,6 +85,7 @@ export function HomePage() {
                     onMouseLeave={() => {
                       isHover.current = false
                     }}
+                    onClick={() => setIsPlaying(false)}
                   />
 
                   <img
@@ -107,9 +98,8 @@ export function HomePage() {
                 <div
                   className='play-button-container'
                   onClick={() => {
-                    isPlay = true
                     onSelectStation(station.stationId, event)
-                    isPlay = false
+
                     setIsPlaying(true)
                   }}
                 >

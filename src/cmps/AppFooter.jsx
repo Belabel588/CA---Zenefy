@@ -47,7 +47,6 @@ export function AppFooter() {
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
   )
-  console.log(isPlaying)
 
   const [station, setStation] = useState([])
   // const urlToPlay = useRef()
