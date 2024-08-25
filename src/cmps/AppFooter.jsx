@@ -7,7 +7,11 @@ import ReactPlayer from 'react-player'
 
 import { stationService } from '../services/stations.service.js'
 import { utilService } from '../services/util.service.js'
-import { setIsPlaying } from '../store/actions/station.actions.js'
+import {
+  setNextSong,
+  setPrevSong,
+  setIsPlaying,
+} from '../store/actions/station.actions.js'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -24,7 +28,6 @@ export function AppFooter() {
   const [volume, setVolume] = useState(50)
   const latestVolume = useRef(volume)
   const isPlayingNow = useRef()
-  // const [isPlaying, setIsPlaying] = useState()
 
   const playerRef = useRef()
 
@@ -34,22 +37,12 @@ export function AppFooter() {
     (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
   )
 
-  const currSongUrl = useSelector(
-    (stateSelector) => stateSelector.stationModule.currentSongURL
-  )
-  const nextSongUrl = useSelector(
-    (stateSelector) => stateSelector.stationModule.nextSongURL
-  )
-  const prevSongUrl = useSelector(
-    (stateSelector) => stateSelector.stationModule.prevSongURL
-  )
-
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
   )
 
   const [station, setStation] = useState([])
-  // const urlToPlay = useRef()
+
   const [urlToPlay, setUrlToPlay] = useState()
 
   const [currTimeMinutes, setCurrTimeMinutes] = useState()
@@ -60,16 +53,14 @@ export function AppFooter() {
 
   useEffect(() => {
     if (!currIdx.current) currIdx.current = 0
-    // setIsPlaying(true)
+
     setStation(currStation)
 
     if (currStation) {
-      console.log(currStation)
       setCurrSong(currStation.songs[currIdx.current])
       if (currStation.songs[currIdx.current].url) {
         setUrlToPlay(currStation.songs[currIdx.current].url)
       }
-      console.log(currStation.songs[currIdx.current])
     }
     setCurrentTime(0)
 
@@ -103,6 +94,8 @@ export function AppFooter() {
           currIdx.current = currStation.songs.length - 1
         } else {
           currIdx.current--
+          setNextSong()
+          setPrevSong()
         }
       },
     },
@@ -133,6 +126,8 @@ export function AppFooter() {
           currIdx.current = 0
         } else {
           currIdx.current++
+          setNextSong()
+          setPrevSong()
         }
       },
     },
@@ -208,7 +203,6 @@ export function AppFooter() {
           })}
         </div>
         <div className='time-container'>
-          {/* <span>{`${currTimeMinutes}:${currTimeSeconds}`}</span> */}
           <span>{utilService.formatSongTime(currentTime)}</span>
 
           <ProgressBar
@@ -223,8 +217,6 @@ export function AppFooter() {
           />
 
           <ReactPlayer
-            // url={'public/Pokémon Theme.mp3'}
-            // url={currStation.currItem.url}
             url={urlToPlay}
             style={{ display: 'none' }}
             playing={isPlaying}
@@ -232,14 +224,10 @@ export function AppFooter() {
             volume={volume / 100}
           />
           <span>{utilService.formatSongTime(Math.ceil(duration))}</span>
-          {/* <span>{`${Math.floor(duration / 60)}:${Math.ceil(
-            (duration / 60 - Math.floor(duration / 60)) * 60
-          )}`}</span> */}
         </div>
       </div>
 
       <div className='buttons-volume-container'>
-        {/* <div className='buttons-container'> */}
         {buttonsContainer.map((button) => {
           if (button.type === 'volumeMute' && volume !== 0) return
           if (button.type === 'volumeHigh' && volume < 50) return
@@ -251,7 +239,7 @@ export function AppFooter() {
             </button>
           )
         })}
-        {/* </div> */}
+
         <VolumeBar
           volume={volume}
           setVolume={setVolume}

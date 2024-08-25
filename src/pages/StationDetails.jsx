@@ -31,6 +31,10 @@ export function StationDetails() {
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
   )
+  const songOrder = useSelector(
+    (stateSelector) => stateSelector.stationModule.songOrder
+  )
+
   const { stationId } = useParams()
 
   // const song = useSelector((storeState) => storeState.songModule.song)
@@ -49,13 +53,12 @@ export function StationDetails() {
 
   async function loadStation(stationId) {
     const stationToSet = await stationService.getStationById(stationId)
-    console.log(stationToSet)
+
     setStation(stationToSet)
   }
 
   async function onPlaySong(songId) {
     const song = await stationService.getItem(songId)
-    console.log(song)
   }
 
   return (

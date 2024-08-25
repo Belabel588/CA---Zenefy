@@ -131,8 +131,16 @@ border-radius: 0.5rem;
         color: $white;
       }
 
+      .playlist-details{
+        display: flex;
+        gap: 0.25em;
+      }
       span{
         color: $grey-light;
+      }
+      span:first-of-type::after{
+        content: ' •'
+
       }
     }
   }

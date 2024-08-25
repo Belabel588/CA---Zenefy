@@ -17,10 +17,10 @@ const initialState = {
   stations: [], // All stations data
   currentlyPlayedStation: stationService.getEmptyStation(), // Currently played station
   currentSongIndex: 0, // Track the index of the currently playing song
-  currSong: {
-    currentSongURL: '', // The currently playing song URL
-    nextSongURL: '', // The next song URL
-    prevSongURL: '', // The previous song URL
+  songOrder: {
+    currentSong: '', // The currently playing song URL
+    nextSong: '', // The next song URL
+    prevSong: '', // The previous song URL
   },
   filterBy: stationService.getDefaultFilter(), // Filter criteria
   isLoading: false, // Loading state for asynchronous actions
@@ -67,9 +67,9 @@ export function stationReducer(state = initialState, action = {}) {
         currentlyPlayedStation: action.currentlyPlayedStation, // Set the currently played station
         currentSongIndex: 0, // Reset the current song index to 0
         songOrder: {
-          currentSongURL: action.currentlyPlayedStation.songs[0] || '', // Set the first song as the current song (if available)
-          nextSongURL: action.currentlyPlayedStation.songs[1] || '', // Set the second song as the next song (if available)
-          prevSongURL:
+          currentSong: action.currentlyPlayedStation.songs[0] || '', // Set the first song as the current song (if available)
+          nextSong: action.currentlyPlayedStation.songs[1] || '', // Set the second song as the next song (if available)
+          prevSong:
             action.currentlyPlayedStation.songs[
               action.currentlyPlayedStation.songs.length - 1
             ] || '', // Set the last song as the previous song (if available)
@@ -82,11 +82,11 @@ export function stationReducer(state = initialState, action = {}) {
         ...state,
         currentSongIndex: action.index, // Update the current song index
         songOrder: {
-          currentSongURL: state.currentlyPlayedStation.songs[action.index], // Set the next song as the current song
-          nextSongURL:
+          currentSong: state.currentlyPlayedStation.songs[action.index], // Set the next song as the current song
+          nextSong:
             state.currentlyPlayedStation.songs[action.index + 1] ||
             state.currentlyPlayedStation.songs[0], // Set the next song (or loop to the first song)
-          prevSongURL:
+          prevSong:
             state.currentlyPlayedStation.songs[action.index - 1] ||
             state.currentlyPlayedStation.songs[
               state.currentlyPlayedStation.songs.length - 1
@@ -100,11 +100,11 @@ export function stationReducer(state = initialState, action = {}) {
         ...state,
         currentSongIndex: action.index, // Update the current song index
         songOrder: {
-          currentSongURL: state.currentlyPlayedStation.songs[action.index], // Set the previous song as the current song
-          nextSongURL:
+          currentSong: state.currentlyPlayedStation.songs[action.index], // Set the previous song as the current song
+          nextSong:
             state.currentlyPlayedStation.songs[action.index + 1] ||
             state.currentlyPlayedStation.songs[0], // Set the next song (or loop to the first song)
-          prevSongURL:
+          prevSong:
             state.currentlyPlayedStation.songs[action.index - 1] ||
             state.currentlyPlayedStation.songs[
               state.currentlyPlayedStation.songs.length - 1
