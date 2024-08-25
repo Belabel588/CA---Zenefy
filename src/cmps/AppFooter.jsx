@@ -7,6 +7,7 @@ import ReactPlayer from 'react-player'
 
 import { stationService } from '../services/stations.service.js'
 import { utilService } from '../services/util.service.js'
+import { setIsPlaying } from '../store/actions/station.actions.js'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -23,7 +24,7 @@ export function AppFooter() {
   const [volume, setVolume] = useState(50)
   const latestVolume = useRef(volume)
   const isPlayingNow = useRef()
-  const [isPlaying, setIsPlaying] = useState()
+  // const [isPlaying, setIsPlaying] = useState()
 
   const playerRef = useRef()
 
@@ -43,6 +44,11 @@ export function AppFooter() {
     (stateSelector) => stateSelector.stationModule.prevSongURL
   )
 
+  const isPlaying = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaying
+  )
+  console.log(isPlaying)
+
   const [station, setStation] = useState([])
   // const urlToPlay = useRef()
   const [urlToPlay, setUrlToPlay] = useState()
@@ -55,7 +61,7 @@ export function AppFooter() {
 
   useEffect(() => {
     if (!currIdx.current) currIdx.current = 0
-    setIsPlaying(true)
+    // setIsPlaying(true)
     setStation(currStation)
 
     if (currStation) {

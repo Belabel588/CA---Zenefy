@@ -8,6 +8,7 @@ import {
   SET_CURRENTLY_PLAYED_STATION,
   SET_NEXT_SONG,
   SET_PREV_SONG,
+  SET_IS_PLAYING,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -55,72 +56,80 @@ export async function saveStation(station) {
 // Set the currently played station by station ID
 export async function setCurrentlyPlayedStation(stationId) {
   try {
-    const station = await stationService.getStationById(stationId);
-    
+    const station = await stationService.getStationById(stationId)
+
     // Assume the first song in the station is the one to start with
-    const firstSong = station.songs[0];
-    const nextSong = station.songs[1] || null;
-    const prevSong = station.songs[station.songs.length - 1] || null;
-    
+    const firstSong = station.songs[0]
+    const nextSong = station.songs[1] || null
+    const prevSong = station.songs[station.songs.length - 1] || null
+
     store.dispatch({
       type: SET_CURRENTLY_PLAYED_STATION,
       currentlyPlayedStation: station,
       songOrder: {
         currentSong: firstSong,
         nextSong: nextSong,
-        prevSong: prevSong
-      }
-    });
-    
-    return station;
+        prevSong: prevSong,
+      },
+    })
+
+    return station
   } catch (err) {
-    console.error('Error setting currently played station:', err);
+    console.error('Error setting currently played station:', err)
   }
 }
 
-
 // Set the next song in the playlist
 export function setNextSong() {
-  const state = store.getState().stationModule;
-  const { currentlyPlayedStation, songOrder } = state;
+  const state = store.getState().stationModule
+  const { currentlyPlayedStation, songOrder } = state
   const currentSongIndex = currentlyPlayedStation.songs.findIndex(
-    song => song.id === songOrder.currentSong.id
-  );
-  
-  const nextSongIndex = (currentSongIndex + 1) % currentlyPlayedStation.songs.length;
-  const nextSong = currentlyPlayedStation.songs[nextSongIndex];
-  const prevSong = currentlyPlayedStation.songs[currentSongIndex];  // Current song becomes previous
+    (song) => song.id === songOrder.currentSong.id
+  )
+
+  const nextSongIndex =
+    (currentSongIndex + 1) % currentlyPlayedStation.songs.length
+  const nextSong = currentlyPlayedStation.songs[nextSongIndex]
+  const prevSong = currentlyPlayedStation.songs[currentSongIndex] // Current song becomes previous
 
   store.dispatch({
     type: SET_NEXT_SONG,
     songOrder: {
       currentSong: nextSong,
-      nextSong: currentlyPlayedStation.songs[nextSongIndex + 1] || currentlyPlayedStation.songs[0],
-      prevSong: prevSong
-    }
-  });
+      nextSong:
+        currentlyPlayedStation.songs[nextSongIndex + 1] ||
+        currentlyPlayedStation.songs[0],
+      prevSong: prevSong,
+    },
+  })
 }
-
 
 // Set the previous song in the playlist
 export function setPrevSong() {
-  const state = store.getState().stationModule;
-  const { currentlyPlayedStation, currentSongIndex } = state;
+  const state = store.getState().stationModule
+  const { currentlyPlayedStation, currentSongIndex } = state
 
   // Calculate the previous song index and wrap around using modulo
-  const prevSongIndex = (currentSongIndex - 1 + currentlyPlayedStation.songs.length) % currentlyPlayedStation.songs.length;
-  
-  const prevSong = currentlyPlayedStation.songs[prevSongIndex];
-  const nextSong = currentlyPlayedStation.songs[currentSongIndex];  // Current song becomes next
+  const prevSongIndex =
+    (currentSongIndex - 1 + currentlyPlayedStation.songs.length) %
+    currentlyPlayedStation.songs.length
+
+  const prevSong = currentlyPlayedStation.songs[prevSongIndex]
+  const nextSong = currentlyPlayedStation.songs[currentSongIndex] // Current song becomes next
 
   store.dispatch({
     type: SET_PREV_SONG,
     songOrder: {
       currentSong: prevSong,
       nextSong: nextSong,
-      prevSong: currentlyPlayedStation.songs[prevSongIndex - 1] || currentlyPlayedStation.songs[currentlyPlayedStation.songs.length - 1]
+      prevSong:
+        currentlyPlayedStation.songs[prevSongIndex - 1] ||
+        currentlyPlayedStation.songs[currentlyPlayedStation.songs.length - 1],
     },
-    index: prevSongIndex  // Update the current song index
-  });
+    index: prevSongIndex, // Update the current song index
+  })
 }
 
+export function setIsPlaying(isPlayingToSet) {
+  store.dispatch({ type: SET_IS_PLAYING, isPlaying: isPlayingToSet })
+}

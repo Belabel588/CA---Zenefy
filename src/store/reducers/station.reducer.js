@@ -10,6 +10,7 @@ export const SET_FILTER_BY = 'SET_FILTER_BY'
 export const SET_IS_LOADING = 'SET_IS_LOADING'
 export const SET_NEXT_SONG = 'SET_NEXT_SONG'
 export const SET_PREV_SONG = 'SET_PREV_SONG'
+export const SET_IS_PLAYING = 'SET_IS_PLAYING'
 
 // Initial state
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   },
   filterBy: stationService.getDefaultFilter(), // Filter criteria
   isLoading: false, // Loading state for asynchronous actions
+  isPlaying: false,
 }
 
 // Reducer function
@@ -110,6 +112,8 @@ export function stationReducer(state = initialState, action = {}) {
         },
       }
 
+    case SET_IS_PLAYING:
+      return { ...state, isPlaying: action.isPlaying }
     // Default case: return the current state
     default:
       return state

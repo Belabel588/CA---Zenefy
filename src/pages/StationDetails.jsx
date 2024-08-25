@@ -22,6 +22,10 @@ import { IoListSharp } from 'react-icons/io5'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { utilService } from '../services/util.service.js'
+import {
+  setCurrentlyPlayedStation,
+  setIsPlaying,
+} from '../store/actions/station.actions.js'
 
 export function StationDetails() {
   const currStation = useSelector(
@@ -31,6 +35,10 @@ export function StationDetails() {
 
   // const song = useSelector((storeState) => storeState.songModule.song)
   const [station, setStation] = useState({ songs: [] })
+
+  const isPlaying = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaying
+  )
 
   const isHover = useRef(false)
 
@@ -66,10 +74,19 @@ export function StationDetails() {
         <div className='buttons-container'>
           <div className='play-container'>
             <div className='play-button-container'>
-              {currStation.stationId === station.stationId ? (
-                <BiPause className='pause-button' />
-              ) : (
-                <BiPlay className='play-button' />
+              {(isPlaying && currStation.stationId === station.stationId && (
+                <BiPause
+                  className='pause-button'
+                  onClick={() => setIsPlaying(false)}
+                />
+              )) || (
+                <BiPlay
+                  className='play-button'
+                  onClick={() => {
+                    setIsPlaying(true)
+                    setCurrentlyPlayedStation(station.stationId)
+                  }}
+                />
               )}
             </div>
             <RxPlusCircled className='option-button plus-button' />

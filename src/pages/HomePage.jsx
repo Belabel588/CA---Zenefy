@@ -22,6 +22,8 @@ import {
   removeStation,
 } from '../store/actions/station.actions.js'
 
+import { setIsPlaying } from '../store/actions/station.actions.js'
+
 import { Sort } from '../cmps/Sort.jsx'
 import { setCurrentlyPlayedStation } from '../store/actions/station.actions.js'
 
@@ -108,6 +110,7 @@ export function HomePage() {
                     isPlay = true
                     onSelectStation(station.stationId, event)
                     isPlay = false
+                    setIsPlaying(true)
                   }}
                 >
                   <BiPlay
