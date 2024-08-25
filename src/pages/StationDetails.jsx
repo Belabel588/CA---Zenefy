@@ -32,6 +32,8 @@ export function StationDetails() {
   // const song = useSelector((storeState) => storeState.songModule.song)
   const [station, setStation] = useState({ songs: [] })
 
+  const isHover = useRef(false)
+
   useEffect(() => {
     // loadSong(songId)
     loadStation(stationId)
@@ -43,8 +45,9 @@ export function StationDetails() {
     setStation(stationToSet)
   }
 
-  function onPlaySong(songId) {
-    console.log(songId)
+  async function onPlaySong(songId) {
+    const song = await stationService.getItem(songId)
+    console.log(song)
   }
 
   return (
@@ -93,9 +96,27 @@ export function StationDetails() {
                 className='song-container'
                 key={song.id}
                 onDoubleClick={() => onPlaySong(song.id)}
+                onMouseEnter={() => {
+                  console.log(isHover)
+                  isHover.current = true
+                }}
+                onMouseLeave={() => {
+                  isHover.current = false
+                }}
               >
                 <div key={song.name} className='song-title-container'>
-                  <span>{1}</span>
+                  <div className='idx-play-container'>
+                    <div className='item-idx-container'>
+                      <span className='item-idx'>1</span>
+                    </div>
+                    <div className='play-pause-container'>
+                      {true ? (
+                        <BiPause className='pause-button' />
+                      ) : (
+                        <BiPlay className='play-button' />
+                      )}
+                    </div>
+                  </div>
                   <img src={station.imgUrl} alt='' />
                   <div className='name-artist-container'>
                     <Link to={`/item/${song.id}`}>
