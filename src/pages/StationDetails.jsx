@@ -28,7 +28,7 @@ export function StationDetails() {
     (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
   )
   const { stationId } = useParams()
-  console.log(stationId)
+
   // const song = useSelector((storeState) => storeState.songModule.song)
   const [station, setStation] = useState({ songs: [] })
 
@@ -43,7 +43,9 @@ export function StationDetails() {
     setStation(stationToSet)
   }
 
-  function onPlaySong(sondId) {}
+  function onPlaySong(songId) {
+    console.log(songId)
+  }
 
   return (
     <section className='station-details-container'>
@@ -57,56 +59,61 @@ export function StationDetails() {
           <span className='playlist-artist'>Playlist artist here</span>
         </div>
       </header>
-      <div className='buttons-container'>
-        <div className='play-container'>
-          <div className='play-button-container'>
-            {currStation.stationId === station.stationId ? (
-              <BiPause className='pause-button' />
-            ) : (
-              <BiPlay className='play-button' />
-            )}
-          </div>
-          <RxPlusCircled className='option-button plus-button' />
-          <BsThreeDots className='option-button more-button' />
-        </div>
-        <div className='list-container'>
-          <span>List</span>
-          <IoListSharp />
-        </div>
-      </div>
-      <div className='items-container'>
-        <div className='info-container'>
-          <div className='title-container'>
-            <span>#</span>
-            <span>Title</span>
-          </div>
-          <span>Album</span>
-          <span className='date-added span'>Date Added</span>
-          <LuClock3 className='time' />
-        </div>
-        {station.songs.map((song) => {
-          return (
-            <div
-              className='song-container'
-              key={song.id}
-              onClick={() => onPlaySong(song.id)}
-            >
-              <div key={song.name} className='song-title-container'>
-                <span>{1}</span>
-                <img src={station.imgUrl} alt='' />
-                <div className='name-artist-container'>
-                  <span className='song-name'>{song.songName}</span>
-                  <span>{song.artist}</span>
-                </div>
-              </div>
-              <span key={utilService.makeId()}>{song.artist}</span>
-              <span key={utilService.makeId()}>{station.addedAt}</span>
-              <span className='time' key={utilService.makeId()}>
-                {'3:33'}
-              </span>
+      <div className='user-interface-container'>
+        <div className='buttons-container'>
+          <div className='play-container'>
+            <div className='play-button-container'>
+              {currStation.stationId === station.stationId ? (
+                <BiPause className='pause-button' />
+              ) : (
+                <BiPlay className='play-button' />
+              )}
             </div>
-          )
-        })}
+            <RxPlusCircled className='option-button plus-button' />
+            <BsThreeDots className='option-button more-button' />
+          </div>
+          <div className='list-container'>
+            <span>List</span>
+            <IoListSharp />
+          </div>
+        </div>
+        <div className='items-container'>
+          <div className='info-container'>
+            <div className='title-container'>
+              <span>#</span>
+              <span>Title</span>
+            </div>
+            <span>Album</span>
+            <span className='date-added span'>Date Added</span>
+            <LuClock3 className='time' />
+          </div>
+          {station.songs.map((song) => {
+            return (
+              <div
+                className='song-container'
+                key={song.id}
+                onDoubleClick={() => onPlaySong(song.id)}
+              >
+                <div key={song.name} className='song-title-container'>
+                  <span>{1}</span>
+                  <img src={station.imgUrl} alt='' />
+                  <div className='name-artist-container'>
+                    <Link to={`/item/${song.id}`}>
+                      {' '}
+                      <span className='song-name'>{song.songName}</span>
+                    </Link>
+                    <span>{song.artist}</span>
+                  </div>
+                </div>
+                <span key={utilService.makeId()}>{song.artist}</span>
+                <span key={utilService.makeId()}>{station.addedAt}</span>
+                <span className='time' key={utilService.makeId()}>
+                  {'3:33'}
+                </span>
+              </div>
+            )
+          })}
+        </div>{' '}
       </div>
     </section>
   )

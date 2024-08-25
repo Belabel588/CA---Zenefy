@@ -17,6 +17,7 @@ export const stationService = {
   getCategoryStats,
   playStation,
   setNextPrevSong, // New function to handle next/prev song
+  getItem,
 }
 
 // For Debug (easy access from console):
@@ -459,4 +460,22 @@ function _getStationCountBySubCategoryMap(stations) {
     return map
   }, {})
   return stationCountBySubCategoryMap
+}
+
+async function getItem(itemId) {
+  try {
+    const demoData = await stationStorageService.query(STATION_KEY)
+
+    const items = []
+    const stations = gatherAllStations(demoData)
+    stations.map((station) => {
+      station.songs.map((song) => {
+        items.push(song)
+      })
+    })
+    const item = items.find((item) => item.id === itemId)
+    return item
+  } catch (err) {
+    console.log(err)
+  }
 }

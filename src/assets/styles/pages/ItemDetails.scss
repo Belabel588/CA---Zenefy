@@ -1,15 +1,14 @@
-
-.station-details-container{
+.item-details-container{
     width: 100%;
     height: 100%;
-    // background-color: #2e1a47; 
+    background-color: #2e1a47; 
+    // background: linear-gradient(180deg, #7300ff, #191414);
     container-type: inline-size;
     
-  }
-  
-  .station-header{
+}
+
+.item-header{
     background: linear-gradient(180deg, #7300ff, #191414);
-    // background: linear-gradient(180deg, #7300ffd3, #7300ff31);
 
     display: grid;
     grid-template-columns: auto 1fr;
@@ -20,14 +19,13 @@
     height: 30%;
     min-height: 150px;
 
-    padding-bottom: 1em;
 
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
     container-type: inline-size;
 
 
-    .station-cover{
+    .item-cover{
       min-height: 120px;
       min-width: 120px;
 
@@ -67,7 +65,7 @@
       }
       
       
-      .station-title{
+      .item-title{
           font-size: calc(4vw);
           @media (min-width:1200px) {
             font-size: 3em;
@@ -85,8 +83,10 @@
   }
 
   .user-interface-container{
-    background: linear-gradient(180deg,  #7300ff51 ,#191414);
+    background: linear-gradient(180deg,  #7300ff08 ,#191414);
     padding-top: 0.5em;
+    height: 400px;
+    overflow: auto;
 
   }
 
@@ -162,112 +162,43 @@
       }
     }
   }
-  .items-container{
 
+  .item-info-container{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    align-items: center;
-    justify-items: center;
-    gap: 0.5em;
+    grid-template-columns: repeat(2,1fr);
+    align-items: start;
 
-    margin: 0px 2em 0px 2em;
-    .info-container{
-      grid-column: 1/-1;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      border-bottom: 1px solid #dddddd37;
-      // padding: 0em 1.5em 0em 1.5em;
-      width: 100%;
-      align-items: center;
-      justify-items: center;
-      padding: 0.5em 0.5em 0.5em 0.5em;
-
-      *{
-        font-family: 'GothamLight';
-        font-size: 0.9em;
-        color: $grey-light;
-      }
-      
-      .title-container{
-        justify-self: start;
+    .lyrics-container{
         display: flex;
-        align-items: center;
-        justify-items: center;
-        gap: 10px;
-
-      }
-    }
-    
-    
-    .date-added{
-      @container (max-width: 800px) {
-        
-        display: none;
-      }
-
-    }
-
-    .time{
-      justify-self: end;
-    }
-
-  
-
-      .song-container{
-        grid-column: 1/-1;
-        width: 100%;
-
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        align-items: center;
-        justify-items: center;
-        border-radius: 5px;
-        padding: 0.5em 0.5em 0.5em 0.5em;
-
-        &:hover{
-          background-color: rgba(255, 255, 255, 0.1);
+        flex-direction: column;
+        padding: 20px;
+        p{
+            color: $grey-light;
+            font-size: 0.8em;
+            line-height: 1.6;
+            white-space: pre-wrap;
         }
-      }
+    }
 
-      .song-title-container{
-        grid-column: 1/2;
+    .artist-container{
         display: flex;
         align-items: center;
-        justify-items: center;
-        justify-self: start;
         gap: 1em;
+        border-radius: 5px;
+        padding: 0.5em;
+        width: 80%;
+        .title-container{
+            display: flex;
+            flex-direction: column;
+        }
 
         img{
-          border-radius: 5px;
-          height: calc(4vw);
-          width: 4vw;
-          object-fit:scale-down;
-          background-color: $green;
-
-          max-width: 50px;
-          max-height: 50px;
-
+            border-radius: 50px;
+            width: 75px;
+            height: 75px;
         }
-
-        .name-artist-container{
-          display: flex;
-          flex-direction: column;
-          .song-name{
-            color: $white;
-            font-size: 1.15em;
+        &:hover{
+            background-color: rgba(255, 255, 255, 0.1);
           }
-        }
-      }
-      *{
-        font-family: 'GothamLight';
-        font-size: 0.9em;
-        color: $grey-light;
-      }
-
-      // @container (max-width: 600px) {
-      // .date-added{
-        //   display: none;
-        // }  
-      }
-      
-  
+    }
+  }

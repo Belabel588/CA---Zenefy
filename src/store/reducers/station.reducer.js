@@ -13,22 +13,21 @@ export const SET_PREV_SONG = 'SET_PREV_SONG'
 
 // Initial state
 const initialState = {
-  stations: [],  // All stations data
-  currentlyPlayedStation: stationService.getEmptyStation(),  // Currently played station
-  currentSongIndex: 0,  // Track the index of the currently playing song
-  songOrder: {
-    currentSongURL: '',  // The currently playing song URL
-    nextSongURL: '',  // The next song URL
-    prevSongURL: '',  // The previous song URL
+  stations: [], // All stations data
+  currentlyPlayedStation: stationService.getEmptyStation(), // Currently played station
+  currentSongIndex: 0, // Track the index of the currently playing song
+  currSong: {
+    currentSongURL: '', // The currently playing song URL
+    nextSongURL: '', // The next song URL
+    prevSongURL: '', // The previous song URL
   },
-  filterBy: stationService.getDefaultFilter(),  // Filter criteria
-  isLoading: false,  // Loading state for asynchronous actions
+  filterBy: stationService.getDefaultFilter(), // Filter criteria
+  isLoading: false, // Loading state for asynchronous actions
 }
 
 // Reducer function
 export function stationReducer(state = initialState, action = {}) {
   switch (action.type) {
-    
     // When stations are loaded into the state
     case SET_STATIONS:
       return { ...state, stations: action.stations }
@@ -61,39 +60,54 @@ export function stationReducer(state = initialState, action = {}) {
 
     // When a new station is set as the currently played station
     case SET_CURRENTLY_PLAYED_STATION:
-      return { 
-        ...state, 
-        currentlyPlayedStation: action.currentlyPlayedStation,  // Set the currently played station
-        currentSongIndex: 0,  // Reset the current song index to 0
+      return {
+        ...state,
+        currentlyPlayedStation: action.currentlyPlayedStation, // Set the currently played station
+        currentSongIndex: 0, // Reset the current song index to 0
         songOrder: {
-          currentSongURL: action.currentlyPlayedStation.songs[0] || '',  // Set the first song as the current song (if available)
-          nextSongURL: action.currentlyPlayedStation.songs[1] || '',  // Set the second song as the next song (if available)
-          prevSongURL: action.currentlyPlayedStation.songs[action.currentlyPlayedStation.songs.length - 1] || ''  // Set the last song as the previous song (if available)
-        }
+          currentSongURL: action.currentlyPlayedStation.songs[0] || '', // Set the first song as the current song (if available)
+          nextSongURL: action.currentlyPlayedStation.songs[1] || '', // Set the second song as the next song (if available)
+          prevSongURL:
+            action.currentlyPlayedStation.songs[
+              action.currentlyPlayedStation.songs.length - 1
+            ] || '', // Set the last song as the previous song (if available)
+        },
       }
 
     // When moving to the next song in the playlist
     case SET_NEXT_SONG:
-      return { 
-        ...state, 
-        currentSongIndex: action.index,  // Update the current song index
+      return {
+        ...state,
+        currentSongIndex: action.index, // Update the current song index
         songOrder: {
-          currentSongURL: state.currentlyPlayedStation.songs[action.index],  // Set the next song as the current song
-          nextSongURL: state.currentlyPlayedStation.songs[action.index + 1] || state.currentlyPlayedStation.songs[0],  // Set the next song (or loop to the first song)
-          prevSongURL: state.currentlyPlayedStation.songs[action.index - 1] || state.currentlyPlayedStation.songs[state.currentlyPlayedStation.songs.length - 1]  // Set the previous song (or loop to the last song)
-        }
+          currentSongURL: state.currentlyPlayedStation.songs[action.index], // Set the next song as the current song
+          nextSongURL:
+            state.currentlyPlayedStation.songs[action.index + 1] ||
+            state.currentlyPlayedStation.songs[0], // Set the next song (or loop to the first song)
+          prevSongURL:
+            state.currentlyPlayedStation.songs[action.index - 1] ||
+            state.currentlyPlayedStation.songs[
+              state.currentlyPlayedStation.songs.length - 1
+            ], // Set the previous song (or loop to the last song)
+        },
       }
 
     // When moving to the previous song in the playlist
     case SET_PREV_SONG:
-      return { 
-        ...state, 
-        currentSongIndex: action.index,  // Update the current song index
+      return {
+        ...state,
+        currentSongIndex: action.index, // Update the current song index
         songOrder: {
-          currentSongURL: state.currentlyPlayedStation.songs[action.index],  // Set the previous song as the current song
-          nextSongURL: state.currentlyPlayedStation.songs[action.index + 1] || state.currentlyPlayedStation.songs[0],  // Set the next song (or loop to the first song)
-          prevSongURL: state.currentlyPlayedStation.songs[action.index - 1] || state.currentlyPlayedStation.songs[state.currentlyPlayedStation.songs.length - 1]  // Set the previous song (or loop to the last song)
-        }
+          currentSongURL: state.currentlyPlayedStation.songs[action.index], // Set the previous song as the current song
+          nextSongURL:
+            state.currentlyPlayedStation.songs[action.index + 1] ||
+            state.currentlyPlayedStation.songs[0], // Set the next song (or loop to the first song)
+          prevSongURL:
+            state.currentlyPlayedStation.songs[action.index - 1] ||
+            state.currentlyPlayedStation.songs[
+              state.currentlyPlayedStation.songs.length - 1
+            ], // Set the previous song (or loop to the last song)
+        },
       }
 
     // Default case: return the current state
