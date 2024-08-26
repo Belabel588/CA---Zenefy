@@ -73,6 +73,27 @@ export function AppFooter() {
     }, 1000)
   }, [currStation, currIdx])
 
+  function next() {
+    let idxToSet
+    if (currIdx + 1 === currStation.items.length) {
+      setCurrItemIdx(0)
+    } else {
+      idxToSet = currIdx + 1
+      setCurrItemIdx(idxToSet)
+    }
+  }
+
+  function prev() {
+    let idxToSet
+    if (currIdx - 1 < 0) {
+      idxToSet = currStation.items.length - 1
+      setCurrItemIdx(idxToSet)
+    } else {
+      idxToSet = currIdx - 1
+      setCurrItemIdx(idxToSet)
+    }
+  }
+
   useEffect(() => {
     if (!isPlaying) return
     const interval = setInterval(() => {
@@ -93,14 +114,15 @@ export function AppFooter() {
       type: 'back',
       icon: <BiSkipPrevious />,
       onClick: () => {
-        let idxToSet
-        if (currIdx - 1 < 0) {
-          idxToSet = currStation.items.length - 1
-          setCurrItemIdx(idxToSet)
-        } else {
-          idxToSet = currIdx - 1
-          setCurrItemIdx(idxToSet)
-        }
+        // let idxToSet
+        // if (currIdx - 1 < 0) {
+        //   idxToSet = currStation.items.length - 1
+        //   setCurrItemIdx(idxToSet)
+        // } else {
+        //   idxToSet = currIdx - 1
+        //   setCurrItemIdx(idxToSet)
+        // }
+        prev()
       },
     },
     {
@@ -125,13 +147,14 @@ export function AppFooter() {
       type: 'next',
       icon: <BiSkipNext />,
       onClick: () => {
-        let idxToSet
-        if (currIdx + 1 === currStation.items.length) {
-          setCurrItemIdx(0)
-        } else {
-          idxToSet = currIdx + 1
-          setCurrItemIdx(idxToSet)
-        }
+        // let idxToSet
+        // if (currIdx + 1 === currStation.items.length) {
+        //   setCurrItemIdx(0)
+        // } else {
+        //   idxToSet = currIdx + 1
+        //   setCurrItemIdx(idxToSet)
+        // }
+        next()
       },
     },
     {
@@ -224,6 +247,9 @@ export function AppFooter() {
             playing={isPlaying}
             ref={playerRef}
             volume={volume / 100}
+            onEnded={() => {
+              next()
+            }}
           />
           <span>{utilService.formatSongTime(Math.ceil(duration))}</span>
         </div>
