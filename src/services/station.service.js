@@ -16,6 +16,7 @@ export const stationService = {
   getEmptyStation,
   getDefaultFilter,
   getItem,
+  getItemsStation,
 }
 window.cs = stationService
 
@@ -95,6 +96,21 @@ async function getItem(itemId) {
   } catch (err) {
     console.log(err)
   }
+}
+
+async function getItemsStation(itemId) {
+  var stations = await storageService.query(STORAGE_KEY)
+  console.log(stations)
+  let stationToReturn
+  stations.map((station) => {
+    // if (stationToReturn) return
+    station.items.map((item) => {
+      if (item.id === itemId) {
+        stationToReturn = station
+      }
+    })
+  })
+  return stationToReturn
 }
 
 function _createStations() {

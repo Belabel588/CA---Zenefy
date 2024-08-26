@@ -5,14 +5,15 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
-import {
-  ADD_STATION,
-  SET_STATIONS,
-  UPDATE_STATION,
-  REMOVE_STATION,
-} from '../store/reducers/station.reducer.js'
 
 import { stationService } from '../services/station.service.js'
+import { utilService } from '../services/util.service.js'
+
+import {
+  setCurrStation,
+  setCurrItem,
+  setIsPlaying,
+} from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
 import { FaCirclePlay } from 'react-icons/fa6'
@@ -21,7 +22,6 @@ import { BsThreeDots } from 'react-icons/bs'
 import { IoListSharp } from 'react-icons/io5'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
-import { utilService } from '../services/util.service.js'
 
 export function ItemDetails() {
   const { itemId } = useParams()
@@ -29,6 +29,10 @@ export function ItemDetails() {
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
+  )
+
+  const currItem = useSelector(
+    (stateSelector) => stateSelector.stationModule.currItem
   )
 
   useEffect(() => {
@@ -55,16 +59,26 @@ export function ItemDetails() {
         <div className='buttons-container'>
           <div className='play-container'>
             <div className='play-button-container'>
-              {isPlaying ? (
-                <BiPause className='pause-button' />
+              {currItem.id === item.id && isPlaying ? (
+                <BiPause
+                  className='pause-button'
+                  onClick={() => {
+                    setIsPlaying(false)
+                  }}
+                />
               ) : (
-                <BiPlay className='play-button' />
+                <BiPlay
+                  className='play-button'
+                  onClick={async () => {
+                    const currStation = await stationService.getItemsStation(
+                      item.id
+                    )
+                    setCurrStation(currStation._id)
+                    setCurrItem(item.id, currStation)
+                    setIsPlaying(true)
+                  }}
+                />
               )}
-              {/* {currSong.itemId === item.itemId ? (
-              <BiPause className='pause-button' />
-            ) : (
-              <BiPlay className='play-button' />
-            )} */}
             </div>
             <RxPlusCircled className='option-button plus-button' />
             <BsThreeDots className='option-button more-button' />
