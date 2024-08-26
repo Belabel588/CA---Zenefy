@@ -1,14 +1,15 @@
 import { FaPlus } from 'react-icons/fa6'
 import { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { stationService } from '../services/stations.service'
-import { loadStations } from '../store/actions/station.actions'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 
+import { stationService } from '../services/station.service'
+import { loadStations } from '../store/actions/station.actions'
 import {
   setIsPlaying,
-  setCurrentlyPlayedStation,
+  setCurrStation,
+  setCurrItem,
 } from '../store/actions/station.actions.js'
 
 import { BiPlay } from 'react-icons/bi'
@@ -20,7 +21,7 @@ export function AppLibrary() {
     (storeState) => storeState.stationModule.stations
   )
   const currStation = useSelector(
-    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
+    (stateSelector) => stateSelector.stationModule.currStation
   )
 
   const navigate = useNavigate()
@@ -67,14 +68,14 @@ export function AppLibrary() {
           return (
             <div
               className='station-container'
-              key={station.stationId}
+              key={station._id}
               onClick={() => {
                 if (isHover.current) return
-                navigate(`station/${station.stationId}`)
+                navigate(`station/${station._id}`)
               }}
             >
               <div className='img-container'>
-                {(isPlaying && currStation.stationId === station.stationId && (
+                {(isPlaying && currStation._id === station._id && (
                   <div
                     className='pause-button-container'
                     onMouseEnter={() => {
@@ -104,19 +105,20 @@ export function AppLibrary() {
                     <BiPlay
                       className='play-button'
                       onClick={() => {
-                        setCurrentlyPlayedStation(station.stationId)
+                        setCurrStation(station._id)
+                        setCurrItem('', currStation)
                         setIsPlaying(true)
                       }}
                     />
                   </div>
                 )}
-                <img src={station.imgUrl} alt='' />
+                <img src={station.cover} alt='' />
               </div>
               <div className='info-container'>
                 <b>{station.title}</b>
                 <div className='playlist-details'>
                   <span>Playlist</span>
-                  <span>{station.songs.length} songs</span>
+                  <span>{station.items.length} songs</span>
                 </div>
               </div>
             </div>

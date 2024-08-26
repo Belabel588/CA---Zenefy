@@ -4,15 +4,8 @@ import { useSelector } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 
-import {
-  SET_STATIONS,
-  REMOVE_STATION,
-  UPDATE_STATION,
-  ADD_STATION,
-} from '../store/reducers/station.reducer.js'
-
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
-import { stationService } from '../services/stations.service.js'
+import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
 import { SongList } from '../cmps/SongList.jsx'
@@ -20,32 +13,29 @@ import { SongFilter } from '../cmps/SongFilter.jsx'
 import {
   loadStations,
   removeStation,
+  setCurrStation,
+  setIsPlaying,
+  setCurrItem,
 } from '../store/actions/station.actions.js'
 
-import { setIsPlaying } from '../store/actions/station.actions.js'
-
 import { Sort } from '../cmps/Sort.jsx'
-import { setCurrentlyPlayedStation } from '../store/actions/station.actions.js'
 
 import { GoContainer } from 'react-icons/go'
-
 import { FaCirclePlay } from 'react-icons/fa6'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
 import playingAnimation from '../../public/img/playing.gif'
 
-// to do: prevent default Link
-
 export function HomePage() {
+  const navigate = useNavigate()
+
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
-  console.log(stations)
-  const navigate = useNavigate()
 
   const currStation = useSelector(
-    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
+    (stateSelector) => stateSelector.stationModule.currStation
   )
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -53,8 +43,9 @@ export function HomePage() {
 
   const isHover = useRef(false)
 
-  function onSelectStation(stationId, ev) {
-    setCurrentlyPlayedStation(stationId)
+  function onSelectStation(stationId) {
+    setCurrStation(stationId)
+    setCurrItem('', currStation)
   }
 
   return (
@@ -64,18 +55,18 @@ export function HomePage() {
         {stations.map((station) => {
           return (
             <div
-              to={`/station/${station.stationId}`}
+              to={`/station/${station._id}`}
               className='station-container'
-              key={station.stationId}
+              key={station._id}
               onClick={() => {
                 if (isHover.current) return
-                navigate(`/station/${station.stationId}`)
+                navigate(`/station/${station._id}`)
               }}
             >
-              <img className='station-cover' src={station.imgUrl} alt='' />
+              <img className='station-cover' src={station.cover} alt='' />
               <span>{station.title}</span>
 
-              {isPlaying && currStation.stationId === station.stationId ? (
+              {isPlaying && currStation._id === station._id ? (
                 <div className='playing-container'>
                   <BiPause
                     className='pause-button'
@@ -98,7 +89,7 @@ export function HomePage() {
                 <div
                   className='play-button-container'
                   onClick={() => {
-                    onSelectStation(station.stationId, event)
+                    onSelectStation(station._id)
 
                     setIsPlaying(true)
                   }}

@@ -12,7 +12,7 @@ import {
   REMOVE_STATION,
 } from '../store/reducers/station.reducer.js'
 
-import { stationService } from '../services/stations.service.js'
+import { stationService } from '../services/station.service.js'
 
 import { LuClock3 } from 'react-icons/lu'
 import { FaCirclePlay } from 'react-icons/fa6'
@@ -27,30 +27,27 @@ export function ItemDetails() {
   const { itemId } = useParams()
   const [item, setItem] = useState({ imgUrl: '', title: '' })
 
+  const isPlaying = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaying
+  )
+
   useEffect(() => {
     getItem(itemId)
   }, [itemId])
 
   async function getItem(itemId) {
     const itemToSet = await stationService.getItem(itemId)
-    console.log(itemToSet)
     setItem(itemToSet)
   }
 
   return (
     <section className='item-details-container'>
       <header className='item-header'>
-        <img
-          className='item-cover'
-          src={
-            item.imgUrl ||
-            'https://images.prismic.io/milanote/df7eeb83a07162b45ac2e882cac055de9411054a_cover.jpg?auto=compress,format'
-          }
-        />
+        <img className='item-cover' src={item.cover} />
 
         <div className='title-container'>
           <span>Song</span>
-          <b className='item-title'>{item.songName}</b>
+          <b className='item-title'>{item.name}</b>
           <span className='playlist-artist'>{item.artist}</span>
         </div>
       </header>
@@ -58,6 +55,11 @@ export function ItemDetails() {
         <div className='buttons-container'>
           <div className='play-container'>
             <div className='play-button-container'>
+              {isPlaying ? (
+                <BiPause className='pause-button' />
+              ) : (
+                <BiPlay className='play-button' />
+              )}
               {/* {currSong.itemId === item.itemId ? (
               <BiPause className='pause-button' />
             ) : (
@@ -133,10 +135,7 @@ A denial`}
             </p>
           </div>
           <div className='artist-container'>
-            <img
-              src='https://images.prismic.io/milanote/df7eeb83a07162b45ac2e882cac055de9411054a_cover.jpg?auto=compress,format'
-              alt=''
-            />
+            <img src={item.cover} alt='' />
             <div className='title-container'>
               <b>Artist</b>
               <b>{item.artist}</b>

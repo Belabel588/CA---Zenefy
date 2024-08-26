@@ -28,13 +28,7 @@ async function query(filterBy = {}) {
   try {
     const stations = await stationStorageService.query(STATION_KEY)
 
-    if (Object.keys(filterBy).length === 0) {
-      // If filterBy is empty, return all stations combined
-      return gatherAllStations(stations)
-    }
-
-    // If filterBy has criteria, gather stations according to the filter
-    return gatherAllStations(stations, filterBy)
+    return
   } catch (error) {
     console.error('Error querying stations:', error)
     throw error
@@ -110,17 +104,17 @@ async function save(station) {
 // Function to get an empty station template
 function getEmptyStation() {
   return {
-    stationId: '', // Unique identifier for the station
-    title: '', // Title of the station, e.g., "Katy Perry"
-    songs: [{ artist: '', id: '', songName: '', url: '' }], // Array of song URLs
-    imgUrl: '', // Image URL for the station
-    addedAt: Date.now(), // Timestamp for when the station was added
+    _id: '',
+    title: '',
+    songs: [{ artist: '', id: '', name: '', url: '', cover: '' }],
+    cover: '',
+    addedAt: Date.now(),
   }
 }
 
 // Function to get the default filter object
 function getDefaultFilter() {
-  return { txt: '', subCategory: '' }
+  return { txt: '' }
 }
 
 // Function to generate a filter object from search parameters
@@ -180,8 +174,88 @@ function setNextPrevSong(station, currentSongIndex) {
 }
 
 // Create demo stations for initial setup
-function _createStations() {
-  const demoMainData = [
+function _createStations() {}
+
+// Helper function to gather all stations based on the filter
+function gatherAllStations(stations, filterBy = {}) {
+  let allStations = []
+
+  // Iterate over each station entry
+  stations.forEach((station) => {
+    // Iterate over each subCategory in the current station
+    Object.entries(station.subCategory).forEach(
+      ([subCategoryKey, stationArray]) => {
+        // If filterBy.subCategory exists, only include matching subCategories
+        if (!filterBy.subCategory || subCategoryKey === filterBy.subCategory) {
+          // If filterBy.txt exists, filter by text within the station title
+          const filteredStations = stationArray.filter((item) => {
+            if (filterBy.txt) {
+              const regExp = new RegExp(filterBy.txt, 'i')
+              return regExp.test(item.title)
+            }
+            return true // If no text filter, include all stations
+          })
+
+          // Combine the filtered stations into the allStations array
+          allStations = allStations.concat(filteredStations)
+        }
+      }
+    )
+  })
+
+  return allStations
+}
+
+// Helper function to set the next and previous station IDs
+async function _setNextPrevStationId(station) {
+  const stations = await stationStorageService.query(STATION_KEY)
+  const stationIdx = stations.findIndex(
+    (currStation) => currStation._id === station._id
+  )
+  const nextStation = stations[stationIdx + 1]
+    ? stations[stationIdx + 1]
+    : stations[0]
+  const prevStation = stations[stationIdx - 1]
+    ? stations[stationIdx - 1]
+    : stations[stations.length - 1]
+  station.nextStationId = nextStation._id
+  station.prevStationId = prevStation._id
+  return station
+}
+
+// Helper function to count stations by subcategory
+function _getStationCountBySubCategoryMap(stations) {
+  const stationCountBySubCategoryMap = stations.reduce((map, station) => {
+    Object.keys(station.subCategory).forEach((subCategory) => {
+      if (!map[subCategory]) map[subCategory] = 0
+      map[subCategory]++
+    })
+    return map
+  }, {})
+  return stationCountBySubCategoryMap
+}
+
+async function getItem(itemId) {
+  try {
+    const demoData = await stationStorageService.query(STATION_KEY)
+
+    const items = []
+    const stations = gatherAllStations(demoData)
+    stations.map((station) => {
+      station.songs.map((song) => {
+        items.push(song)
+      })
+    })
+    const item = items.find((item) => item.id === itemId)
+    return item
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+/*
+
+ const demoMainData = [
     {
       _id: '5lZfP',
       name: 'Pop Hits',
@@ -290,7 +364,7 @@ function _createStations() {
               {
                 id: stationUtilService.makeId(),
                 url: 'https://podcast.com/episode2',
-                songName: 'AI in Healthcare',
+                songName: 'AI in Healthstatione',
                 artist: 'Tech Guru',
               },
               {
@@ -401,81 +475,5 @@ function _createStations() {
 
   // Save the demo stations to the storage
   stationUtilService.saveToStorage(STATION_KEY, demoMainData)
-}
 
-// Helper function to gather all stations based on the filter
-function gatherAllStations(stations, filterBy = {}) {
-  let allStations = []
-
-  // Iterate over each station entry
-  stations.forEach((station) => {
-    // Iterate over each subCategory in the current station
-    Object.entries(station.subCategory).forEach(
-      ([subCategoryKey, stationArray]) => {
-        // If filterBy.subCategory exists, only include matching subCategories
-        if (!filterBy.subCategory || subCategoryKey === filterBy.subCategory) {
-          // If filterBy.txt exists, filter by text within the station title
-          const filteredStations = stationArray.filter((item) => {
-            if (filterBy.txt) {
-              const regExp = new RegExp(filterBy.txt, 'i')
-              return regExp.test(item.title)
-            }
-            return true // If no text filter, include all stations
-          })
-
-          // Combine the filtered stations into the allStations array
-          allStations = allStations.concat(filteredStations)
-        }
-      }
-    )
-  })
-
-  return allStations
-}
-
-// Helper function to set the next and previous station IDs
-async function _setNextPrevStationId(station) {
-  const stations = await stationStorageService.query(STATION_KEY)
-  const stationIdx = stations.findIndex(
-    (currStation) => currStation._id === station._id
-  )
-  const nextStation = stations[stationIdx + 1]
-    ? stations[stationIdx + 1]
-    : stations[0]
-  const prevStation = stations[stationIdx - 1]
-    ? stations[stationIdx - 1]
-    : stations[stations.length - 1]
-  station.nextStationId = nextStation._id
-  station.prevStationId = prevStation._id
-  return station
-}
-
-// Helper function to count stations by subcategory
-function _getStationCountBySubCategoryMap(stations) {
-  const stationCountBySubCategoryMap = stations.reduce((map, station) => {
-    Object.keys(station.subCategory).forEach((subCategory) => {
-      if (!map[subCategory]) map[subCategory] = 0
-      map[subCategory]++
-    })
-    return map
-  }, {})
-  return stationCountBySubCategoryMap
-}
-
-async function getItem(itemId) {
-  try {
-    const demoData = await stationStorageService.query(STATION_KEY)
-
-    const items = []
-    const stations = gatherAllStations(demoData)
-    stations.map((station) => {
-      station.songs.map((song) => {
-        items.push(song)
-      })
-    })
-    const item = items.find((item) => item.id === itemId)
-    return item
-  } catch (err) {
-    console.log(err)
-  }
-}
+*/

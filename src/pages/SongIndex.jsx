@@ -9,7 +9,7 @@ import {
 } from '../store/reducers/station.reducer.js'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
-import { stationService } from '../services/stations.service.js'
+import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
 import { SongList } from '../cmps/SongList.jsx'

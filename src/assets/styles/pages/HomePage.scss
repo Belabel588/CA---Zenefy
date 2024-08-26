@@ -95,13 +95,15 @@
 
         .station-cover{
             // padding: 5px;
-            border-radius: 5px;
-            height: calc(4vw);
-            width: 4vw;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+
+            height: calc(3.5vw);
+            width: 3.5vw;
             object-fit:scale-down;
 
-            min-width: 50px;
-            min-height: 50px;
+            min-width: 60px;
+            min-height: 60px;
 
         }
 

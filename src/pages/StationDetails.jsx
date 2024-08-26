@@ -5,14 +5,12 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
-import {
-  ADD_STATION,
-  SET_STATIONS,
-  UPDATE_STATION,
-  REMOVE_STATION,
-} from '../store/reducers/station.reducer.js'
+import { stationService } from '../services/station.service.js'
 
-import { stationService } from '../services/stations.service.js'
+import {
+  setCurrStation,
+  setIsPlaying,
+} from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
 import { FaCirclePlay } from 'react-icons/fa6'
@@ -22,23 +20,16 @@ import { IoListSharp } from 'react-icons/io5'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { utilService } from '../services/util.service.js'
-import {
-  setCurrentlyPlayedStation,
-  setIsPlaying,
-} from '../store/actions/station.actions.js'
 
 export function StationDetails() {
   const currStation = useSelector(
-    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
-  )
-  const songOrder = useSelector(
-    (stateSelector) => stateSelector.stationModule.songOrder
+    (stateSelector) => stateSelector.stationModule.currStation
   )
 
   const { stationId } = useParams()
 
   // const song = useSelector((storeState) => storeState.songModule.song)
-  const [station, setStation] = useState({ songs: [] })
+  const [station, setStation] = useState({ items: [] })
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -52,7 +43,7 @@ export function StationDetails() {
   }, [stationId])
 
   async function loadStation(stationId) {
-    const stationToSet = await stationService.getStationById(stationId)
+    const stationToSet = await stationService.getById(stationId)
 
     setStation(stationToSet)
   }
@@ -64,7 +55,7 @@ export function StationDetails() {
   return (
     <section className='station-details-container'>
       <header className='station-header'>
-        <img className='station-cover' src={station.imgUrl} />
+        <img className='station-cover' src={station.cover} />
 
         <div className='title-container'>
           <span>Playlist</span>
@@ -77,7 +68,7 @@ export function StationDetails() {
         <div className='buttons-container'>
           <div className='play-container'>
             <div className='play-button-container'>
-              {(isPlaying && currStation.stationId === station.stationId && (
+              {(isPlaying && currStation._id === station._id && (
                 <BiPause
                   className='pause-button'
                   onClick={() => setIsPlaying(false)}
@@ -87,7 +78,7 @@ export function StationDetails() {
                   className='play-button'
                   onClick={() => {
                     setIsPlaying(true)
-                    setCurrentlyPlayedStation(station.stationId)
+                    setCurrStation(station._id)
                   }}
                 />
               )}
@@ -110,12 +101,12 @@ export function StationDetails() {
             <span className='date-added span'>Date Added</span>
             <LuClock3 className='time' />
           </div>
-          {station.songs.map((song) => {
+          {station.items.map((item) => {
             return (
               <div
                 className='song-container'
-                key={song.id}
-                onDoubleClick={() => onPlaySong(song.id)}
+                key={item.id}
+                onDoubleClick={() => onPlaySong(item.id)}
                 onMouseEnter={() => {
                   console.log(isHover)
                   isHover.current = true
@@ -124,7 +115,7 @@ export function StationDetails() {
                   isHover.current = false
                 }}
               >
-                <div key={song.name} className='song-title-container'>
+                <div key={item.id} className='song-title-container'>
                   <div className='idx-play-container'>
                     <div className='item-idx-container'>
                       <span className='item-idx'>1</span>
@@ -137,17 +128,17 @@ export function StationDetails() {
                       )}
                     </div>
                   </div>
-                  <img src={station.imgUrl} alt='' />
+                  <img src={item.cover} alt='' />
                   <div className='name-artist-container'>
-                    <Link to={`/item/${song.id}`}>
+                    <Link to={`/item/${item.id}`}>
                       {' '}
-                      <span className='song-name'>{song.songName}</span>
+                      <span className='song-name'>{item.name}</span>
                     </Link>
-                    <span>{song.artist}</span>
+                    <span>{item.artist}</span>
                   </div>
                 </div>
-                <span key={utilService.makeId()}>{song.artist}</span>
-                <span key={utilService.makeId()}>{station.addedAt}</span>
+                <span>{item.album}</span>
+                <span>{station.addedAt}</span>
                 <span className='time' key={utilService.makeId()}>
                   {'3:33'}
                 </span>

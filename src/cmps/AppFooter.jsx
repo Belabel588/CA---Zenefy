@@ -1,16 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux'
 
-import { setCurrentlyPlayedStation } from '../store/actions/station.actions'
-
 import React, { useState, useEffect, useRef } from 'react'
 import ReactPlayer from 'react-player'
 
-import { stationService } from '../services/stations.service.js'
+import { stationService } from '../services/station.service.js'
 import { utilService } from '../services/util.service.js'
+
 import {
-  setNextSong,
-  setPrevSong,
+  setCurrStation,
+  setCurrItem,
   setIsPlaying,
+  setCurrItemIdx,
 } from '../store/actions/station.actions.js'
 
 import { BiPlay } from 'react-icons/bi'
@@ -34,11 +34,18 @@ export function AppFooter() {
   const [duration, setDuration] = useState(1)
 
   const currStation = useSelector(
-    (stateSelector) => stateSelector.stationModule.currentlyPlayedStation
+    (stateSelector) => stateSelector.stationModule.currStation
+  )
+  const currItem = useSelector(
+    (stateSelector) => stateSelector.stationModule.currItem
   )
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
+  )
+
+  const currIdx = useSelector(
+    (stateSelector) => stateSelector.stationModule.currItemIdx
   )
 
   const [station, setStation] = useState([])
@@ -48,18 +55,14 @@ export function AppFooter() {
   const [currTimeMinutes, setCurrTimeMinutes] = useState()
   const [currTimeSeconds, setCurrTimeSeconds] = useState()
 
-  const currIdx = useRef()
-  const [currSong, setCurrSong] = useState({ songName: '', artist: '' })
-
   useEffect(() => {
-    if (!currIdx.current) currIdx.current = 0
-
     setStation(currStation)
 
     if (currStation) {
-      setCurrSong(currStation.songs[currIdx.current])
-      if (currStation.songs[currIdx.current].url) {
-        setUrlToPlay(currStation.songs[currIdx.current].url)
+      setCurrItem(currStation.items[currIdx].id, currStation)
+      console.log(currItem)
+      if (currStation.items[currIdx].url) {
+        setUrlToPlay(currStation.items[currIdx].url)
       }
     }
     setCurrentTime(0)
@@ -68,7 +71,7 @@ export function AppFooter() {
       const durationToSet = playerRef.current.getDuration()
       setDuration(durationToSet)
     }, 1000)
-  }, [currStation, currIdx.current])
+  }, [currStation, currIdx])
 
   useEffect(() => {
     if (!isPlaying) return
@@ -90,12 +93,13 @@ export function AppFooter() {
       type: 'back',
       icon: <BiSkipPrevious />,
       onClick: () => {
-        if (currIdx.current - 1 < 0) {
-          currIdx.current = currStation.songs.length - 1
+        let idxToSet
+        if (currIdx - 1 < 0) {
+          idxToSet = currStation.items.length - 1
+          setCurrItemIdx(idxToSet)
         } else {
-          currIdx.current--
-          setNextSong()
-          setPrevSong()
+          idxToSet = currIdx - 1
+          setCurrItemIdx(idxToSet)
         }
       },
     },
@@ -121,13 +125,12 @@ export function AppFooter() {
       type: 'next',
       icon: <BiSkipNext />,
       onClick: () => {
-        console.log(currIdx.current)
-        if (currIdx.current + 1 === currStation.songs.length) {
-          currIdx.current = 0
+        let idxToSet
+        if (currIdx + 1 === currStation.items.length) {
+          setCurrItemIdx(0)
         } else {
-          currIdx.current++
-          setNextSong()
-          setPrevSong()
+          idxToSet = currIdx + 1
+          setCurrItemIdx(idxToSet)
         }
       },
     },
@@ -153,7 +156,6 @@ export function AppFooter() {
       type: 'volumeHigh',
       icon: <i className='fa-solid fa-volume-high'></i>,
       onClick: () => {
-        console.log(volume)
         setVolume(0)
       },
     },
@@ -176,10 +178,10 @@ export function AppFooter() {
   return (
     <footer className='app-footer play-bar-container'>
       <div className='song-details-container'>
-        <img src={station.imgUrl} className='play-bar-cover' alt='' />
+        <img src={currItem.cover} className='play-bar-cover' alt='' />
         <div className='song-text-container'>
-          <b className='song-name'>{currSong.songName}</b>
-          <span className='song-artist'>{currSong.artist}</span>
+          <b className='song-name'>{currItem.name}</b>
+          <span className='song-artist'>{currItem.artist}</span>
         </div>
         <button>
           <i className='fa-solid fa-circle-plus'></i>
@@ -278,7 +280,6 @@ const ProgressBar = ({
   function onSetTime({ target }) {
     const timeToSet = +target.value
     progressPercentage = (timeToSet / duration) * 100
-    // console.log(playerRef)
     playerRef.current.seekTo(timeToSet)
 
     setCurrentTime(timeToSet)
