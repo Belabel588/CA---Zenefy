@@ -16,6 +16,8 @@ export async function loadStations() {
   const filterBy = store.getState().stationModule.filterBy
   store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
+  console.log('filterBy IN ACTIONS IS : ' , filterBy);
+
   try {
     const stations = await stationService.query(filterBy)
     store.dispatch({ type: SET_STATIONS, stations })
