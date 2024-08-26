@@ -28,6 +28,9 @@ export function StationDetails() {
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
   )
+  const currItem = useSelector(
+    (stateSelector) => stateSelector.stationModule.currItem
+  )
 
   const { stationId } = useParams()
 
@@ -39,7 +42,7 @@ export function StationDetails() {
   )
 
   const isHover = useRef(false)
-
+  let counter = 0
   useEffect(() => {
     // loadSong(songId)
     loadStation(stationId)
@@ -122,7 +125,15 @@ export function StationDetails() {
                 <div key={item.id} className='song-title-container'>
                   <div className='idx-play-container'>
                     <div className='item-idx-container'>
-                      <span className='item-idx'>1</span>
+                      {currItem.id === item.id ? (
+                        <img
+                          className='playing-animation'
+                          src={playingAnimation}
+                          alt=''
+                        />
+                      ) : (
+                        <span className='item-idx'>{++counter}</span>
+                      )}
                     </div>
                     <div className='play-pause-container'>
                       {true ? (
@@ -134,7 +145,14 @@ export function StationDetails() {
                   </div>
                   <img src={item.cover} alt='' />
                   <div className='name-artist-container'>
-                    <Link to={`/item/${item.id}`} className='song-name'>
+                    <Link
+                      to={`/item/${item.id}`}
+                      className={
+                        currItem.id === item.id
+                          ? `song-name playing`
+                          : 'song-name'
+                      }
+                    >
                       {item.name}
                     </Link>
                     <span>{item.artist}</span>
