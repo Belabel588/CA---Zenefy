@@ -10,6 +10,7 @@ import { stationService } from '../services/station.service.js'
 import {
   setCurrStation,
   setIsPlaying,
+  setCurrItem,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -20,6 +21,8 @@ import { IoListSharp } from 'react-icons/io5'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { utilService } from '../services/util.service.js'
+
+import playingAnimation from '../../public/img/playing.gif'
 
 export function StationDetails() {
   const currStation = useSelector(
@@ -49,7 +52,9 @@ export function StationDetails() {
   }
 
   async function onPlaySong(songId) {
-    const song = await stationService.getItem(songId)
+    setCurrStation(station._id)
+    setCurrItem(songId, station)
+    setIsPlaying(true)
   }
 
   return (
@@ -108,7 +113,6 @@ export function StationDetails() {
                 key={item.id}
                 onDoubleClick={() => onPlaySong(item.id)}
                 onMouseEnter={() => {
-                  console.log(isHover)
                   isHover.current = true
                 }}
                 onMouseLeave={() => {
@@ -130,9 +134,8 @@ export function StationDetails() {
                   </div>
                   <img src={item.cover} alt='' />
                   <div className='name-artist-container'>
-                    <Link to={`/item/${item.id}`}>
-                      {' '}
-                      <span className='song-name'>{item.name}</span>
+                    <Link to={`/item/${item.id}`} className='song-name'>
+                      {item.name}
                     </Link>
                     <span>{item.artist}</span>
                   </div>
