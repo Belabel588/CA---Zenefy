@@ -1,3 +1,5 @@
+import { FastAverageColor } from 'fast-average-color'
+
 import { stationService } from '../../services/station.service.js'
 import {
   SET_STATIONS,
@@ -9,6 +11,7 @@ import {
   SET_IS_PLAYING,
   SET_CURR_ITEM,
   SET_CURR_IDX,
+  SET_CURR_COLOR,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -52,7 +55,7 @@ export async function setCurrStation(stationId) {
 
     store.dispatch({
       type: SET_CURR_STATION,
-      currStation: station,
+      currStation: { ...station },
     })
 
     return station
@@ -79,4 +82,21 @@ export function setCurrItemIdx(itemIdx) {
 
 export function setIsPlaying(isPlayingToSet) {
   store.dispatch({ type: SET_IS_PLAYING, isPlaying: isPlayingToSet })
+}
+
+export async function setCurrColor(cover) {
+  try {
+    const fac = new FastAverageColor()
+    let color
+
+    const img = new Image()
+    img.crossOrigin = 'Anonymous'
+    img.src = cover
+    color = await fac.getColorAsync(img)
+    const hex = color.hex
+
+    store.dispatch({ type: SET_CURR_COLOR, currColor: hex })
+  } catch (err) {
+    console.log(err)
+  }
 }

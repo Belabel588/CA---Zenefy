@@ -11,6 +11,7 @@ export const SET_IS_LOADING = 'SET_IS_LOADING'
 export const SET_CURR_ITEM = 'SET_CURR_ITEM'
 export const SET_CURR_IDX = 'SET_CURR_IDX'
 export const SET_IS_PLAYING = 'SET_IS_PLAYING'
+export const SET_CURR_COLOR = 'SET_CURR_COLOR'
 
 const initialState = {
   stations: [],
@@ -20,6 +21,7 @@ const initialState = {
   filterBy: stationService.getDefaultFilter(),
   isLoading: false,
   isPlaying: false,
+  currColor: '#4B0E8B',
 }
 
 export function stationReducer(state = initialState, action = {}) {
@@ -68,6 +70,9 @@ export function stationReducer(state = initialState, action = {}) {
 
     case SET_IS_PLAYING:
       return { ...state, isPlaying: action.isPlaying }
+
+    case SET_CURR_COLOR:
+      return { ...state, currColor: action.currColor }
 
     default:
       return state

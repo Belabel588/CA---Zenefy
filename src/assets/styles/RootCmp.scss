@@ -1,8 +1,17 @@
 
+.no-select {
+  user-select: none; /* Standard */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
 
 body{
   font-family: 'GothamMedium';
-
+  user-select: none; /* Standard */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 

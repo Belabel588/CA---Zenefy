@@ -4,7 +4,7 @@
 background-color: #000000;
 
 display: grid;
-grid-template-columns: auto 1fr auto;
+grid-template-columns: 1fr 2fr 1fr;
 align-items: center;
 justify-items: center;
 
@@ -14,6 +14,7 @@ padding: 0px 0.5em 1em 0.5em;
 // justify-content: space-between;
 
 .song-details-container{
+    justify-self: start;
     // width: 100%;
     display: flex;
     align-items: center;
@@ -71,6 +72,7 @@ padding: 0px 0.5em 1em 0.5em;
         }
         .play-button, .pause-button{
 
+            align-self: start;
             background-color: $white;
             color: black;
             font-size: 2em;
@@ -83,6 +85,7 @@ padding: 0px 0.5em 1em 0.5em;
             display: flex;
             align-items: center;
             justify-items: center;
+
             cursor: pointer;
             transition: 0.1s;
             &:hover{
@@ -214,6 +217,7 @@ padding: 0px 0.5em 1em 0.5em;
 
 .buttons-volume-container{
     align-self: end;
+    justify-self: end;
     display: flex;
     align-items: center;
     justify-items: center;

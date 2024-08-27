@@ -11,6 +11,7 @@ import {
   setCurrItem,
   setIsPlaying,
   setCurrItemIdx,
+  setCurrColor,
 } from '../store/actions/station.actions.js'
 
 import { BiPlay } from 'react-icons/bi'
@@ -60,9 +61,7 @@ export function AppFooter() {
   const [isRepeat, setIsRepeat] = useState(false)
 
   useEffect(() => {
-    setStation(currStation)
-    console.log(currIdx)
-    console.log(currStation)
+    // setStation(currStation)
 
     if (currStation) {
       setCurrItem(currStation.items[currIdx].id, currStation)
@@ -72,6 +71,7 @@ export function AppFooter() {
       }
     }
     setCurrentTime(0)
+    setCurrColor(currStation.cover)
 
     setTimeout(() => {
       const durationToSet = playerRef.current.getDuration()
@@ -93,8 +93,12 @@ export function AppFooter() {
   function next() {
     let idxToSet
     if (isRepeat) {
+      setCurrStation(currStation._id)
+      setCurrItem(currItem.id, currStation)
       setCurrItemIdx(currIdx)
       setCurrentTime(0)
+      playerRef.current.seekTo(0)
+
       return
     }
     if (isShuffle) {
@@ -126,18 +130,14 @@ export function AppFooter() {
     }
   }
 
-  function setMode() {
-    setIsRepeat((prev) => (prev = !prev))
-    setIsShuffle((prev) => (prev = !prev))
-  }
-
   const controlButtons = [
     {
       type: 'shuffle',
       icon: <TiArrowShuffle />,
       isActive: isShuffle,
       onClick: () => {
-        setMode()
+        setIsRepeat(false)
+        setIsShuffle((prev) => (prev = !prev))
       },
     },
     {
@@ -177,7 +177,8 @@ export function AppFooter() {
       icon: <BiRepeat />,
       isActive: isRepeat,
       onClick: () => {
-        setMode()
+        setIsShuffle(false)
+        setIsRepeat((prev) => (prev = !prev))
       },
     },
   ]

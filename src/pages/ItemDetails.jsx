@@ -34,6 +34,9 @@ export function ItemDetails() {
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
   )
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currStation
+  )
 
   useEffect(() => {
     getItem(itemId)
@@ -70,11 +73,16 @@ export function ItemDetails() {
                 <BiPlay
                   className='play-button'
                   onClick={async () => {
-                    const currStation = await stationService.getItemsStation(
+                    const station = await stationService.getItemsStation(
                       item.id
                     )
-                    setCurrStation(currStation._id)
-                    setCurrItem(item.id, currStation)
+                    if (
+                      JSON.stringify(currStation) !== JSON.stringify(station)
+                    ) {
+                      await setCurrStation(station._id)
+                    }
+                    await setCurrItem(item.id, station)
+
                     setIsPlaying(true)
                   }}
                 />
