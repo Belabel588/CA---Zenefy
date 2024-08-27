@@ -27,11 +27,12 @@ export function AppFooter() {
 
   const [volume, setVolume] = useState(50)
   const latestVolume = useRef(volume)
-  const isPlayingNow = useRef()
 
   const playerRef = useRef()
 
   const [duration, setDuration] = useState(1)
+
+  const timeToSet = useRef()
 
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
@@ -55,8 +56,13 @@ export function AppFooter() {
   const [currTimeMinutes, setCurrTimeMinutes] = useState()
   const [currTimeSeconds, setCurrTimeSeconds] = useState()
 
+  const [isShuffle, setIsShuffle] = useState(false)
+  const [isRepeat, setIsRepeat] = useState(false)
+
   useEffect(() => {
     setStation(currStation)
+    console.log(currIdx)
+    console.log(currStation)
 
     if (currStation) {
       setCurrItem(currStation.items[currIdx].id, currStation)
@@ -73,8 +79,34 @@ export function AppFooter() {
     }, 1000)
   }, [currStation, currIdx])
 
+  useEffect(() => {
+    if (!isPlaying) return
+    const interval = setInterval(() => {
+      setCurrentTime((prevTime) =>
+        prevTime < duration ? prevTime + 1 : prevTime
+      )
+    }, 1000) // Simulate progress every second
+
+    return () => clearInterval(interval)
+  }, [duration, isPlaying, currentTime])
+
   function next() {
     let idxToSet
+    if (isRepeat) {
+      setCurrItemIdx(currIdx)
+      setCurrentTime(0)
+      return
+    }
+    if (isShuffle) {
+      idxToSet = utilService.getRandomIntInclusive(
+        0,
+        currStation.items.length - 1,
+        [currIdx]
+      )
+      setCurrItemIdx(idxToSet)
+      return
+    }
+
     if (currIdx + 1 === currStation.items.length) {
       setCurrItemIdx(0)
     } else {
@@ -94,34 +126,24 @@ export function AppFooter() {
     }
   }
 
-  useEffect(() => {
-    if (!isPlaying) return
-    const interval = setInterval(() => {
-      setCurrentTime((prevTime) =>
-        prevTime < duration ? prevTime + 1 : prevTime
-      )
-    }, 1000) // Simulate progress every second
-
-    return () => clearInterval(interval)
-  }, [duration, isPlaying, currentTime])
+  function setMode() {
+    setIsRepeat((prev) => (prev = !prev))
+    setIsShuffle((prev) => (prev = !prev))
+  }
 
   const controlButtons = [
     {
       type: 'shuffle',
       icon: <TiArrowShuffle />,
+      isActive: isShuffle,
+      onClick: () => {
+        setMode()
+      },
     },
     {
       type: 'back',
       icon: <BiSkipPrevious />,
       onClick: () => {
-        // let idxToSet
-        // if (currIdx - 1 < 0) {
-        //   idxToSet = currStation.items.length - 1
-        //   setCurrItemIdx(idxToSet)
-        // } else {
-        //   idxToSet = currIdx - 1
-        //   setCurrItemIdx(idxToSet)
-        // }
         prev()
       },
     },
@@ -147,19 +169,16 @@ export function AppFooter() {
       type: 'next',
       icon: <BiSkipNext />,
       onClick: () => {
-        // let idxToSet
-        // if (currIdx + 1 === currStation.items.length) {
-        //   setCurrItemIdx(0)
-        // } else {
-        //   idxToSet = currIdx + 1
-        //   setCurrItemIdx(idxToSet)
-        // }
         next()
       },
     },
     {
       type: 'repeat',
       icon: <BiRepeat />,
+      isActive: isRepeat,
+      onClick: () => {
+        setMode()
+      },
     },
   ]
   const buttonsContainer = [
@@ -220,7 +239,11 @@ export function AppFooter() {
               <button
                 key={button.type}
                 onClick={button.onClick}
-                className={`button ${button.type}-button`}
+                className={
+                  button.isActive
+                    ? `button ${button.type}-button active`
+                    : `button ${button.type}-button`
+                }
               >
                 {button.icon}
               </button>
@@ -239,6 +262,7 @@ export function AppFooter() {
             currTimeSeconds={currTimeSeconds}
             setCurrTimeMinutes={setCurrTimeMinutes}
             setCurrTimeSeconds={setCurrTimeSeconds}
+            timeToSet={timeToSet}
           />
 
           <ReactPlayer
@@ -290,6 +314,7 @@ const ProgressBar = ({
   currTimeSeconds,
   setCurrTimeMinutes,
   setCurrTimeSeconds,
+  timeToSet,
 }) => {
   let progressPercentage = (currentTime / duration) * 100
 
@@ -304,11 +329,9 @@ const ProgressBar = ({
   }, [progressPercentage, isHovered])
 
   function onSetTime({ target }) {
-    const timeToSet = +target.value
-    progressPercentage = (timeToSet / duration) * 100
-    playerRef.current.seekTo(timeToSet)
-
-    setCurrentTime(timeToSet)
+    timeToSet.current = +target.value
+    progressPercentage = (timeToSet.current / duration) * 100
+    setCurrentTime(timeToSet.current)
   }
 
   return (
@@ -316,6 +339,9 @@ const ProgressBar = ({
       <input
         type='range'
         onChange={onSetTime}
+        onMouseUp={() => {
+          playerRef.current.seekTo(timeToSet.current)
+        }}
         value={currentTime}
         className='time-progress'
         ref={timeRef}
