@@ -28,14 +28,17 @@
         gap: 1em;
         
         // font-size: .8em;
+        a{
 
+            text-decoration: none;
+        }
         .active {
             // color: $clr1;
 
         }
         align-self: center;
   
-        .logo {
+        .logo-container {
             font-size: 1.8em;
             font-weight: bold;
             // margin-inline-end: 2em;     
@@ -43,6 +46,25 @@
 
                display: flex;
                align-items: center;
+               gap: 0.2em;
+               color: $white;
+               transition: 0.2s;
+               b{
+
+                  
+               }
+
+               img{
+                width: 50px;
+            
+             
+               }
+                &:hover{
+
+
+                        transform: scale(1.08);
+
+                }
                
             }
 

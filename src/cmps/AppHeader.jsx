@@ -16,6 +16,8 @@ import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 
+import zenefyLogo from '/public/img/zenefy-logo.png'
+
 export function AppHeader() {
   const user = useSelector((storeState) => storeState.userModule.user)
   const navigate = useNavigate()
@@ -50,8 +52,12 @@ export function AppHeader() {
   return (
     <header className='app-header full'>
       <nav>
-        <NavLink to='/' className='logo'>
-          <FaSpotify className='app-logo' />
+        <NavLink to='/'>
+          {/* <FaSpotify className='app-logo' /> */}
+          <div className='logo-container'>
+            <img src={zenefyLogo} alt='' />
+            <b>Zenefy</b>
+          </div>
         </NavLink>
       </nav>
       <div className='home-search-container'>
