@@ -24,7 +24,7 @@ async function query(filterBy = { txt: '', stationType: '' }) {
   console.log('FILTER BY INSIDE SERVICE QUERY IS:', filterBy);
 
   var stations = await storageService.query(STORAGE_KEY)
-  console.log('STATION BEFORE QUERY : ', stations);
+  // console.log('STATION BEFORE QUERY : ', stations);
 
   const { txt, stationType } = filterBy
 

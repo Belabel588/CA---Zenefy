@@ -6,7 +6,7 @@ import { AppFooter } from './cmps/AppFooter.jsx'
 
 import { HomePage } from '../src/pages/HomePage.jsx'
 import { AboutUs } from '../src/pages/AboutUs.jsx'
-import { SongIndex } from '../src/pages/SongIndex.jsx'
+import { SearchIndex } from '../src/pages/SearchIndex.jsx'
 import { StationDetails } from './pages/StationDetails.jsx'
 import { ItemDetails } from './pages/ItemDetails.jsx'
 import { UserDetails } from '../src/pages/UserDetails.jsx'
@@ -24,7 +24,7 @@ export function RootCmp() {
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<AboutUs />} />
-            <Route path='/song' element={<SongIndex />} />
+            <Route path='/search' element={<SearchIndex />} />
             <Route path='/station/:stationId' element={<StationDetails />} />
             <Route path='/item/:itemId' element={<ItemDetails />} />
             <Route path='/user/:userId' element={<UserDetails />} />

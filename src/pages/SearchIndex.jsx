@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { Link, NavLink } from 'react-router-dom'
 
 import {
   SET_STATIONS,
@@ -8,23 +9,31 @@ import {
   ADD_STATION,
 } from '../store/reducers/station.reducer.js'
 
-import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
+
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
 import { SongList } from '../cmps/SongList.jsx'
 import { SongFilter } from '../cmps/SongFilter.jsx'
+
 import {
   loadStations,
   removeStation,
 } from '../store/actions/station.actions.js'
 
-export function SongIndex() {
+export function SearchIndex() {
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
-  const songs = useSelector((storeState) => storeState.stationModule.stations)
+  // const songs = useSelector((storeState) => storeState.stationModule.stations)
+  const stations = useSelector((storeState) => storeState.stationModule.stations)
+
+  const stationTypes = stationService.getStationTypes(stations)
+
+
+
+  console.log('stations inside searchIndex : ', stations);
 
   useEffect(() => {
-    loadStations(filterBy)
+    loadStations()
   }, [filterBy])
 
   async function onRemoveSong(songId) {
@@ -67,11 +76,28 @@ export function SongIndex() {
           <button onClick={onAddSong}>Add a Song</button>
         )}
       </header>
-      <SongList
+      <section>
+        <ul className='search-list'>
+          {stations
+            .filter((station, index, currentStations) =>
+              currentStations.findIndex((currentStation) => currentStation.stationType === station.stationType) === index
+            )
+            .map((uniqueStation) => (
+              <li key={uniqueStation._id}>
+                <Link to={`/genere/${uniqueStation._id}`}>
+                  {uniqueStation.stationType}
+                </Link>
+              </li>
+            ))}
+        </ul>
+      </section>
+
+
+      {/* <SongList
         songs={songs}
         onRemoveSong={onRemoveSong}
         onUpdateSong={onUpdateSong}
-      />
+      /> */}
     </main>
   )
 }

@@ -1,0 +1,30 @@
+.search-list {
+
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+
+  li {
+    border-radius: 10px;
+    margin: 1em;
+    padding: 1em;
+    flex-grow: 1;
+    height: 6em;
+    justify-content: center;
+    align-content: center;
+  }
+
+  li:first-child {
+    background-color: rgba(19, 135, 135, 0.696);
+  }
+
+  li:nth-child(2) {
+    background-color: rgb(13, 43, 123);
+  }
+
+  a {
+    text-decoration: none;
+    color: white;
+    align-self: center;
+  }
+}

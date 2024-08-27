@@ -46,7 +46,7 @@ export function AppHeader() {
 
   function onSearchClick() {
     inputRef.current.focus()
-    navigate('/song')
+    navigate('/search')
   }
 
   return (
