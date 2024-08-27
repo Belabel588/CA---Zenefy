@@ -4,11 +4,37 @@
     overflow-y: auto;
     border-radius: 0.5rem;
     container-type: inline-size;
+    transition: 2s;
+
+    &::after{
+        content: '';
+
+
+
+        width: 10px;
+        height: 10px;
+        background-color: #ff000000;
+
+    }
+}
+.gradient-container-1, .gradient-container-2{
+    transition: 0.3s;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.gradient-container-2{
+    opacity: 1;
+    background: linear-gradient(0deg, $background-black 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%);   
 
 }
 
-.filter-container{
 
+.filter-container{
+    z-index: 2;
     display: flex;
     gap: 0.5em;
     padding: 1em;
@@ -47,7 +73,7 @@
 }
 
 .stations-container{
-
+    z-index: 2;
     display: grid;
     grid-template-rows: repeat(2,1fr);
     grid-template-columns: repeat(4,1fr);
