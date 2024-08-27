@@ -55,8 +55,8 @@ export function StationDetails() {
   }
 
   async function onPlaySong(songId) {
-    setCurrStation(station._id)
-    setCurrItem(songId, station)
+    await setCurrStation(station._id)
+    await setCurrItem(songId, station)
     setIsPlaying(true)
   }
 
