@@ -26,7 +26,7 @@ export function SearchIndex() {
   // const songs = useSelector((storeState) => storeState.stationModule.stations)
   const stations = useSelector((storeState) => storeState.stationModule.stations)
 
-  const stationTypes = stationService.getStationTypes(stations)
+  
 
 
 
