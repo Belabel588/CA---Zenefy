@@ -8,7 +8,7 @@
   }
   
   .station-header{
-    background: linear-gradient(180deg, #7300ff, #191414);
+    // background: linear-gradient(180deg, #7300ff, #191414);
     // background: linear-gradient(180deg, #7300ffd3, #7300ff31);
 
     display: grid;
@@ -97,6 +97,7 @@
     justify-items: center;
     justify-content: space-between;
     margin: 1em;
+    
 
     .play-container{
       display: flex;

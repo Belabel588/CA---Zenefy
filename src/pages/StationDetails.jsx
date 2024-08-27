@@ -11,6 +11,7 @@ import {
   setCurrStation,
   setIsPlaying,
   setCurrItem,
+  setCurrColor,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -33,9 +34,10 @@ export function StationDetails() {
   )
 
   const { stationId } = useParams()
+  console.log(stationId)
 
   // const song = useSelector((storeState) => storeState.songModule.song)
-  const [station, setStation] = useState({ items: [] })
+  const [station, setStation] = useState({ items: [{ id: '' }] })
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -43,9 +45,33 @@ export function StationDetails() {
 
   const isHover = useRef(false)
   let counter = 0
+
+  const pageRef = useRef()
+
+  const currColor = useSelector(
+    (stateSelector) => stateSelector.stationModule.currColor
+  )
+  const [currPageColor, setCurrColorPage] = useState(currColor)
+
+  // useEffect(() => {
+  //   loadStation(stationId)
+  //   // setCoverColor()
+  //   // loadSong(songId)
+  // }, [stationId, currColor])
+
   useEffect(() => {
-    // loadSong(songId)
-    loadStation(stationId)
+    const setCoverColor = async () => {
+      try {
+        await loadStation(stationId)
+        await setCurrColor(station.cover)
+        pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+        // setCurrColorPage((prev) => (prev = currColor))
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    setCoverColor()
   }, [stationId])
 
   async function loadStation(stationId) {
@@ -61,7 +87,7 @@ export function StationDetails() {
   }
 
   return (
-    <section className='station-details-container'>
+    <section className='station-details-container' ref={pageRef}>
       <header className='station-header'>
         <img className='station-cover' src={station.cover} />
 
@@ -136,10 +162,28 @@ export function StationDetails() {
                       )}
                     </div>
                     <div className='play-pause-container'>
-                      {true ? (
-                        <BiPause className='pause-button' />
+                      {currItem.id === item.id && isPlaying ? (
+                        <BiPause
+                          className='pause-button'
+                          onClick={() => {
+                            setIsPlaying(false)
+                          }}
+                        />
                       ) : (
-                        <BiPlay className='play-button' />
+                        <BiPlay
+                          className='play-button'
+                          onClick={async () => {
+                            if (
+                              JSON.stringify(currStation) !==
+                              JSON.stringify(station)
+                            ) {
+                              await setCurrStation(station._id)
+                            }
+                            await setCurrItem(item.id, station)
+
+                            setIsPlaying(true)
+                          }}
+                        />
                       )}
                     </div>
                   </div>

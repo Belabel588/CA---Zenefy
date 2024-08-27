@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
+import { FastAverageColor } from 'fast-average-color'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
@@ -16,6 +17,7 @@ import {
   setCurrStation,
   setIsPlaying,
   setCurrItem,
+  setCurrColor,
 } from '../store/actions/station.actions.js'
 
 import { Sort } from '../cmps/Sort.jsx'
@@ -40,16 +42,26 @@ export function HomePage() {
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
   )
+  const currColor = useSelector(
+    (stateSelector) => stateSelector.stationModule.currColor
+  )
 
   const isHover = useRef(false)
+
+  const pageRef = useRef()
+  const [currPageColor, setCurrColorPage] = useState(currColor)
+
+  useEffect(() => {
+    pageRef.current.style.transition = '0.2s'
+    pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+  }, [currColor])
 
   function onSelectStation(stationId) {
     setCurrStation(stationId)
     setCurrItem('', currStation)
   }
-
   return (
-    <section className='section home-container'>
+    <section className='section home-container' ref={pageRef}>
       <Sort />
       <div className='stations-container'>
         {stations.map((station) => {
@@ -61,6 +73,10 @@ export function HomePage() {
               onClick={() => {
                 if (isHover.current) return
                 navigate(`/station/${station._id}`)
+              }}
+              onMouseEnter={async () => {
+                await setCurrColor(station.cover)
+                // setCurrColorPage((prev) => (prev = currColor))
               }}
             >
               <img className='station-cover' src={station.cover} alt='' />

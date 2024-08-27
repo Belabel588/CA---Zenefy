@@ -145,7 +145,7 @@ function _createStations() {
           id: 'G2G3h3',
           name: 'Chamber of Reflection',
           album: 'Salad Days',
-          url: 'https://www.youtube.com/watch?v=6bfTTeZOrs4',
+          url: 'https://www.youtube.com/watch?v=pQsF3pzOc54',
           cover:
             'https://i.scdn.co/image/ab67616d0000b273ec6e9c13eeed14eedbd5f7c9',
           addedBy: 'user2',
@@ -157,7 +157,7 @@ function _createStations() {
           id: 'JX6Dy3',
           name: 'So Many Details',
           album: 'Anything in Return',
-          url: 'https://www.youtube.com/watch?v=7k6V7sUpFHk',
+          url: 'https://www.youtube.com/watch?v=O0_ardwzTrA',
           cover: 'https://i1.sndcdn.com/artworks-vffRvS0dZpkD-0-t500x500.jpg',
           addedBy: 'user3',
           likedBy: [],
@@ -365,7 +365,7 @@ function _createStations() {
           id: 'S0syJA',
           name: 'Better Together',
           album: 'In Between Dreams',
-          url: 'https://www.youtube.com/watch?v=u57d4_b_YgI',
+          url: 'https://www.youtube.com/watch?v=fqxNYjDFJUk',
           cover:
             'https://upload.wikimedia.org/wikipedia/en/f/f6/Better_Together_Luke_Combs.jpg',
           addedBy: 'user15',
