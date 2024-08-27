@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 
 import { AppHeader } from './cmps/AppHeader.jsx'
 import { AppFooter } from './cmps/AppFooter.jsx'
+import {SearchDynamicCmp} from './cmps/SearchDynamicCmp.jsx'
 
 import { HomePage } from '../src/pages/HomePage.jsx'
 import { AboutUs } from '../src/pages/AboutUs.jsx'
@@ -25,6 +26,8 @@ export function RootCmp() {
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<AboutUs />} />
             <Route path='/search' element={<SearchIndex />} />
+            <Route path='/genere/:stationId' element={<SearchDynamicCmp />} />
+
             <Route path='/station/:stationId' element={<StationDetails />} />
             <Route path='/item/:itemId' element={<ItemDetails />} />
             <Route path='/user/:userId' element={<UserDetails />} />

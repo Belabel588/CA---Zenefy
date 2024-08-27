@@ -17,6 +17,7 @@ export const stationService = {
   getDefaultFilter,
   getItem,
   getItemsStation,
+  getStationData,
 }
 window.cs = stationService
 
@@ -120,6 +121,29 @@ async function getItemsStation(itemId) {
   })
   return stationToReturn
 }
+
+async function getStationData(stationId) {
+
+  const stations = await storageService.query(STORAGE_KEY) 
+  const foundStation = stations.find(station => station._id === stationId)
+
+  if (!foundStation) {
+    return {
+      stationsWithSameType: [],
+      combinedTags: []
+    }
+  }
+
+
+  const stationsWithSameType = stations.filter(station => station.stationType === foundStation.stationType)
+  const combinedTags = stationsWithSameType.map(station => station.tags).flat()
+
+  return {
+    stationsWithSameType,
+    combinedTags
+  }
+}
+
 
 function _createStations() {
   const demoStations = [
