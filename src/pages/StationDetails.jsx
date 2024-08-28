@@ -1,6 +1,6 @@
 import { React } from 'react'
 import { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -8,6 +8,7 @@ import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 
 import { StationEditModal } from '../cmps/StationEditModal.jsx'
+import { EditOptions } from '../cmps/EditOptions.jsx'
 
 import {
   setCurrStation,
@@ -15,6 +16,7 @@ import {
   setCurrItem,
   setCurrColor,
   saveStation,
+  removeStation,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -29,6 +31,7 @@ import { utilService } from '../services/util.service.js'
 import playingAnimation from '../../public/img/playing.gif'
 
 export function StationDetails() {
+  const navigate = useNavigate()
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
   )
@@ -103,16 +106,61 @@ export function StationDetails() {
     const newStation = await saveStation(stationToSave)
     setStation(newStation)
   }
+  const editRef = useRef()
+  async function onDeleteStation(stationToDelete) {
+    if (stationToDelete.isLiked === true) return
+
+    try {
+      removeStation(station._id)
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  function toggleEdit() {
+    if (editRef.current.style.display !== 'flex') {
+      editRef.current.style.display = 'flex'
+    } else {
+      editRef.current.style.display = 'none'
+    }
+  }
+  const [isVisible, setIsVisible] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const handleRightClick = (event) => {
+    if (station.isLiked) return
+    event.preventDefault()
+    setPosition({ x: event.pageX, y: event.pageY })
+
+    setIsVisible(true)
+  }
+
+  const handleClickOutside = () => {
+    setIsVisible(false)
+  }
 
   return (
-    <section className='station-details-container' ref={pageRef}>
+    <section
+      className='station-details-container'
+      ref={pageRef}
+      onClick={handleClickOutside}
+    >
       <StationEditModal
         station={station}
         modalRef={modalRef}
         toggleModal={toggleModal}
         saveStation={sendToSaveStation}
       />
-      <header className='station-header'>
+      <EditOptions
+        station={station}
+        toggleModal={toggleModal}
+        editRef={editRef}
+        position={position}
+        isVisible={isVisible}
+        onDeleteStation={onDeleteStation}
+      />
+
+      <header className='station-header' onContextMenu={handleRightClick}>
         <img className='station-cover' src={station.cover} />
 
         <div className='title-container'>

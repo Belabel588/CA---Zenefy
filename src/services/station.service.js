@@ -77,8 +77,15 @@ async function save(station) {
     }
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
   } else {
+    var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {
-      title: station.title,
+      title: station.title || `My playlist #${stations.length}`,
+      items: station.items || [],
+      cover:
+        station.cover ||
+        'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+      preview: station.preview || '',
+      addedAt: station.addedAt || Date.now(),
       // Later, owner is set by the backend
       //   creator: userService.getLoggedinUser(),
     }
@@ -92,7 +99,8 @@ function getEmptyStation() {
     _id: '',
     title: '',
     items: [{ artist: '', id: '', name: '', url: '', cover: '' }],
-    cover: '',
+    cover:
+      'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
     addedAt: Date.now(),
   }
 }
