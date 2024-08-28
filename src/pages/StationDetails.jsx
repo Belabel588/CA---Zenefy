@@ -97,12 +97,18 @@ export function StationDetails() {
     }
   }
 
+  async function saveStation(stationToSave) {
+    const newStation = await stationService.save(stationToSave)
+    setStation(newStation)
+  }
+
   return (
     <section className='station-details-container' ref={pageRef}>
       <StationEditModal
         station={station}
         modalRef={modalRef}
         toggleModal={toggleModal}
+        saveStation={saveStation}
       />
       <header className='station-header'>
         <img className='station-cover' src={station.cover} />
@@ -112,7 +118,9 @@ export function StationDetails() {
           <b className='station-title' onClick={toggleModal}>
             {station.title}
           </b>
-          <p className='playlist-summery'>Playlist summery here</p>
+          {(station.preview && (
+            <p className='playlist-summery'>{station.preview}</p>
+          )) || <p className='playlist-summery'>Playlist summery here</p>}
           <span className='playlist-artist'>Playlist artist here</span>
         </div>
       </header>

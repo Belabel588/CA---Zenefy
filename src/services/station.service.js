@@ -63,7 +63,10 @@ async function save(station) {
     const stationToSave = {
       _id: station._id,
       title: station.title,
+      cover: station.cover,
+      preview: station.preview,
     }
+    console.log(stationToSave.cover)
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
   } else {
     const stationToSave = {

@@ -50,14 +50,24 @@
         // gap: 0.1em;
       align-items: center;
       width: 100%;
-  
-      img {
-        width: 95%;
-        height: 95%;
-        border-radius: 8px;
-        // margin-bottom: 20px;
-        align-self: center;
-        justify-self: center;
+
+      .img-container{
+          
+              img {
+                width: 95%;
+                height: 95%;
+                border-radius: 8px;
+                // margin-bottom: 20px;
+                align-self: center;
+                justify-self: center;
+              }
+
+              .file-label{
+                width: 100px;
+                height: 100px;
+                background-color: red;
+              }
+          
       }
   
       .input-name-container {
