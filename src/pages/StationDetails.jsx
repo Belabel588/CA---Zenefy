@@ -1,17 +1,22 @@
 import { React } from 'react'
 import { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 
+import { StationEditModal } from '../cmps/StationEditModal.jsx'
+import { EditOptions } from '../cmps/EditOptions.jsx'
+
 import {
   setCurrStation,
   setIsPlaying,
   setCurrItem,
   setCurrColor,
+  saveStation,
+  removeStation,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -26,6 +31,7 @@ import { utilService } from '../services/util.service.js'
 import playingAnimation from '../../public/img/playing.gif'
 
 export function StationDetails() {
+  const navigate = useNavigate()
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
   )
@@ -34,9 +40,7 @@ export function StationDetails() {
   )
 
   const { stationId } = useParams()
-  console.log(stationId)
 
-  // const song = useSelector((storeState) => storeState.songModule.song)
   const [station, setStation] = useState({ items: [{ id: '' }] })
 
   const isPlaying = useSelector(
@@ -47,6 +51,7 @@ export function StationDetails() {
   let counter = 0
 
   const pageRef = useRef()
+  const modalRef = useRef()
 
   const currColor = useSelector(
     (stateSelector) => stateSelector.stationModule.currColor
@@ -86,15 +91,84 @@ export function StationDetails() {
     setIsPlaying(true)
   }
 
+  function toggleModal() {
+    if (station.isLiked) return
+    if (modalRef.current.style.display !== 'flex') {
+      modalRef.current.style.display = 'flex'
+    } else {
+      modalRef.current.style.display = 'none'
+    }
+  }
+
+  async function sendToSaveStation(stationToSave) {
+    const newStation = await saveStation(stationToSave)
+    setStation(newStation)
+  }
+  const editRef = useRef()
+  async function onDeleteStation(stationToDelete) {
+    if (stationToDelete.isLiked === true) return
+
+    try {
+      await removeStation(station._id)
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  function toggleEdit() {
+    if (editRef.current.style.display !== 'flex') {
+      editRef.current.style.display = 'flex'
+    } else {
+      editRef.current.style.display = 'none'
+    }
+  }
+  const [isVisible, setIsVisible] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const handleRightClick = (event) => {
+    if (station.isLiked) return
+    event.preventDefault()
+    setPosition({ x: event.pageX, y: event.pageY })
+
+    setIsVisible(true)
+  }
+
+  const handleClickOutside = () => {
+    setIsVisible(false)
+  }
+
   return (
-    <section className='station-details-container' ref={pageRef}>
-      <header className='station-header'>
+    <section
+      className='station-details-container'
+      ref={pageRef}
+      onClick={handleClickOutside}
+    >
+      <StationEditModal
+        station={station}
+        modalRef={modalRef}
+        toggleModal={toggleModal}
+        saveStation={sendToSaveStation}
+      />
+      <EditOptions
+        station={station}
+        toggleModal={toggleModal}
+        editRef={editRef}
+        position={position}
+        isVisible={isVisible}
+        onDeleteStation={onDeleteStation}
+      />
+
+      <header className='station-header' onContextMenu={handleRightClick}>
         <img className='station-cover' src={station.cover} />
 
         <div className='title-container'>
           <span>Playlist</span>
-          <b className='station-title'>{station.title}</b>
-          <p className='playlist-summery'>Playlist summery here</p>
+          <b className='station-title' onClick={toggleModal}>
+            {station.title}
+          </b>
+          {(station.preview && (
+            <p className='playlist-summery'>{station.preview}</p>
+          )) || <p className='playlist-summery'>Playlist summery here</p>}
           <span className='playlist-artist'>Playlist artist here</span>
         </div>
       </header>

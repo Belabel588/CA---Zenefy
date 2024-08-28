@@ -9,8 +9,7 @@ import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
-import { SongList } from '../cmps/SongList.jsx'
-import { SongFilter } from '../cmps/SongFilter.jsx'
+import { StationList } from '../cmps/StationList.jsx'
 import {
   loadStations,
   removeStation,
@@ -49,12 +48,21 @@ export function HomePage() {
   const isHover = useRef(false)
 
   const pageRef = useRef()
+  const gradientRefOne = useRef()
+  const gradientRefTwo = useRef()
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   useEffect(() => {
-    pageRef.current.style.transition = '0.2s'
-    pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-  }, [currColor])
+    // loadStations()
+  }, [stations])
+
+  // useEffect(() => {
+  //   if (currColor === '#706da4') return
+  //   gradientRefOne.current.style.opacity = '0'
+  //   gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+  //   gradientRefTwo.current.style.opacity = '0'
+  //   gradientRefOne.current.style.opacity = '1'
+  // }, [currColor])
 
   function onSelectStation(stationId) {
     setCurrStation(stationId)
@@ -62,69 +70,13 @@ export function HomePage() {
   }
   return (
     <section className='section home-container' ref={pageRef}>
+      <div className='gradient-container-1' ref={gradientRefOne}></div>
+      <div className='gradient-container-2' ref={gradientRefTwo}></div>
       <Sort />
-      <div className='stations-container'>
-        {stations.map((station) => {
-          return (
-            <div
-              to={`/station/${station._id}`}
-              className='station-container'
-              key={station._id}
-              onClick={() => {
-                if (isHover.current) return
-                navigate(`/station/${station._id}`)
-              }}
-              onMouseEnter={async () => {
-                await setCurrColor(station.cover)
-                // setCurrColorPage((prev) => (prev = currColor))
-              }}
-            >
-              <img className='station-cover' src={station.cover} alt='' />
-              <span>{station.title}</span>
-
-              {isPlaying && currStation._id === station._id ? (
-                <div className='playing-container'>
-                  <BiPause
-                    className='pause-button'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                    onClick={() => setIsPlaying(false)}
-                  />
-
-                  <img
-                    className='playing-animation'
-                    src={playingAnimation}
-                    alt=''
-                  />
-                </div>
-              ) : (
-                <div
-                  className='play-button-container'
-                  onClick={() => {
-                    onSelectStation(station._id)
-
-                    setIsPlaying(true)
-                  }}
-                >
-                  <BiPlay
-                    className='play-button'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
+      <StationList
+        gradientRefOne={gradientRefOne}
+        gradientRefTwo={gradientRefTwo}
+      />
     </section>
   )
 }

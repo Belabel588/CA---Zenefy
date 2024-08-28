@@ -13,6 +13,7 @@ import { ItemDetails } from './pages/ItemDetails.jsx'
 import { UserDetails } from '../src/pages/UserDetails.jsx'
 import { LoginSignup } from '../src/pages/LoginSignup.jsx'
 import { SideBar } from './cmps/SideBar.jsx'
+import { StationEditModal } from './cmps/StationEditModal.jsx'
 
 export function RootCmp() {
   return (
@@ -33,6 +34,7 @@ export function RootCmp() {
             <Route path='/user/:userId' element={<UserDetails />} />
             <Route path='/login' element={<LoginSignup />} />
           </Routes>
+          {/* <StationEditModal /> */}
         </main>
       </div>
 

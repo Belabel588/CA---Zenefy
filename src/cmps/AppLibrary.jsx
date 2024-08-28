@@ -10,7 +10,11 @@ import {
   setIsPlaying,
   setCurrStation,
   setCurrItem,
+  saveStation,
 } from '../store/actions/station.actions.js'
+
+import { StationEditModal } from './StationEditModal.jsx'
+import { StationList } from '../cmps/StationList.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -20,6 +24,7 @@ export function AppLibrary() {
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
+
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
   )
@@ -27,7 +32,7 @@ export function AppLibrary() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    loadStations(filterBy)
+    // loadStations(filterBy)
   }, [filterBy])
 
   const isPlaying = useSelector(
@@ -35,6 +40,17 @@ export function AppLibrary() {
   )
 
   const isHover = useRef(false)
+
+  async function onCreateNewStation() {
+    const emptyStation = stationService.getEmptyStation()
+    emptyStation.items = []
+    try {
+      const newStation = await saveStation(emptyStation)
+      navigate(`/station/${newStation._id}`)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <div className='library-container'>
@@ -59,7 +75,7 @@ export function AppLibrary() {
         </div>
 
         <button>
-          <FaPlus className='plus-icon' />
+          <FaPlus className='plus-icon' onClick={onCreateNewStation} />
         </button>
       </div>
 
@@ -115,10 +131,23 @@ export function AppLibrary() {
                 <img src={station.cover} alt='' />
               </div>
               <div className='info-container'>
-                <b>{station.title}</b>
+                <b
+                  className={
+                    currStation._id === station._id
+                      ? `station-name playing`
+                      : 'station-name'
+                  }
+                >
+                  {station.title}
+                </b>
                 <div className='playlist-details'>
                   <span>Playlist</span>
-                  <span>{station.items.length} songs</span>
+                  {station.items.length && (
+                    <span>
+                      {station.items.length}{' '}
+                      {station.stationType !== 'music' ? 'podcasts' : 'songs'}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

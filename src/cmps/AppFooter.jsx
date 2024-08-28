@@ -12,6 +12,7 @@ import {
   setIsPlaying,
   setCurrItemIdx,
   setCurrColor,
+  saveStation,
 } from '../store/actions/station.actions.js'
 
 import { BiPlay } from 'react-icons/bi'
@@ -50,6 +51,10 @@ export function AppFooter() {
     (stateSelector) => stateSelector.stationModule.currItemIdx
   )
 
+  const stations = useSelector(
+    (stateSelector) => stateSelector.stationModule.stations
+  )
+
   const [station, setStation] = useState([])
 
   const [urlToPlay, setUrlToPlay] = useState()
@@ -65,7 +70,7 @@ export function AppFooter() {
 
     if (currStation) {
       setCurrItem(currStation.items[currIdx].id, currStation)
-      console.log(currItem)
+
       if (currStation.items[currIdx].url) {
         setUrlToPlay(currStation.items[currIdx].url)
       }
@@ -218,6 +223,14 @@ export function AppFooter() {
     },
   ]
 
+  function likeSong(itemToAdd) {
+    if (itemToAdd.url === '') return
+    console.log(itemToAdd)
+    const likedStation = stations.find((station) => station.isLiked)
+    likedStation.items.push(itemToAdd)
+    saveStation(likedStation)
+  }
+
   return (
     <footer className='app-footer play-bar-container'>
       <div className='song-details-container'>
@@ -226,7 +239,7 @@ export function AppFooter() {
           <b className='song-name'>{currItem.name}</b>
           <span className='song-artist'>{currItem.artist}</span>
         </div>
-        <button>
+        <button onClick={() => likeSong(currItem)}>
           <i className='fa-solid fa-circle-plus'></i>
         </button>
       </div>
