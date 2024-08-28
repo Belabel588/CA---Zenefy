@@ -14,6 +14,7 @@ import {
   setIsPlaying,
   setCurrItem,
   setCurrColor,
+  saveStation,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -90,6 +91,7 @@ export function StationDetails() {
   }
 
   function toggleModal() {
+    if (station.isLiked) return
     if (modalRef.current.style.display !== 'flex') {
       modalRef.current.style.display = 'flex'
     } else {
@@ -97,8 +99,8 @@ export function StationDetails() {
     }
   }
 
-  async function saveStation(stationToSave) {
-    const newStation = await stationService.save(stationToSave)
+  async function sendToSaveStation(stationToSave) {
+    const newStation = await saveStation(stationToSave)
     setStation(newStation)
   }
 
@@ -108,7 +110,7 @@ export function StationDetails() {
         station={station}
         modalRef={modalRef}
         toggleModal={toggleModal}
-        saveStation={saveStation}
+        saveStation={sendToSaveStation}
       />
       <header className='station-header'>
         <img className='station-cover' src={station.cover} />

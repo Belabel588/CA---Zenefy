@@ -218,6 +218,12 @@ export function AppFooter() {
     },
   ]
 
+  function likeSong(itemToAdd) {
+    if (itemToAdd.url === '') return
+    console.log(itemToAdd)
+    stationService.save()
+  }
+
   return (
     <footer className='app-footer play-bar-container'>
       <div className='song-details-container'>
@@ -226,7 +232,7 @@ export function AppFooter() {
           <b className='song-name'>{currItem.name}</b>
           <span className='song-artist'>{currItem.artist}</span>
         </div>
-        <button>
+        <button onClick={() => likeSong(currItem)}>
           <i className='fa-solid fa-circle-plus'></i>
         </button>
       </div>

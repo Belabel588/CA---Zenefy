@@ -58,15 +58,23 @@ async function remove(stationId) {
 }
 
 async function save(station) {
-  var savedStation
+  var stationToSave
+  let savedStation
   if (station._id) {
-    const stationToSave = {
-      _id: station._id,
-      title: station.title,
-      cover: station.cover,
-      preview: station.preview,
+    if (station.isLiked) {
+      stationToSave = {
+        _id: station._id,
+        items: station.items,
+      }
+    } else {
+      stationToSave = {
+        _id: station._id,
+        title: station.title,
+        cover: station.cover,
+        preview: station.preview,
+        items: station.items,
+      }
     }
-    console.log(stationToSave.cover)
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
   } else {
     const stationToSave = {
