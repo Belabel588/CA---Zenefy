@@ -66,22 +66,21 @@ export function StationList(gradientRefOne, gradientRefTwo) {
               navigate(`/station/${station._id}`)
             }}
             onMouseEnter={async () => {
-              gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
-              gradientRefTwo.current.style.opacity = '1'
-              await setCurrColor(station.cover)
+              // gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
+              // gradientRefTwo.current.style.opacity = '1'
+              // await setCurrColor(station.cover)
               // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
               // gradientRefTwo.current.style.opacity = '0'
               // gradientRefOne.current.style.opacity = '1'
               // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
               // gradientRefTwo.current.style.opacity = '0'
-
               // setCurrColorPage((prev) => (prev = currColor))
             }}
             onMouseLeave={async () => {
-              gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
-              gradientRefOne.current.style.opacity = '0'
-              gradientRefTwo.current.style.opacity = '1'
-              await setCurrColor()
+              // gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
+              // gradientRefOne.current.style.opacity = '0'
+              // gradientRefTwo.current.style.opacity = '1'
+              // await setCurrColor()
             }}
           >
             <img className='station-cover' src={station.cover} alt='' />

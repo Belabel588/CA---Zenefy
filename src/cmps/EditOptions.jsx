@@ -14,7 +14,6 @@ export function EditOptions({
   onDeleteStation,
 }) {
   let id = 0
-  console.log(position)
 
   const options = [
     {

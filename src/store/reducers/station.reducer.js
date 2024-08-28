@@ -32,10 +32,11 @@ export function stationReducer(state = initialState, action = {}) {
       return { ...state, stations: action.stations }
 
     case REMOVE_STATION:
-      const stations = state.stations.filter(
+      const newStations = state.stations.filter(
         (station) => station._id !== action.stationId
       )
-      return { ...state, stations }
+
+      return { ...state, stations: newStations }
 
     case ADD_STATION:
       return { ...state, stations: [...state.stations, action.station] }

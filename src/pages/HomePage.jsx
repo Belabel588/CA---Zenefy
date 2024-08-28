@@ -53,12 +53,16 @@ export function HomePage() {
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   useEffect(() => {
-    if (currColor === '#706da4') return
-    gradientRefOne.current.style.opacity = '0'
-    gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-    gradientRefTwo.current.style.opacity = '0'
-    gradientRefOne.current.style.opacity = '1'
-  }, [currColor])
+    // loadStations()
+  }, [stations])
+
+  // useEffect(() => {
+  //   if (currColor === '#706da4') return
+  //   gradientRefOne.current.style.opacity = '0'
+  //   gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+  //   gradientRefTwo.current.style.opacity = '0'
+  //   gradientRefOne.current.style.opacity = '1'
+  // }, [currColor])
 
   function onSelectStation(stationId) {
     setCurrStation(stationId)
@@ -73,82 +77,6 @@ export function HomePage() {
         gradientRefOne={gradientRefOne}
         gradientRefTwo={gradientRefTwo}
       />
-      {/* <div className='stations-container'>
-        {stations.map((station) => {
-          return (
-            <div
-              to={`/station/${station._id}`}
-              className='station-container'
-              key={station._id}
-              onClick={() => {
-                if (isHover.current) return
-                navigate(`/station/${station._id}`)
-              }}
-              onMouseEnter={async () => {
-                gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
-                gradientRefTwo.current.style.opacity = '1'
-                await setCurrColor(station.cover)
-                // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-                // gradientRefTwo.current.style.opacity = '0'
-                // gradientRefOne.current.style.opacity = '1'
-                // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-                // gradientRefTwo.current.style.opacity = '0'
-
-                // setCurrColorPage((prev) => (prev = currColor))
-              }}
-              onMouseLeave={async () => {
-                gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
-                gradientRefOne.current.style.opacity = '0'
-                gradientRefTwo.current.style.opacity = '1'
-                await setCurrColor()
-              }}
-            >
-              <img className='station-cover' src={station.cover} alt='' />
-              <span>{station.title}</span>
-
-              {isPlaying && currStation._id === station._id ? (
-                <div className='playing-container'>
-                  <BiPause
-                    className='pause-button'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                    onClick={() => setIsPlaying(false)}
-                  />
-
-                  <img
-                    className='playing-animation'
-                    src={playingAnimation}
-                    alt=''
-                  />
-                </div>
-              ) : (
-                <div
-                  className='play-button-container'
-                  onClick={() => {
-                    onSelectStation(station._id)
-
-                    setIsPlaying(true)
-                  }}
-                >
-                  <BiPlay
-                    className='play-button'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div> */}
     </section>
   )
 }

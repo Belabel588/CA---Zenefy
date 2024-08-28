@@ -54,6 +54,7 @@ function remove(entityType, entityId) {
       )
     entities.splice(idx, 1)
     _save(entityType, entities)
+    return entities
   })
 }
 

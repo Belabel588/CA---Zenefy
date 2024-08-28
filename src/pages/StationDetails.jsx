@@ -40,9 +40,7 @@ export function StationDetails() {
   )
 
   const { stationId } = useParams()
-  console.log(stationId)
 
-  // const song = useSelector((storeState) => storeState.songModule.song)
   const [station, setStation] = useState({ items: [{ id: '' }] })
 
   const isPlaying = useSelector(
@@ -111,7 +109,7 @@ export function StationDetails() {
     if (stationToDelete.isLiked === true) return
 
     try {
-      removeStation(station._id)
+      await removeStation(station._id)
       navigate('/')
     } catch (err) {
       console.log(err)

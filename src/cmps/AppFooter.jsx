@@ -69,9 +69,8 @@ export function AppFooter() {
     // setStation(currStation)
 
     if (currStation) {
-      console.log(currStation)
       setCurrItem(currStation.items[currIdx].id, currStation)
-      console.log(currItem)
+
       if (currStation.items[currIdx].url) {
         setUrlToPlay(currStation.items[currIdx].url)
       }
