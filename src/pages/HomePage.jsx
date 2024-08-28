@@ -9,8 +9,7 @@ import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
-import { SongList } from '../cmps/SongList.jsx'
-import { SongFilter } from '../cmps/SongFilter.jsx'
+import { StationList } from '../cmps/StationList.jsx'
 import {
   loadStations,
   removeStation,
@@ -49,11 +48,16 @@ export function HomePage() {
   const isHover = useRef(false)
 
   const pageRef = useRef()
+  const gradientRefOne = useRef()
+  const gradientRefTwo = useRef()
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   useEffect(() => {
-    pageRef.current.style.transition = '0.2s'
-    pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+    if (currColor === '#706da4') return
+    gradientRefOne.current.style.opacity = '0'
+    gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+    gradientRefTwo.current.style.opacity = '0'
+    gradientRefOne.current.style.opacity = '1'
   }, [currColor])
 
   function onSelectStation(stationId) {
@@ -62,8 +66,14 @@ export function HomePage() {
   }
   return (
     <section className='section home-container' ref={pageRef}>
+      <div className='gradient-container-1' ref={gradientRefOne}></div>
+      <div className='gradient-container-2' ref={gradientRefTwo}></div>
       <Sort />
-      <div className='stations-container'>
+      <StationList
+        gradientRefOne={gradientRefOne}
+        gradientRefTwo={gradientRefTwo}
+      />
+      {/* <div className='stations-container'>
         {stations.map((station) => {
           return (
             <div
@@ -75,8 +85,22 @@ export function HomePage() {
                 navigate(`/station/${station._id}`)
               }}
               onMouseEnter={async () => {
+                gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
+                gradientRefTwo.current.style.opacity = '1'
                 await setCurrColor(station.cover)
+                // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+                // gradientRefTwo.current.style.opacity = '0'
+                // gradientRefOne.current.style.opacity = '1'
+                // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+                // gradientRefTwo.current.style.opacity = '0'
+
                 // setCurrColorPage((prev) => (prev = currColor))
+              }}
+              onMouseLeave={async () => {
+                gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
+                gradientRefOne.current.style.opacity = '0'
+                gradientRefTwo.current.style.opacity = '1'
+                await setCurrColor()
               }}
             >
               <img className='station-cover' src={station.cover} alt='' />
@@ -124,7 +148,7 @@ export function HomePage() {
             </div>
           )
         })}
-      </div>
+      </div> */}
     </section>
   )
 }

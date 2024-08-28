@@ -56,7 +56,6 @@ export function AppHeader() {
           {/* <FaSpotify className='app-logo' /> */}
           <div className='logo-container'>
             <img src={zenefyLogo} alt='' />
-            <b>Zenefy</b>
           </div>
         </NavLink>
       </nav>

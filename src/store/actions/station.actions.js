@@ -86,7 +86,9 @@ export function setIsPlaying(isPlayingToSet) {
   store.dispatch({ type: SET_IS_PLAYING, isPlaying: isPlayingToSet })
 }
 
-export async function setCurrColor(cover) {
+export async function setCurrColor(
+  cover = 'https://i.scdn.co/image/ab67706c0000da849d25907759522a25b86a3033'
+) {
   try {
     const fac = new FastAverageColor()
     let color
@@ -96,6 +98,7 @@ export async function setCurrColor(cover) {
     img.src = cover
     color = await fac.getColorAsync(img)
     const hex = color.hex
+    console.log(hex)
 
     store.dispatch({ type: SET_CURR_COLOR, currColor: hex })
   } catch (err) {
