@@ -69,6 +69,7 @@
       
       .station-title{
           font-size: calc(4vw);
+          cursor: pointer;
           @media (min-width:1200px) {
             font-size: 3em;
           }

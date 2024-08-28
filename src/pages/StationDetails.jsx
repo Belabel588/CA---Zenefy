@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 
+import { StationEditModal } from '../cmps/StationEditModal.jsx'
+
 import {
   setCurrStation,
   setIsPlaying,
@@ -47,6 +49,7 @@ export function StationDetails() {
   let counter = 0
 
   const pageRef = useRef()
+  const modalRef = useRef()
 
   const currColor = useSelector(
     (stateSelector) => stateSelector.stationModule.currColor
@@ -86,14 +89,29 @@ export function StationDetails() {
     setIsPlaying(true)
   }
 
+  function toggleModal() {
+    if (modalRef.current.style.display !== 'flex') {
+      modalRef.current.style.display = 'flex'
+    } else {
+      modalRef.current.style.display = 'none'
+    }
+  }
+
   return (
     <section className='station-details-container' ref={pageRef}>
+      <StationEditModal
+        station={station}
+        modalRef={modalRef}
+        toggleModal={toggleModal}
+      />
       <header className='station-header'>
         <img className='station-cover' src={station.cover} />
 
         <div className='title-container'>
           <span>Playlist</span>
-          <b className='station-title'>{station.title}</b>
+          <b className='station-title' onClick={toggleModal}>
+            {station.title}
+          </b>
           <p className='playlist-summery'>Playlist summery here</p>
           <span className='playlist-artist'>Playlist artist here</span>
         </div>
