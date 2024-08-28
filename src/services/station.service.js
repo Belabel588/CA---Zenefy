@@ -21,7 +21,7 @@ export const stationService = {
 window.cs = stationService
 
 async function query(filterBy = { txt: '', stationType: '' }) {
-  console.log('FILTER BY INSIDE SERVICE QUERY IS:', filterBy);
+  console.log('FILTER BY INSIDE SERVICE QUERY IS:', filterBy)
 
   var stations = await storageService.query(STORAGE_KEY)
   // console.log('STATION BEFORE QUERY : ', stations);
@@ -37,7 +37,6 @@ async function query(filterBy = { txt: '', stationType: '' }) {
   if (stationType !== 'all') {
     stations = stations.filter((station) => stationType === station.stationType)
   }
-
 
   //   stations = stations.map(({ _id, vendor, price, speed, owner }) => ({
   //     _id,
@@ -124,6 +123,131 @@ async function getItemsStation(itemId) {
 function _createStations() {
   const demoStations = [
     {
+      _id: 'likedSongs123',
+      isLiked: true,
+      stationType: 'music',
+      title: 'Liked Songs',
+      items: [
+        {
+          artist: 'Queen',
+          id: 'zoaP5d',
+          name: 'Bohemian Rhapsody',
+          album: 'A Night at the Opera',
+          url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
+          cover:
+            'https://i1.sndcdn.com/artworks-000116795481-6fmihq-t500x500.jpg',
+          addedBy: 'user7',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'Led Zeppelin',
+          id: 'HJuxQX',
+          name: 'Stairway to Heaven',
+          album: 'Led Zeppelin IV',
+          url: 'https://www.youtube.com/watch?v=QkF3oxziUI4',
+          cover:
+            'https://i1.sndcdn.com/artworks-000123427250-vyogac-t500x500.jpg',
+          addedBy: 'user8',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'The Beatles',
+          id: 'aew9tr',
+          name: 'Hey Jude',
+          album: 'The Beatles Again',
+          url: 'https://www.youtube.com/watch?v=A_MjCqQoLLA',
+          cover:
+            'https://upload.wikimedia.org/wikipedia/en/0/0a/Heyjudealbum.jpg',
+          addedBy: 'user9',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'Tame Impala',
+          id: 'CT9zn5',
+          name: 'Let It Happen',
+          album: 'Currents',
+          url: 'https://www.youtube.com/watch?v=pFptt7Cargc',
+          cover:
+            'https://i.scdn.co/image/ab67616d0000b2739e1cfc756886ac782e363d79',
+          addedBy: 'user1',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'Taylor Swift',
+          id: '3J9rjg',
+          name: 'Shake It Off',
+          album: '1989',
+          url: 'https://www.youtube.com/watch?v=nfWlot6h_JM',
+          cover:
+            'https://pyxis.nymag.com/v1/imgs/2d9/6f5/3f8dbd63613637b7843e4653ff548503b9-tay--.w710.jpg',
+          addedBy: 'user10',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'Adele',
+          id: '9je28A',
+          name: 'Rolling in the Deep',
+          album: '21',
+          url: 'https://www.youtube.com/watch?v=rYEDA3JcQqw',
+          cover:
+            'https://cdns-images.dzcdn.net/images/cover/8bdaf37e2e7f883e84bbc3462c938293/500x500.jpg',
+          addedBy: 'user11',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'Bruno Mars',
+          id: 'ZAZIRK',
+          name: 'Uptown Funk',
+          album: 'Uptown Special',
+          url: 'https://www.youtube.com/watch?v=OPf0YbXqDm0',
+          cover:
+            'https://i1.sndcdn.com/artworks-000136214158-87a33w-t500x500.jpg',
+          addedBy: 'user12',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'Mac DeMarco',
+          id: 'G2G3h3',
+          name: 'Chamber of Reflection',
+          album: 'Salad Days',
+          url: 'https://www.youtube.com/watch?v=pQsF3pzOc54',
+          cover:
+            'https://i.scdn.co/image/ab67616d0000b273ec6e9c13eeed14eedbd5f7c9',
+          addedBy: 'user2',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+
+        {
+          artist: 'Toro y Moi',
+          id: 'JX6Dy3',
+          name: 'So Many Details',
+          album: 'Anything in Return',
+          url: 'https://www.youtube.com/watch?v=O0_ardwzTrA',
+          cover: 'https://i1.sndcdn.com/artworks-vffRvS0dZpkD-0-t500x500.jpg',
+          addedBy: 'user3',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+      ],
+      cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png', // Spotify's Liked Songs cover
+      tags: ['favorites', 'liked', 'personal'],
+      createdBy: {
+        _id: 'creator1',
+        fullname: 'Alice Johnson',
+        imgUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
+      },
+      likedByUsers: [],
+      addedAt: 1724685172590,
+    },
+    {
       _id: 'yPlzCv',
       stationType: 'music',
       title: 'Chill Vibes',
@@ -180,6 +304,30 @@ function _createStations() {
       stationType: 'music',
       title: 'Upbeat Tunes',
       items: [
+        {
+          artist: 'Queen',
+          id: 'zoaP5d',
+          name: 'Bohemian Rhapsody',
+          album: 'A Night at the Opera',
+          url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
+          cover:
+            'https://i1.sndcdn.com/artworks-000116795481-6fmihq-t500x500.jpg',
+          addedBy: 'user7',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
+        {
+          artist: 'Led Zeppelin',
+          id: 'HJuxQX',
+          name: 'Stairway to Heaven',
+          album: 'Led Zeppelin IV',
+          url: 'https://www.youtube.com/watch?v=QkF3oxziUI4',
+          cover:
+            'https://i1.sndcdn.com/artworks-000123427250-vyogac-t500x500.jpg',
+          addedBy: 'user8',
+          likedBy: [],
+          addedAt: 1724685172590,
+        },
         {
           artist: 'Daft Punk',
           id: 'Qr99dW',
@@ -395,7 +543,8 @@ function _createStations() {
           name: 'The Next Frontier',
           album: 'TED Radio Hour',
           url: 'https://www.npr.org/programs/ted-radio-hour/',
-          cover: 'https://media.npr.org/assets/img/2020/11/13/ted-radio-hour_tile_npr-network-01_sq-b401b6fafbe93f876e02a8c61c225ec5f8fdd4a3.jpg',
+          cover:
+            'https://media.npr.org/assets/img/2020/11/13/ted-radio-hour_tile_npr-network-01_sq-b401b6fafbe93f876e02a8c61c225ec5f8fdd4a3.jpg',
           addedBy: 'user16',
           likedBy: [],
           addedAt: 1724685172591,
@@ -406,7 +555,8 @@ function _createStations() {
           name: 'The Case of the Missing Hit',
           album: 'Reply All',
           url: 'https://gimletmedia.com/shows/reply-all',
-          cover: 'https://megaphone.imgix.net/podcasts/23d52a2a-1c5f-11ea-9a0e-b70170f2a827/image/uploads_2F1588357113366-jjsdfzx6x4m-c0339c10f9b113a5fcc93436e66e5ef4_2FReplyAll-ShowArt.jpg',
+          cover:
+            'https://megaphone.imgix.net/podcasts/23d52a2a-1c5f-11ea-9a0e-b70170f2a827/image/uploads_2F1588357113366-jjsdfzx6x4m-c0339c10f9b113a5fcc93436e66e5ef4_2FReplyAll-ShowArt.jpg',
           addedBy: 'user17',
           likedBy: [],
           addedAt: 1724685172592,
@@ -417,13 +567,15 @@ function _createStations() {
           name: 'Elon Musk: AI, Autopilot, and the Future of Tesla',
           album: 'Lex Fridman Podcast',
           url: 'https://lexfridman.com/podcast/',
-          cover: 'https://lexfridman.com/wordpress/wp-content/uploads/2022/01/thumb_ai_podcast_2022.png',
+          cover:
+            'https://lexfridman.com/wordpress/wp-content/uploads/2022/01/thumb_ai_podcast_2022.png',
           addedBy: 'user18',
           likedBy: [],
           addedAt: 1724685172593,
         },
       ],
-      cover: 'https://i.pinimg.com/originals/1c/54/f7/1c54f7b06d7723c21afc5035bf88a5ef.png',
+      cover:
+        'https://i.pinimg.com/originals/1c/54/f7/1c54f7b06d7723c21afc5035bf88a5ef.png',
       tags: ['technology', 'innovation', 'science'],
       createdBy: {
         _id: 'creator6',
@@ -444,7 +596,8 @@ function _createStations() {
           name: 'The Alibi',
           album: 'Serial',
           url: 'https://serialpodcast.org/',
-          cover: 'https://serialpodcast.org/sites/all/modules/custom/serial/img/serial-social-logo.png',
+          cover:
+            'https://serialpodcast.org/sites/all/modules/custom/serial/img/serial-social-logo.png',
           addedBy: 'user19',
           likedBy: [],
           addedAt: 1724685172595,
@@ -455,7 +608,8 @@ function _createStations() {
           name: 'The Golden State Killer',
           album: 'My Favorite Murder',
           url: 'https://myfavoritemurder.com/',
-          cover: 'https://content.production.cdn.art19.com/images/69/10/10/fb/691010fb-625e-4abe-993c-a57228b28dbe/91cb53ae0d5dbb379b9dffecf0a772593891d0d09bbe6d90ee746edbdb79e3ec75584f2ceb8260e9f675a90c05419b9b99842a76905b686f0f51c1a9d3e227ab.jpeg',
+          cover:
+            'https://content.production.cdn.art19.com/images/69/10/10/fb/691010fb-625e-4abe-993c-a57228b28dbe/91cb53ae0d5dbb379b9dffecf0a772593891d0d09bbe6d90ee746edbdb79e3ec75584f2ceb8260e9f675a90c05419b9b99842a76905b686f0f51c1a9d3e227ab.jpeg',
           addedBy: 'user20',
           likedBy: [],
           addedAt: 1724685172596,
@@ -466,7 +620,8 @@ function _createStations() {
           name: 'MURDERED: The Watts Family',
           album: 'Crime Junkie',
           url: 'https://crimejunkiepodcast.com/',
-          cover: 'https://content.production.cdn.art19.com/images/cc/e5/0a/08/cce50a08-d77d-490e-8c68-17725541b0ca/9dcebd4019d57b9551799479fa226e2a79026be3c2857ce6bbc8a36cf1a153a9638f9a5a08f40840ffa02ef628f9f4a29460461fe8923ff9508e20f8924e15b9.jpeg',
+          cover:
+            'https://content.production.cdn.art19.com/images/cc/e5/0a/08/cce50a08-d77d-490e-8c68-17725541b0ca/9dcebd4019d57b9551799479fa226e2a79026be3c2857ce6bbc8a36cf1a153a9638f9a5a08f40840ffa02ef628f9f4a29460461fe8923ff9508e20f8924e15b9.jpeg',
           addedBy: 'user21',
           likedBy: [],
           addedAt: 1724685172597,
@@ -493,7 +648,8 @@ function _createStations() {
           name: 'Will Ferrell',
           album: 'Conan O Brien Needs A Friend',
           url: 'https://www.earwolf.com/show/conan-obrien/',
-          cover: 'https://content.production.cdn.art19.com/images/5d/4f/d2/19/5d4fd219-85cc-4f03-bf7a-bb4de4551b8d/8d9e6ebc4d65a9575fa626318e426fcf8be7f98ea0c1b7b103de2b32def46ded57537627ad114ee194cdb857931458c47dbe1c14db5282397e1bf7a3fdbf836d.png',
+          cover:
+            'https://content.production.cdn.art19.com/images/5d/4f/d2/19/5d4fd219-85cc-4f03-bf7a-bb4de4551b8d/8d9e6ebc4d65a9575fa626318e426fcf8be7f98ea0c1b7b103de2b32def46ded57537627ad114ee194cdb857931458c47dbe1c14db5282397e1bf7a3fdbf836d.png',
           addedBy: 'user22',
           likedBy: [],
           addedAt: 1724685172599,
@@ -504,7 +660,8 @@ function _createStations() {
           name: 'Robin Williams',
           album: 'WTF with Marc Maron',
           url: 'http://www.wtfpod.com/',
-          cover: 'https://i.scdn.co/image/d3bc5a53ac4ed94b7b0bfb8b2cfb3c39a58cc864',
+          cover:
+            'https://i.scdn.co/image/d3bc5a53ac4ed94b7b0bfb8b2cfb3c39a58cc864',
           addedBy: 'user23',
           likedBy: [],
           addedAt: 1724685172600,
@@ -515,7 +672,8 @@ function _createStations() {
           name: 'Dave Chappelle',
           album: 'The Joe Rogan Experience',
           url: 'https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk',
-          cover: 'https://i.scdn.co/image/ab6765630000ba8a1ddfa03938f377ab9f685ee2',
+          cover:
+            'https://i.scdn.co/image/ab6765630000ba8a1ddfa03938f377ab9f685ee2',
           addedBy: 'user24',
           likedBy: [],
           addedAt: 1724685172601,
@@ -530,10 +688,8 @@ function _createStations() {
       },
       likedByUsers: [],
       addedAt: 1724685172602,
-    }
+    },
   ]
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(demoStations))
 }
-
-
