@@ -128,8 +128,13 @@ border-radius: 0.5rem;
 
       display: flex;
       flex-direction: column;
-      b{
+
+      
+      .station-name{
         color: $white;
+      }
+      .station-name.playing{
+        color: $green;
       }
 
       .playlist-details{

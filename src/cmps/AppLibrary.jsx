@@ -14,6 +14,7 @@ import {
 } from '../store/actions/station.actions.js'
 
 import { StationEditModal } from './StationEditModal.jsx'
+import { StationList } from '../cmps/StationList.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -23,7 +24,7 @@ export function AppLibrary() {
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
-  console.log(stations)
+
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
   )
@@ -130,11 +131,22 @@ export function AppLibrary() {
                 <img src={station.cover} alt='' />
               </div>
               <div className='info-container'>
-                <b>{station.title}</b>
+                <b
+                  className={
+                    currStation._id === station._id
+                      ? `station-name playing`
+                      : 'station-name'
+                  }
+                >
+                  {station.title}
+                </b>
                 <div className='playlist-details'>
                   <span>Playlist</span>
                   {station.items.length && (
-                    <span>{station.items.length} songs</span>
+                    <span>
+                      {station.items.length}{' '}
+                      {station.stationType !== 'music' ? 'podcasts' : 'songs'}
+                    </span>
                   )}
                 </div>
               </div>
