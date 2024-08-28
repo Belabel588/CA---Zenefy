@@ -9,8 +9,7 @@ import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
-import { SongList } from '../cmps/SongList.jsx'
-import { SongFilter } from '../cmps/SongFilter.jsx'
+import { StationList } from '../cmps/StationList.jsx'
 import {
   loadStations,
   removeStation,
@@ -70,7 +69,11 @@ export function HomePage() {
       <div className='gradient-container-1' ref={gradientRefOne}></div>
       <div className='gradient-container-2' ref={gradientRefTwo}></div>
       <Sort />
-      <div className='stations-container'>
+      <StationList
+        gradientRefOne={gradientRefOne}
+        gradientRefTwo={gradientRefTwo}
+      />
+      {/* <div className='stations-container'>
         {stations.map((station) => {
           return (
             <div
@@ -83,7 +86,7 @@ export function HomePage() {
               }}
               onMouseEnter={async () => {
                 gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
-
+                gradientRefTwo.current.style.opacity = '1'
                 await setCurrColor(station.cover)
                 // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
                 // gradientRefTwo.current.style.opacity = '0'
@@ -145,7 +148,7 @@ export function HomePage() {
             </div>
           )
         })}
-      </div>
+      </div> */}
     </section>
   )
 }
