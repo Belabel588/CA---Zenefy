@@ -1,42 +1,42 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-import {
-  SET_STATIONS,
-  REMOVE_STATION,
-  UPDATE_STATION,
-  ADD_STATION,
-  SET_FILTER_BY
-} from '../store/reducers/station.reducer.js'
-
-
+import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
-
-import { SongList } from '../cmps/SongList.jsx'
-import { SongFilter } from '../cmps/SongFilter.jsx'
-
-import {
-  loadStations,
-  removeStation,
-} from '../store/actions/station.actions.js'
+import { loadStations, removeStation } from '../store/actions/station.actions.js'
 
 export function SearchIndex() {
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
-  
+  const [allTags, setAllTags] = useState([]) // State to store the tags
   const stations = useSelector((storeState) => storeState.stationModule.stations)
-
   const dispatch = useDispatch()
-
-
-
-  console.log('stations inside searchIndex : ', stations);
 
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy })
     loadStations()
   }, [])
+
+  useEffect(() => {
+    if (stations.length > 0) {
+      const tags = getAllTags(stations)
+      setAllTags(tags)
+    }
+  }, [stations])
+
+
+  function getAllTags(stations) {
+    return stations
+      .map(station => station.tags)
+      .flat() // Flatten the array of arrays into a single array
+  }
+
+
+  const generateColor = (index, total) => {
+    const hue = (index / total) * 360 // Spread hues evenly across the color wheel
+    return `hsl(${hue}, 70%, 50%)` // HSL color with 70% saturation and 50% lightness
+  }
 
   async function onRemoveSong(songId) {
     try {
@@ -59,12 +59,8 @@ export function SearchIndex() {
   }
 
   async function onUpdateSong(song) {
-    // const speed = +prompt('New speed?', song.speed)
-    // if (speed === 0 || speed === song.speed) return
-
-    // const songToSave = { ...song, speed }
     try {
-      const savedSong = await updateSong(songToSave)
+      const savedSong = await updateSong(song)
       showSuccessMsg(`Song updated`)
     } catch (err) {
       showErrorMsg('Cannot update song')
@@ -72,34 +68,31 @@ export function SearchIndex() {
   }
 
   return (
-    <main className='song-index'>
-      <header>
-        {userService.getLoggedinUser() && (
-          <button onClick={onAddSong}>Add a Song</button>
-        )}
-      </header>
-      <section>
-        <ul className='search-list'>
-          {stations
-            .filter((station, index, currentStations) =>
-              currentStations.findIndex((currentStation) => currentStation.stationType === station.stationType) === index
-            )
-            .map((uniqueStation) => (
-              <Link to={`/genere/${uniqueStation._id}`} className="full-link">
-                <li key={uniqueStation._id}>
-                  {uniqueStation.stationType}
-                </li>
-              </Link>
-            ))}
-        </ul>
-      </section>
+    <section className="search-section">
 
-      {/* <SongList
-        songs={songs}
-        onRemoveSong={onRemoveSong}
-        onUpdateSong={onUpdateSong}
-      /> */}
-    </main>
+      <h1>Browse all</h1>
+      <ul className="search-list">
+        {stations
+          .filter((station, index, currentStations) =>
+            currentStations.findIndex((currentStation) => currentStation.stationType === station.stationType) === index
+          )
+          .map((uniqueStation, index) => (
+            <Link to={`/genere/${uniqueStation._id}`} className="full-link" key={uniqueStation._id}>
+              <li style={{ backgroundColor: generateColor(index, stations.length) }}>
+                {uniqueStation.stationType}
+              </li>
+            </Link>
+          ))}
+        {allTags.map((tag, idx) => (
+          <Link to="#" key={idx}>
+            <li className="tag" style={{ backgroundColor: generateColor(idx, allTags.length) }}>
+              {tag}
+            </li>
+          </Link>
+        ))}
+      </ul>
+
+
+    </section>
   )
-
 }
