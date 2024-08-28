@@ -5,42 +5,16 @@ import { CiCircleMinus } from 'react-icons/ci'
 import { FaPlus } from 'react-icons/fa6'
 
 export function EditOptions({
+  options,
   station,
   toggleModal,
-  toggleEdit,
-  editRef,
+
   position,
   isVisible,
   onDeleteStation,
+  onCreateNewStation,
 }) {
   let id = 0
-
-  const options = [
-    {
-      text: 'Edit',
-      icon: <FiEdit2 />,
-      onClick: () => {
-        toggleModal()
-      },
-      id: ++id,
-    },
-    {
-      text: 'Delete',
-      icon: <CiCircleMinus />,
-      onClick: () => {
-        onDeleteStation(station)
-      },
-      id: ++id,
-    },
-    {
-      text: 'Create',
-      icon: <FaPlus />,
-      onClick: () => {
-        onCreateStation()
-      },
-      id: ++id,
-    },
-  ]
 
   return (
     <>
@@ -56,7 +30,7 @@ export function EditOptions({
           {options.map((option) => (
             <div
               className='option-container'
-              key={option.id}
+              key={++id}
               onClick={option.onClick}
             >
               {option.icon}

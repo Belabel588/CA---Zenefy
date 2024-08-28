@@ -142,12 +142,12 @@ export function AppLibrary() {
                 </b>
                 <div className='playlist-details'>
                   <span>Playlist</span>
-                  {station.items.length && (
+                  {(station.items.length && (
                     <span>
                       {station.items.length}{' '}
                       {station.stationType !== 'music' ? 'podcasts' : 'songs'}
                     </span>
-                  )}
+                  )) || <span>0 songs</span>}
                 </div>
               </div>
             </div>
