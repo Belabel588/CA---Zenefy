@@ -1,4 +1,40 @@
 .stations-in-category {
     display: grid;
-    
+
+
+
+}
+
+.main-search-container {
+    display: grid;
+    place-items: center; // Centers content both horizontally and vertically
+    grid-template-rows: 1fr 1fr;
+  
+    .search-tags {
+      display: grid;
+      grid-auto-flow: row; // Places tags in a grid row by row
+      justify-items: center; // Centers tags horizontally in the grid cells
+  
+      .tag {
+        justify-self: center; // Horizontally center each tag within its cell
+        align-self: center; // Vertically center each tag within its cell
+      }
+    }
+  }
+  
+
+
+.search-tags {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    justify-items: start;
+    width: 80%;
+
+
+
+    .tag {
+        width: 100%;
+        height: 6rem;
+        justify-content: left;
+    }
 }

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer'
+import { StationList } from './StationList'
 
 export function SearchDynamicCmp() {
     const params = useParams()
@@ -48,21 +49,20 @@ export function SearchDynamicCmp() {
     console.log('STATIONS TO RENDER ARE::', stations)
 
     return (
-        <div className='stations-in-category'>
-            {stations && stations.length > 0 ? (
-                <ul>
-                    {stations.map((station) => (
-                        <li key={station._id}>
-                            <h2>{station.title}</h2>
-                            <img src={station.cover} alt={`${station.title} cover`} width={200} />
-                            <p>Tags: {station.tags.join(', ')}</p>
-                            <p>Created by: {station.createdBy.fullname}</p>
-                        </li>
+        <div className='main-search-container'>
+            <StationList />
+
+            {stationDataObj?.combinedTags && (
+                <div className="search-tags">
+                    {stationDataObj.combinedTags.map((tag, idx) => (
+                        <div key={idx} className="tag">
+                            <span>{tag}</span>
+
+                        </div>
                     ))}
-                </ul>
-            ) : (
-                <p>No stations found</p>
+                </div>
             )}
+
         </div>
     )
 }
