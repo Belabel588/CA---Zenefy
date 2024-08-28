@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
@@ -27,9 +27,14 @@ import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
 import playingAnimation from '../../public/img/playing.gif'
+import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 
 export function HomePage() {
+
+  const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
+
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
@@ -53,8 +58,8 @@ export function HomePage() {
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   useEffect(() => {
-    // loadStations()
-  }, [stations])
+    dispatch({ type: SET_FILTER_BY, filterBy })
+  }, [])
 
   // useEffect(() => {
   //   if (currColor === '#706da4') return
