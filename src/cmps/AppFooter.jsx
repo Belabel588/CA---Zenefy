@@ -12,6 +12,7 @@ import {
   setIsPlaying,
   setCurrItemIdx,
   setCurrColor,
+  saveStation,
 } from '../store/actions/station.actions.js'
 
 import { BiPlay } from 'react-icons/bi'
@@ -48,6 +49,10 @@ export function AppFooter() {
 
   const currIdx = useSelector(
     (stateSelector) => stateSelector.stationModule.currItemIdx
+  )
+
+  const stations = useSelector(
+    (stateSelector) => stateSelector.stationModule.stations
   )
 
   const [station, setStation] = useState([])
@@ -221,7 +226,9 @@ export function AppFooter() {
   function likeSong(itemToAdd) {
     if (itemToAdd.url === '') return
     console.log(itemToAdd)
-    stationService.save()
+    const likedStation = stations.find((station) => station.isLiked)
+    likedStation.items.push(itemToAdd)
+    saveStation(likedStation)
   }
 
   return (
