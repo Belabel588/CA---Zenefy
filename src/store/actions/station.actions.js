@@ -17,7 +17,10 @@ import {
 import { store } from '../store.js'
 
 export async function loadStations() {
+  
   const filterBy = store.getState().stationModule.filterBy
+  console.log(filterBy);
+  
   store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
   // console.log('filterBy IN ACTIONS IS : ' , filterBy);

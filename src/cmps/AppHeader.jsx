@@ -1,8 +1,9 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 import { useLocation } from 'react-router-dom'
+import { loadStations } from '../store/actions/station.actions.js'
 
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect, useRef } from 'react'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
 import { logout } from '../store/actions/user.actions.js'
@@ -17,10 +18,15 @@ import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 
 import zenefyLogo from '/public/img/zenefy-logo.png'
+import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 
 export function AppHeader() {
   const user = useSelector((storeState) => storeState.userModule.user)
+  const filterBy = useSelector((storeState) => storeState.stationModule.filterBy)
+
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const [isFocus, setIsFocus] = useState()
   const inputRef = useRef()
   const location = useLocation()
@@ -33,6 +39,35 @@ export function AppHeader() {
       setIsHome(false)
     }
   }, [location])
+
+  function handleSearch({ target }) {
+    console.log('searching')
+    const field = target.name
+    let value = target.value
+
+    switch (target.type) {
+      case 'txt':
+        value = value || ''
+        break
+    }
+
+    // Create a new filter object with the current field and value
+    const newFilter = {
+      [field]: value
+    }
+
+    // Dispatch action to update the filter in the Redux store
+    dispatch({
+      type: SET_FILTER_BY,
+      filterBy: {
+        ...filterBy,
+        [field]: value,
+      }
+    })
+
+    // Reload the stations with the updated filter
+    loadStations()
+  }
 
   async function onLogout() {
     try {
@@ -69,6 +104,8 @@ export function AppHeader() {
           <IoSearchOutline className='icon search' />
           <input
             type='text'
+            name='txt'
+            onChange={handleSearch}
             placeholder='What do you want to play?'
             ref={inputRef}
           />
