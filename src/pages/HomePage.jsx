@@ -18,6 +18,7 @@ import {
   setCurrItem,
   setCurrColor,
 } from '../store/actions/station.actions.js'
+import { apiService } from '../services/youtube-spotify.service.js'
 
 import { Sort } from '../cmps/Sort.jsx'
 
@@ -68,6 +69,7 @@ export function HomePage() {
     setCurrStation(stationId)
     setCurrItem('', currStation)
   }
+  console.log(apiService.getVideos('naruto'))
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container-1' ref={gradientRefOne}></div>
