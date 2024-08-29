@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 
 import { AppHeader } from './cmps/AppHeader.jsx'
 import { AppFooter } from './cmps/AppFooter.jsx'
-import {SearchDynamicCmp} from './cmps/SearchDynamicCmp.jsx'
+import { SearchDynamicCmp } from './cmps/SearchDynamicCmp.jsx'
 
 import { HomePage } from '../src/pages/HomePage.jsx'
 import { AboutUs } from '../src/pages/AboutUs.jsx'
