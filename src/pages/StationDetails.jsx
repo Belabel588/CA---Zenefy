@@ -9,6 +9,7 @@ import { stationService } from '../services/station.service.js'
 
 import { StationEditModal } from '../cmps/StationEditModal.jsx'
 import { EditOptions } from '../cmps/EditOptions.jsx'
+import { PlayingAnimation } from '../cmps/PlayingAnimation.jsx'
 
 import {
   setCurrStation,
@@ -26,9 +27,13 @@ import { BsThreeDots } from 'react-icons/bs'
 import { IoListSharp } from 'react-icons/io5'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
+
+import { FiEdit2 } from 'react-icons/fi'
+import { CiCircleMinus } from 'react-icons/ci'
+import { FaPlus } from 'react-icons/fa6'
 import { utilService } from '../services/util.service.js'
 
-import playingAnimation from '../../public/img/playing.gif'
+// import playingAnimation from '../../public/img/playing.gif'
 
 export function StationDetails() {
   const navigate = useNavigate()
@@ -116,13 +121,6 @@ export function StationDetails() {
     }
   }
 
-  function toggleEdit() {
-    if (editRef.current.style.display !== 'flex') {
-      editRef.current.style.display = 'flex'
-    } else {
-      editRef.current.style.display = 'none'
-    }
-  }
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const handleRightClick = (event) => {
@@ -137,6 +135,41 @@ export function StationDetails() {
     setIsVisible(false)
   }
 
+  async function onCreateNewStation() {
+    const emptyStation = stationService.getEmptyStation()
+    emptyStation.items = []
+    try {
+      const newStation = await saveStation(emptyStation)
+      navigate(`/station/${newStation._id}`)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const options = [
+    {
+      text: 'Edit',
+      icon: <FiEdit2 />,
+      onClick: () => {
+        toggleModal()
+      },
+    },
+    {
+      text: 'Delete',
+      icon: <CiCircleMinus />,
+      onClick: () => {
+        onDeleteStation(station)
+      },
+    },
+    {
+      text: 'Create',
+      icon: <FaPlus />,
+      onClick: () => {
+        onCreateNewStation()
+      },
+    },
+  ]
+
   return (
     <section
       className='station-details-container'
@@ -150,12 +183,14 @@ export function StationDetails() {
         saveStation={sendToSaveStation}
       />
       <EditOptions
+        options={options}
         station={station}
         toggleModal={toggleModal}
         editRef={editRef}
         position={position}
         isVisible={isVisible}
         onDeleteStation={onDeleteStation}
+        onCreateNewStation={onCreateNewStation}
       />
 
       <header className='station-header' onContextMenu={handleRightClick}>
@@ -226,11 +261,7 @@ export function StationDetails() {
                   <div className='idx-play-container'>
                     <div className='item-idx-container'>
                       {currItem.id === item.id ? (
-                        <img
-                          className='playing-animation'
-                          src={playingAnimation}
-                          alt=''
-                        />
+                        <PlayingAnimation />
                       ) : (
                         <span className='item-idx'>{++counter}</span>
                       )}

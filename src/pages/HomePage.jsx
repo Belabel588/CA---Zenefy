@@ -10,6 +10,7 @@ import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
 import { StationList } from '../cmps/StationList.jsx'
+
 import {
   loadStations,
   removeStation,
@@ -18,6 +19,7 @@ import {
   setCurrItem,
   setCurrColor,
 } from '../store/actions/station.actions.js'
+import { apiService } from '../services/youtube-spotify.service.js'
 
 import { Sort } from '../cmps/Sort.jsx'
 
@@ -30,7 +32,6 @@ import playingAnimation from '../../public/img/playing.gif'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 
 export function HomePage() {
-
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
 
   const navigate = useNavigate()
@@ -73,6 +74,7 @@ export function HomePage() {
     setCurrStation(stationId)
     setCurrItem('', currStation)
   }
+
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container-1' ref={gradientRefOne}></div>

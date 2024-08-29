@@ -22,6 +22,7 @@ import {
 import { useEffectUpdate } from '../customHooks/useEffectUpdate.js'
 
 import { IoMdClose } from 'react-icons/io'
+import { FiEdit2 } from 'react-icons/fi'
 
 export function StationEditModal({
   station,
@@ -59,7 +60,6 @@ export function StationEditModal({
   }
 
   async function uploadFile(ev) {
-    console.log('works')
     const res = await uploadService.uploadImg(ev)
     console.log(res.url)
     const coverSrc = res.url
@@ -70,6 +70,7 @@ export function StationEditModal({
     saveStation(editStation)
     toggleModal()
   }
+  const fileRef = useRef()
 
   return (
     <div className='modal-container' ref={modalRef}>
@@ -80,9 +81,23 @@ export function StationEditModal({
 
       <div className='info-container'>
         <div className='img-container'>
+          <div
+            className='img-backshadow-container'
+            onClick={() => fileRef.current.click()}
+          >
+            <div>
+              <FiEdit2 />
+              <span>Choose Photo</span>
+            </div>
+          </div>
           <img src={editStation.cover} alt='' name='cover' />
-          <input type='file' id='cover' onChange={uploadFile} />
-          <label htmlFor='cover' className='file-label'></label>
+          <input
+            type='file'
+            id='cover'
+            onChange={uploadFile}
+            style={{ display: 'none' }}
+            ref={fileRef}
+          />
         </div>
         <div className='text-inputs-container'>
           <div className='input-name-container'>

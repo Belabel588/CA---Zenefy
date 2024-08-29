@@ -19,13 +19,14 @@ import {
 } from '../store/actions/station.actions.js'
 
 import { Sort } from '../cmps/Sort.jsx'
+import { PlayingAnimation } from '../cmps/PlayingAnimation.jsx'
 
 import { GoContainer } from 'react-icons/go'
 import { FaCirclePlay } from 'react-icons/fa6'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
-import playingAnimation from '../../public/img/playing.gif'
+// import playingAnimation from '../../public/img/playing.gif'
 
 export function StationList(gradientRefOne, gradientRefTwo) {
   const navigate = useNavigate()
@@ -52,10 +53,13 @@ export function StationList(gradientRefOne, gradientRefTwo) {
     setCurrStation(stationId)
     setCurrItem('', currStation)
   }
+  let counter = 0
 
   return (
     <div className='stations-container'>
       {stations.map((station) => {
+        if (counter >= 8) return
+        counter++
         return (
           <div
             to={`/station/${station._id}`}
@@ -98,12 +102,9 @@ export function StationList(gradientRefOne, gradientRefTwo) {
                   }}
                   onClick={() => setIsPlaying(false)}
                 />
-
-                <img
-                  className='playing-animation'
-                  src={playingAnimation}
-                  alt=''
-                />
+                <div className='animation-container'>
+                  <PlayingAnimation />
+                </div>
               </div>
             ) : (
               <div

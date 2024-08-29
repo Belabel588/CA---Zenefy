@@ -83,7 +83,7 @@ export function AppHeader() {
     inputRef.current.focus()
     navigate('/search')
   }
-
+  // d
   return (
     <header className='app-header full'>
       <nav>
