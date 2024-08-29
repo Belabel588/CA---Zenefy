@@ -261,11 +261,6 @@ export function StationDetails() {
                   <div className='idx-play-container'>
                     <div className='item-idx-container'>
                       {currItem.id === item.id ? (
-                        // <img
-                        //   className='playing-animation'
-                        //   src={playingAnimation}
-                        //   alt=''
-                        // />
                         <PlayingAnimation />
                       ) : (
                         <span className='item-idx'>{++counter}</span>
