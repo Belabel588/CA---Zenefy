@@ -11,12 +11,9 @@ import { FaSpotify } from 'react-icons/fa'
 import { FaRegUserCircle } from 'react-icons/fa'
 import { GoHome } from 'react-icons/go'
 import { GoHomeFill } from 'react-icons/go'
-// import { CiSearch } from 'react-icons/ci'
 import { IoSearchOutline } from 'react-icons/io5'
-
 import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
-
 import zenefyLogo from '/public/img/zenefy-logo.png'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 
@@ -40,7 +37,15 @@ export function AppHeader() {
     }
   }, [location])
 
-  function handleSearch({ target }) {
+  function debounce(func, delay) {
+    let timeout
+    return function (...args) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => func.apply(this, args), delay)
+    }
+  }
+
+  const handleSearch = debounce(({ target }) => {
     console.log('searching')
     const field = target.name
     let value = target.value
@@ -50,6 +55,7 @@ export function AppHeader() {
         value = value || ''
         break
     }
+
     // Dispatch action to update the filter in the Redux store
     dispatch({
       type: SET_FILTER_BY,
@@ -61,7 +67,7 @@ export function AppHeader() {
 
     // Reload the stations with the updated filter
     loadStations()
-  }
+  }, 500) // Debounce with a 300ms delay
 
   async function onLogout() {
     try {
@@ -77,12 +83,11 @@ export function AppHeader() {
     inputRef.current.focus()
     navigate('/search')
   }
-  // d
+
   return (
     <header className='app-header full'>
       <nav>
         <NavLink to='/'>
-          {/* <FaSpotify className='app-logo' /> */}
           <div className='logo-container'>
             <img src={zenefyLogo} alt='' />
           </div>
@@ -99,7 +104,7 @@ export function AppHeader() {
           <input
             type='text'
             name='txt'
-            onChange={handleSearch}
+            onChange={handleSearch} // Use the debounced handleSearch
             placeholder='What do you want to play?'
             ref={inputRef}
           />
@@ -119,10 +124,8 @@ export function AppHeader() {
       {user && (
         <div className='user-info'>
           <Link to={`user/${user._id}`}>
-            {/* {user.imgUrl && <img src={user.imgUrl} />} */}
             {user.fullname}
           </Link>
-          {/* <span className="score">{user.score?.toLocaleString()}</span> */}
           <button onClick={onLogout}>logout</button>
         </div>
       )}
