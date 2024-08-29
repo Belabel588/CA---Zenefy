@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 
 import {
@@ -7,6 +7,7 @@ import {
   REMOVE_STATION,
   UPDATE_STATION,
   ADD_STATION,
+  SET_FILTER_BY,
 } from '../store/reducers/station.reducer.js'
 
 import { stationService } from '../services/station.service.js'
@@ -23,17 +24,19 @@ import {
 
 export function SearchIndex() {
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
-  // const songs = useSelector((storeState) => storeState.stationModule.stations)
+
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
 
+  const dispatch = useDispatch()
+
   console.log('stations inside searchIndex : ', stations)
 
   useEffect(() => {
-    // getApiData()
+    dispatch({ type: SET_FILTER_BY, filterBy })
     loadStations()
-  }, [filterBy])
+  }, [])
 
   async function onRemoveSong(songId) {
     try {
@@ -91,11 +94,9 @@ export function SearchIndex() {
                 ) === index
             )
             .map((uniqueStation) => (
-              <li key={uniqueStation._id}>
-                <Link to={`/genere/${uniqueStation._id}`}>
-                  {uniqueStation.stationType}
-                </Link>
-              </li>
+              <Link to={`/genere/${uniqueStation._id}`} className='full-link'>
+                <li key={uniqueStation._id}>{uniqueStation.stationType}</li>
+              </Link>
             ))}
         </ul>
       </section>

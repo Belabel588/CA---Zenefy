@@ -1,8 +1,8 @@
 .search-list {
 
-  display: flex;
-  justify-content: start;
-  flex-wrap: wrap;
+  display: grid;
+  grid-auto-flow: column;
+
 
   li {
     border-radius: 10px;
