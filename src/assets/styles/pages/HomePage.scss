@@ -110,7 +110,7 @@
             .play-button, .pause-button{
                 display: flex;
             }  
-             .playing-animation{
+             .animation-container{
                 display: none;
             }
         }
@@ -183,8 +183,8 @@
         .pause-button{
             padding: 0px;
         }
-        .playing-animation {
-
+        .animation-container {
+            // justify-self: center;
             // background-color: black;
             // border-radius: 50%;
             // display: flex;
@@ -192,8 +192,18 @@
             // align-items: center;
             // color: $green;
 
+
             width: clamp(16px, 5vw, 42px);
             height: clamp(16px, 5vw, 42px);
+            display: flex;
+            svg{
+                margin-inline-start: 0.8em;
+                justify-self: center;
+                align-self: center;
+
+                // width: 50%;
+                // height: 50%;
+            }
 
         }
         

@@ -10,6 +10,7 @@ import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 
 import { StationList } from '../cmps/StationList.jsx'
+
 import {
   loadStations,
   removeStation,
@@ -27,7 +28,7 @@ import { FaCirclePlay } from 'react-icons/fa6'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
-import playingAnimation from '../../public/img/playing.gif'
+// import playingAnimation from '../../public/img/playing.gif'
 
 export function HomePage() {
   const navigate = useNavigate()

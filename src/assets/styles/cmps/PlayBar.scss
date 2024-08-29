@@ -22,7 +22,14 @@ padding: 0px 0.5em 1em 0.5em;
     gap: 0.5em;
     align-self: end;
 
-
+svg{
+    fill: $grey-light;
+    height: 17px;
+    min-width: 20px;
+}
+.added{
+    fill: $green;
+}
     .play-bar-cover{
         width: 50px;
         border-radius: 5px;
@@ -62,13 +69,18 @@ padding: 0px 0.5em 1em 0.5em;
         display: flex;
         align-items: center;
         justify-items: center;
-        gap: 1em;
+        gap: 1.5em;
         // width: 400px;
         margin: 0px;
         padding-top: 1em;
         .button{
             margin: 0px;
             padding: 0px;
+            svg{
+                color: $grey-light;
+                font-size: 1em;
+
+            }
         }
         .play-button, .pause-button{
 
@@ -80,8 +92,8 @@ padding: 0px 0.5em 1em 0.5em;
             border-radius: 50%;
             padding: 2px 1px 2px 2px;
             // padding: 10px;
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-items: center;
@@ -94,8 +106,10 @@ padding: 0px 0.5em 1em 0.5em;
             }
             
         }
-        .pause-button{
-            
+        .pause-button, .play-button{
+            svg{
+                fill: black;
+            }
             // padding: 7.5px;
         }
      
@@ -114,8 +128,30 @@ padding: 0px 0.5em 1em 0.5em;
 
             font-size: 1.8em;
         }
+        .button:not(.pause-button, .play-button){
+            svg{
+                
+                width: 16px; /* Adjust size */
+                height: 16px; /* Adjust size */
+                fill: $grey-light; /* Change color */
+                height: 30px;
+            }
+            
+            &:hover{
+                svg{
+                    
+                    fill: $white;
+                }
+                
+            }
+        }
         .button.active{
-                color: $green;
+            svg{
+                fill: $green;
+
+
+            }
+                fill: $green;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -131,10 +167,11 @@ padding: 0px 0.5em 1em 0.5em;
                     // position: absolute;
                 }
                 &:hover{
-                    color: $green;
-
+                    svg{
+                        fill: $green;
+                    }
                 }
-        }
+            }
 
   
     }
@@ -216,7 +253,7 @@ padding: 0px 0.5em 1em 0.5em;
 }
 
 .buttons-volume-container{
-    align-self: end;
+    // align-self: end;
     justify-self: end;
     display: flex;
     align-items: center;
@@ -228,11 +265,20 @@ padding: 0px 0.5em 1em 0.5em;
             i{
                 color: $white;
                 transform: scale(1.05);
-
+                
+            }
+            svg{
+                fill: $white;
+                transform: scale(1.05);
             }
         }
     }
-
+    
+    svg{
+        fill: $grey-light;
+        height: 17px;
+        min-width: 20px;
+    }
 
 i{
 
@@ -319,3 +365,6 @@ i{
 }
 
 
+
+
+  
