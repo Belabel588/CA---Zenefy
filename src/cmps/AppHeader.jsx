@@ -67,7 +67,7 @@ export function AppHeader() {
 
     // Reload the stations with the updated filter
     loadStations()
-  }, 500) // Debounce with a 300ms delay
+  }, 800) // Debounce with a 300ms delay
 
   async function onLogout() {
     try {
