@@ -9,6 +9,7 @@ import { stationService } from '../services/station.service.js'
 
 import { StationEditModal } from '../cmps/StationEditModal.jsx'
 import { EditOptions } from '../cmps/EditOptions.jsx'
+import { PlayingAnimation } from '../cmps/PlayingAnimation.jsx'
 
 import {
   setCurrStation,
@@ -32,7 +33,7 @@ import { CiCircleMinus } from 'react-icons/ci'
 import { FaPlus } from 'react-icons/fa6'
 import { utilService } from '../services/util.service.js'
 
-import playingAnimation from '../../public/img/playing.gif'
+// import playingAnimation from '../../public/img/playing.gif'
 
 export function StationDetails() {
   const navigate = useNavigate()
@@ -260,11 +261,12 @@ export function StationDetails() {
                   <div className='idx-play-container'>
                     <div className='item-idx-container'>
                       {currItem.id === item.id ? (
-                        <img
-                          className='playing-animation'
-                          src={playingAnimation}
-                          alt=''
-                        />
+                        // <img
+                        //   className='playing-animation'
+                        //   src={playingAnimation}
+                        //   alt=''
+                        // />
+                        <PlayingAnimation />
                       ) : (
                         <span className='item-idx'>{++counter}</span>
                       )}

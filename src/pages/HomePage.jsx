@@ -69,7 +69,7 @@ export function HomePage() {
     setCurrStation(stationId)
     setCurrItem('', currStation)
   }
-  console.log(apiService.getVideos('naruto'))
+
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container-1' ref={gradientRefOne}></div>

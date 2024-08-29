@@ -9,9 +9,9 @@ import {
   ADD_STATION,
 } from '../store/reducers/station.reducer.js'
 
-
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
+import { apiService } from '../services/youtube-spotify.service.js'
 
 import { SongList } from '../cmps/SongList.jsx'
 import { SongFilter } from '../cmps/SongFilter.jsx'
@@ -24,15 +24,14 @@ import {
 export function SearchIndex() {
   const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
   // const songs = useSelector((storeState) => storeState.stationModule.stations)
-  const stations = useSelector((storeState) => storeState.stationModule.stations)
+  const stations = useSelector(
+    (storeState) => storeState.stationModule.stations
+  )
 
-  
-
-
-
-  console.log('stations inside searchIndex : ', stations);
+  console.log('stations inside searchIndex : ', stations)
 
   useEffect(() => {
+    // getApiData()
     loadStations()
   }, [filterBy])
 
@@ -69,6 +68,11 @@ export function SearchIndex() {
     }
   }
 
+  async function getApiData() {
+    const res = await apiService.getVideos('nirvana')
+    console.log(res)
+  }
+
   return (
     <main className='song-index'>
       <header>
@@ -79,8 +83,12 @@ export function SearchIndex() {
       <section>
         <ul className='search-list'>
           {stations
-            .filter((station, index, currentStations) =>
-              currentStations.findIndex((currentStation) => currentStation.stationType === station.stationType) === index
+            .filter(
+              (station, index, currentStations) =>
+                currentStations.findIndex(
+                  (currentStation) =>
+                    currentStation.stationType === station.stationType
+                ) === index
             )
             .map((uniqueStation) => (
               <li key={uniqueStation._id}>
@@ -91,7 +99,6 @@ export function SearchIndex() {
             ))}
         </ul>
       </section>
-
 
       {/* <SongList
         songs={songs}
