@@ -50,12 +50,6 @@ export function AppHeader() {
         value = value || ''
         break
     }
-
-    // Create a new filter object with the current field and value
-    const newFilter = {
-      [field]: value
-    }
-
     // Dispatch action to update the filter in the Redux store
     dispatch({
       type: SET_FILTER_BY,
