@@ -85,7 +85,7 @@
   .user-interface-container{
     background: linear-gradient(180deg,  #7300ff08 ,#191414);
     padding-top: 0.5em;
-    height: 400px;
+    height: calc(100vh - 410px);
     overflow: auto;
 
   }

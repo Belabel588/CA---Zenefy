@@ -53,10 +53,13 @@ export function StationList(gradientRefOne, gradientRefTwo) {
     setCurrStation(stationId)
     setCurrItem('', currStation)
   }
+  let counter = 0
 
   return (
     <div className='stations-container'>
       {stations.map((station) => {
+        if (counter >= 8) return
+        counter++
         return (
           <div
             to={`/station/${station._id}`}

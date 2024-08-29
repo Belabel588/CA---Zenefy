@@ -59,6 +59,12 @@ height:5rem;
 border-radius: 0.5rem;
   }
 
+  .library-stations-container{
+    height: calc(100vh - 160px);
+    overflow-y: auto;
+
+  }
+
   .station-container{
     display: grid;
     grid-template-columns: auto 1fr;
@@ -70,6 +76,7 @@ border-radius: 0.5rem;
     font-size: 0.8em;
     cursor: pointer;
     text-decoration: none;
+    position: relative;
 
 
     &:hover{
@@ -100,6 +107,8 @@ border-radius: 0.5rem;
       background-color: $green;
       border-radius: 5px;
       
+      
+      
       .pause-button-container, .play-button-container{
         justify-self: center;
         background-color: rgba(0, 0, 0, 0.583);
@@ -110,9 +119,11 @@ border-radius: 0.5rem;
         display: none;
         align-items: center;
         justify-items: center;
-        position: absolute;
+        position:absolute;
+
         font-size: 2em;
         color: $white;
+        z-index: 4;
         
         .play-button, .pause-button{
           width: 30px;
