@@ -32,7 +32,7 @@ async function getVideos(search) {
 async function createList(search) {
   const db = `${search}Youtube`
   let videos
-  // const list = []
+  const list = []
 
   const res = await storageService.query(db)
   videos = res[0].items
