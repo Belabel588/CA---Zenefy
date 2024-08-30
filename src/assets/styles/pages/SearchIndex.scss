@@ -2,44 +2,128 @@
   display: flex;
   flex-direction: column;
   padding: 2rem;
-  background-color: #121212; /* Dark background for a Spotify-like look */
-  color: #ffffff; /* White text on a dark background */
+  background-color: #121212;
+  /* Dark background for a Spotify-like look */
+  color: #ffffff;
+  /* White text on a dark background */
 
   .search-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 300px)); /* Responsive grid */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+    /* Responsive grid */
     grid-gap: 1rem;
     list-style: none;
     padding: 0;
-    width: 100%; /* Ensure the grid takes up the full width of the container */
+    width: 100%;
+    /* Ensure the grid takes up the full width of the container */
     /* Limit the maximum width */
-    justify-items: stretch; /* Stretch the items to fill the grid cells */
+    justify-items: stretch;
+    /* Stretch the items to fill the grid cells */
 
     li {
-      min-height: 7rem; /* Set the minimum height */
-      max-height: 9rem; /* Set the maximum height */
-      width: 100%; /* Ensure the li elements take up the full width of their grid cells */
+      min-height: 7rem;
+      /* Set the minimum height */
+      max-height: 9rem;
+      /* Set the maximum height */
+      width: 100%;
+      /* Ensure the li elements take up the full width of their grid cells */
       border-radius: 8px;
       padding: 1rem;
       display: flex;
       justify-content: left;
       align-items: start;
-      background-color: #282828; /* Dark grey background for list items */
+      background-color: #282828;
+      /* Dark grey background for list items */
       color: white;
       font-weight: bold;
       text-align: center;
       transition: transform 0.3s ease, background-color 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      /* Subtle shadow for depth */
 
       &:hover {
         transform: scale(1.05);
-        background-color: #333333; /* Slightly lighter on hover */
+        background-color: #333333;
+        /* Slightly lighter on hover */
       }
     }
 
     a {
       text-decoration: none;
       color: inherit;
+    }
+
+  }
+}
+
+.search-results {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr;
+  height: 300px;
+  gap: 20px;
+  /* Adds some spacing between the grid columns */
+
+  img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    /* Ensures the image covers the area without distortion */
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    padding: 10px;
+    background-color: #212020;
+
+
+    h2,
+    h6,
+    img {
+      margin-left: 20px;
+    }
+
+  }
+
+  .songs {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Distribute songs evenly within the grid */
+    overflow-y: auto;
+    /* Allows scrolling if there are more songs */
+    padding: 10px;
+  }
+
+  .song-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+
+    .song-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h2 {
+        font-size: 1rem;
+        margin: 0;
+      }
+
+      h6 {
+        font-size: 0.8rem;
+        margin: 0;
+        color: #b3b3b3;
+        /* A lighter color for the artist name */
+      }
     }
   }
 }

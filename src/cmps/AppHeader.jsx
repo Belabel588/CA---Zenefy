@@ -1,21 +1,17 @@
 import { Link, NavLink } from 'react-router-dom'
-import { useNavigate, useParams } from 'react-router'
-import { useLocation } from 'react-router-dom'
-import { loadStations } from '../store/actions/station.actions.js'
-
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect, useRef } from 'react'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
 import { logout } from '../store/actions/user.actions.js'
-import { FaSpotify } from 'react-icons/fa'
-import { FaRegUserCircle } from 'react-icons/fa'
-import { GoHome } from 'react-icons/go'
-import { GoHomeFill } from 'react-icons/go'
+import { FaSpotify, FaRegUserCircle } from 'react-icons/fa'
+import { GoHome, GoHomeFill } from 'react-icons/go'
 import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 import zenefyLogo from '/public/img/zenefy-logo.png'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
+// import { loadStations } from '../store/actions/station.actions.js'
 
 export function AppHeader() {
   const user = useSelector((storeState) => storeState.userModule.user)
@@ -24,8 +20,7 @@ export function AppHeader() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const [isFocus, setIsFocus] = useState()
-  const inputRef = useRef()
+  const inputRef = useRef(null) // Step 1: Create a ref for the input field
   const location = useLocation()
   const [isHome, setIsHome] = useState()
 
@@ -34,6 +29,10 @@ export function AppHeader() {
       setIsHome(true)
     } else {
       setIsHome(false)
+    }
+    // Step 2: Reset the input value on route change using the ref
+    if (inputRef.current) {
+      inputRef.current.value = '' // Clear the input value
     }
   }, [location])
 
@@ -50,12 +49,6 @@ export function AppHeader() {
     const field = target.name
     let value = target.value
 
-    switch (target.type) {
-      case 'txt':
-        value = value || ''
-        break
-    }
-
     // Dispatch action to update the filter in the Redux store
     dispatch({
       type: SET_FILTER_BY,
@@ -66,7 +59,7 @@ export function AppHeader() {
     })
 
     // Reload the stations with the updated filter
-    loadStations()
+    // loadStations() stopped the filtering of the stations on the side.
   }, 800) // Debounce with a 300ms delay
 
   async function onLogout() {
@@ -80,7 +73,9 @@ export function AppHeader() {
   }
 
   function onSearchClick() {
-    inputRef.current.focus()
+    if (inputRef.current) {
+      inputRef.current.focus() // Focus the input field
+    }
     navigate('/search')
   }
 
@@ -106,11 +101,9 @@ export function AppHeader() {
             name='txt'
             onChange={handleSearch} // Use the debounced handleSearch
             placeholder='What do you want to play?'
-            ref={inputRef}
+            ref={inputRef} // Step 3: Bind the ref to the input field
           />
-          {(isFocus && <RxCross2 className='icon close' />) || (
-            <PiBrowsersThin className='icon browse' />
-          )}
+          <PiBrowsersThin className='icon browse' />
         </div>
       </div>
 

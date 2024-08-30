@@ -44,8 +44,11 @@ export function ItemDetails() {
 
   async function getItem(itemId) {
     const itemToSet = await stationService.getItem(itemId)
+    console.log(itemToSet);
+    
     setItem(itemToSet)
   }
+  
 
   return (
     <section className='item-details-container'>

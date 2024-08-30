@@ -18,6 +18,7 @@ export const stationService = {
   getItem,
   getItemsStation,
   getStationData,
+  createStationFromSearch,
 }
 window.cs = stationService
 
@@ -59,6 +60,8 @@ async function remove(stationId) {
 }
 
 async function save(station) {
+  console.log('saving station' , station);
+  
   var stationToSave
   let savedStation
   if (station._id) {
@@ -112,7 +115,7 @@ function getDefaultFilter() {
 
 async function getItem(itemId) {
   try {
-    const stations = await stationService.query()
+    var stations = await storageService.query(STORAGE_KEY)
     let item
     stations.map((station) => {
       if (item) return
@@ -160,6 +163,36 @@ async function getStationData(stationId) {
     stationsWithSameType,
     combinedTags
   }
+}
+
+
+async function createStationFromSearch(searchResults) {
+  // Create a new station object
+  const station = {
+    stationType: 'music', // Assuming the station type is always 'music'
+    title: searchResults[0]?.artist || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
+    items: searchResults.map(result => ({
+      artist: result.artist,
+      id: utilService.makeId(), // Generate a unique ID for each item
+      name: result.name,
+      album: result.album,
+      url: result.url,
+      cover: result.cover,
+      addedBy: 'user1', // Assuming a default user, replace with actual user ID if available
+      likedBy: [], // Empty likedBy array
+      addedAt: Date.now() // Current timestamp
+    })),
+    cover: searchResults[0]?.cover || 'default_cover_url', // Use the first song's cover as the station cover, fallback to a default URL
+    tags: [], // Empty tags array
+    createdBy: {
+      fullname: searchResults[0]?.artist || 'Unknown Artist', // Use the artist's name
+      imgUrl: searchResults[0]?.cover || 'default_artist_image_url', // Use the artist's cover as their image, fallback to a default URL
+    },
+    likedByUsers: [], // Empty likedByUsers array
+    addedAt: Date.now() // Current timestamp
+  };
+
+  return station;
 }
 
 
