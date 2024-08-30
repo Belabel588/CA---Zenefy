@@ -9,7 +9,7 @@ export function SongList({ songs, onRemoveSong, onUpdateSong }) {
     if (user.isAdmin) return true
     return song.owner?._id === user._id
   }
-// console.log(songs);
+
 
   return (
     <section>
