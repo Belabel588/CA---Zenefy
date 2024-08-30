@@ -17,17 +17,26 @@ import {
 import { store } from '../store.js'
 
 export async function loadStations() {
-  
   const filterBy = store.getState().stationModule.filterBy
-  console.log(filterBy);
-  
+  console.log(filterBy)
+
   store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
   // console.log('filterBy IN ACTIONS IS : ' , filterBy);
 
   try {
     const stations = await stationService.query(filterBy)
-    store.dispatch({ type: SET_STATIONS, stations })
+    const loggedInUser = store.getState().userModule.loggedinUser
+    if (!loggedInUser) {
+      store.dispatch({ type: SET_STATIONS, stations })
+    } else {
+      const stationIds = loggedInUser.likedStationsIds
+      const userStations = stations.filter((station) =>
+        loggedInUser.likedStationsIds.includes(station._id)
+      )
+
+      store.dispatch({ type: SET_STATIONS, stations: userStations })
+    }
   } catch (err) {
     console.error('Error loading stations:', err)
   } finally {
@@ -46,7 +55,6 @@ export async function removeStation(stationId) {
 
 export async function saveStation(station) {
   try {
-    console.log(station)
     const savedStation = await stationService.save(station)
     const type = station._id ? UPDATE_STATION : ADD_STATION
 

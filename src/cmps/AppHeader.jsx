@@ -34,6 +34,8 @@ export function AppHeader() {
   const location = useLocation()
   const [isHome, setIsHome] = useState()
 
+  const [userBy, setUserBy] = useState()
+
   useEffect(() => {
     if (location.pathname === '/') {
       setIsHome(true)
@@ -94,7 +96,7 @@ export function AppHeader() {
       const user = await userService.guestLogin()
       const cred = { username: user.username, password: '' }
       const res = await logInUser(cred)
-
+      await loadStations()
       navigate('/')
     } catch (err) {
       console.log(err)

@@ -1,6 +1,7 @@
 import { storageService } from './async-storage.service'
 import { utilService } from './util.service.js'
 import { userService } from './user.service.js'
+import { updateUser } from '../store/actions/user.actions.js'
 
 const STORAGE_KEY = 'stationDB'
 
@@ -53,9 +54,22 @@ function getById(stationId) {
   return storageService.get(STORAGE_KEY, stationId)
 }
 
-async function remove(stationId) {
+async function remove(stationIdToRemove) {
   // throw new Error('Nope')
-  await storageService.remove(STORAGE_KEY, stationId)
+  try {
+    const loggedInUser = userService.getLoggedinUser()
+    if (!loggedInUser.likedStationsIds.includes(stationIdToRemove)) return
+
+    await storageService.remove(STORAGE_KEY, stationIdToRemove)
+
+    const newStationsIds = loggedInUser.likedStationsIds.filter(
+      (stationId) => stationId !== stationIdToRemove
+    )
+    const updatedUser = { ...loggedInUser, likedStationsIds: newStationsIds }
+    await updateUser(updatedUser)
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 async function save(station) {
@@ -76,7 +90,12 @@ async function save(station) {
         items: station.items,
       }
     }
+
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
+    const loggedInUser = userService.getLoggedinUser()
+    loggedInUser.likedStationsIds.push(stationToSave._id)
+    console.log(loggedInUser)
+    await updateUser(loggedInUser)
   } else {
     var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {
@@ -91,6 +110,10 @@ async function save(station) {
       //   creator: userService.getLoggedinUser(),
     }
     savedStation = await storageService.post(STORAGE_KEY, stationToSave)
+    const loggedInUser = userService.getLoggedinUser()
+    loggedInUser.likedStationsIds.push(stationToSave._id)
+    console.log(loggedInUser)
+    await updateUser(loggedInUser)
   }
   return savedStation
 }
@@ -141,27 +164,28 @@ async function getItemsStation(itemId) {
 }
 
 async function getStationData(stationId) {
-
-  const stations = await storageService.query(STORAGE_KEY) 
-  const foundStation = stations.find(station => station._id === stationId)
+  const stations = await storageService.query(STORAGE_KEY)
+  const foundStation = stations.find((station) => station._id === stationId)
 
   if (!foundStation) {
     return {
       stationsWithSameType: [],
-      combinedTags: []
+      combinedTags: [],
     }
   }
 
-
-  const stationsWithSameType = stations.filter(station => station.stationType === foundStation.stationType)
-  const combinedTags = stationsWithSameType.map(station => station.tags).flat()
+  const stationsWithSameType = stations.filter(
+    (station) => station.stationType === foundStation.stationType
+  )
+  const combinedTags = stationsWithSameType
+    .map((station) => station.tags)
+    .flat()
 
   return {
     stationsWithSameType,
-    combinedTags
+    combinedTags,
   }
 }
-
 
 function _createStations() {
   const demoStations = [
