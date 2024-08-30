@@ -6,6 +6,7 @@ import { loadStations } from '../store/actions/station.actions.js'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect, useRef } from 'react'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
+import { userService } from '../services/user.service.js'
 import { logout } from '../store/actions/user.actions.js'
 import { FaSpotify } from 'react-icons/fa'
 import { FaRegUserCircle } from 'react-icons/fa'
@@ -17,9 +18,13 @@ import { RxCross2 } from 'react-icons/rx'
 import zenefyLogo from '/public/img/zenefy-logo.png'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 
+import { logInUser } from '../store/actions/user.actions.js'
+
 export function AppHeader() {
-  const user = useSelector((storeState) => storeState.userModule.user)
-  const filterBy = useSelector((storeState) => storeState.stationModule.filterBy)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
+  const filterBy = useSelector(
+    (storeState) => storeState.stationModule.filterBy
+  )
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -62,7 +67,7 @@ export function AppHeader() {
       filterBy: {
         ...filterBy,
         [field]: value,
-      }
+      },
     })
 
     // Reload the stations with the updated filter
@@ -82,6 +87,21 @@ export function AppHeader() {
   function onSearchClick() {
     inputRef.current.focus()
     navigate('/search')
+  }
+
+  async function onLoginGuest() {
+    try {
+      const user = await userService.guestLogin()
+      const cred = { username: user.username, password: '' }
+      const res = await logInUser(cred)
+
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+      showErrorMsg('Error login')
+    } finally {
+      showSuccessMsg('Welcome')
+    }
   }
 
   return (
@@ -117,15 +137,18 @@ export function AppHeader() {
       {user?.isAdmin && <NavLink to='/admin'>Admin</NavLink>}
 
       {!user && (
-        <NavLink to='login' className='login-link'>
-          <FaRegUserCircle className='user-logo' />
-        </NavLink>
+        <div className='user-container'>
+          <button onClick={onLoginGuest} className='guest-login-button'>
+            Guest?
+          </button>
+          <NavLink to='login' className='login-link'>
+            <FaRegUserCircle className='user-logo' />
+          </NavLink>
+        </div>
       )}
       {user && (
         <div className='user-info'>
-          <Link to={`user/${user._id}`}>
-            {user.fullname}
-          </Link>
+          <Link to={`user/${user._id}`}>{user.fullname}</Link>
           <button onClick={onLogout}>logout</button>
         </div>
       )}

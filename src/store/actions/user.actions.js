@@ -4,6 +4,7 @@ import { store } from '../store.js'
 
 export function logInUser(credentials) {
   return userService.login(credentials).then((loggedInUser) => {
+    console.log(loggedInUser)
     store.dispatch({ type: SET_LOGGED_USER, loggedinUser: loggedInUser })
     return loggedInUser // Ensure this returns the user
   })

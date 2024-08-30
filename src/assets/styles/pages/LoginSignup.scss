@@ -45,3 +45,36 @@
 		color: $clr2;
 	}
 }
+
+.login-page{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-items: center;
+	gap: 1em;
+}
+
+
+.guest-login-button{
+	display: inline-block;
+	background: linear-gradient(135deg, #1db954, #1ed760);
+	color: white;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 50px;
+	text-align: center;
+	cursor: pointer;
+	transition: background 0.3s ease, transform 0.2s ease;
+
+  
+	&:hover {
+	  background: linear-gradient(135deg, #1ed760, #1db954);
+	  transform: scale(1.05);
+	}
+  
+	&:active {
+	  transform: scale(0.95);
+	}
+}

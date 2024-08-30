@@ -15,11 +15,14 @@ import { LoginSignup } from '../src/pages/LoginSignup.jsx'
 import { SideBar } from './cmps/SideBar.jsx'
 import { StationEditModal } from './cmps/StationEditModal.jsx'
 
+import { UserMsg } from './cmps/UserMsg.jsx'
+
 export function RootCmp() {
   return (
     <section className='app main-layout'>
       <AppHeader />
       <SideBar />
+      <UserMsg />
 
       <div className='main-content'>
         <main>

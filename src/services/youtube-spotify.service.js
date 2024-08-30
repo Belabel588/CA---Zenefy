@@ -32,7 +32,7 @@ async function getVideos(search) {
 async function createList(search) {
   const db = `${search}Youtube`
   let videos
-  const list = []
+  // const list = []
 
   const res = await storageService.query(db)
   videos = res[0].items
@@ -41,6 +41,18 @@ async function createList(search) {
 
   const regex = new RegExp(search, 'i')
 
+  // const list = videos.map((video)=>{
+  //   const currVideo = createVideo(videos[i])
+
+  //   spotifyInfo.filter((track) => regex.test(track.name === currVideo.title))
+  //   return {
+  //     url: currVideo.url,
+  //     name: spotifyInfo[i].name,
+  //     artist: spotifyInfo[i].artist,
+  //     album: spotifyInfo[i].album,
+  //     cover: spotifyInfo[i].coverArt,
+  //   }
+  // })
   for (var i = 0; i < videos.length; i++) {
     const currVideo = createVideo(videos[i])
 
