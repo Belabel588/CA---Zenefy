@@ -75,7 +75,7 @@ async function createList(search) {
     }
   }
 
-  save(listDB, list)
+  // save(listDB, list)
   return list
 }
 
@@ -124,7 +124,7 @@ async function getSpotify(search) {
     coverArt: track.album.images[0]?.url,
   }))
 
-  save(db, tracksToSave)
+  // save(db, tracksToSave)
   return tracksToSave
 }
 
