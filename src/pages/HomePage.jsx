@@ -51,6 +51,10 @@ export function HomePage() {
     (stateSelector) => stateSelector.stationModule.currColor
   )
 
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
+
   const isHover = useRef(false)
 
   const pageRef = useRef()

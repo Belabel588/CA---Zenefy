@@ -45,13 +45,16 @@ export function StationList(gradientRefOne, gradientRefTwo) {
     (stateSelector) => stateSelector.stationModule.currColor
   )
 
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
   const isHover = useRef(false)
 
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   function onSelectStation(stationId) {
     setCurrStation(stationId)
-    setCurrItem('', currStation)
+    setCurrItem(0, currStation)
   }
   let counter = 0
 
@@ -110,9 +113,12 @@ export function StationList(gradientRefOne, gradientRefTwo) {
               <div
                 className='play-button-container'
                 onClick={() => {
+                  if (station.items.length === 0) return
+                  if (currStation._id === station._id) {
+                    setIsPlaying(true)
+                    return
+                  }
                   onSelectStation(station._id)
-
-                  setIsPlaying(true)
                 }}
               >
                 <BiPlay

@@ -15,6 +15,8 @@ import {
   saveStation,
 } from '../store/actions/station.actions.js'
 
+import { updateUser } from '../store/actions/user.actions.js'
+
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { BiSkipNext } from 'react-icons/bi'
@@ -55,6 +57,10 @@ export function AppFooter() {
     (stateSelector) => stateSelector.stationModule.stations
   )
 
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
+
   const [station, setStation] = useState([])
 
   const [urlToPlay, setUrlToPlay] = useState()
@@ -78,6 +84,7 @@ export function AppFooter() {
       }
     }
     setCurrentTime(0)
+
     setCurrColor(currStation.cover)
     setLikedStation()
 
@@ -86,6 +93,10 @@ export function AppFooter() {
       setDuration(durationToSet)
     }, 1000)
   }, [currStation, currIdx])
+
+  useEffect(() => {
+    playerRef.current.seekTo(0)
+  }, [currItem])
 
   useEffect(() => {
     if (!isPlaying) return
@@ -241,11 +252,20 @@ export function AppFooter() {
 
   async function likeSong(itemToAdd) {
     if (itemToAdd.url === '') return
-    console.log(itemToAdd)
+    if (!user) return
+
     const likedStation = stations.find((station) => station.isLiked)
     likedStation.items.push(itemToAdd)
-    await saveStation(likedStation)
-    setLikedStation()
+    try {
+      await saveStation(likedStation)
+      const likedSongsIds = user.likedSongsIds
+      likedSongsIds.push(itemToAdd.id)
+      const userToSave = { ...user, likedSongsIds }
+      await updateUser(userToSave)
+      setLikedStation()
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (

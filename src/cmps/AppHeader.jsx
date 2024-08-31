@@ -12,7 +12,8 @@ import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 import zenefyLogo from '/public/img/zenefy-logo.png'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
-// import { loadStations } from '../store/actions/station.actions.js'
+
+import { loadStations } from '../store/actions/station.actions.js'
 
 import { logInUser } from '../store/actions/user.actions.js'
 
@@ -72,6 +73,8 @@ export function AppHeader() {
   async function onLogout() {
     try {
       await logout()
+      await loadStations()
+
       navigate('/')
       showSuccessMsg(`Bye now`)
     } catch (err) {

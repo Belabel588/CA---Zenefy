@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { storageService } from './async-storage.service.js'
+import { utilService } from './util.service.js'
 
 export const apiService = {
   getVideos,
@@ -33,11 +34,17 @@ async function createList(search) {
   const db = `${search}Youtube`
   let videos
   const list = []
+  const listDB = `${search}List`
 
   const res = await storageService.query(db)
+  const listRes = await storageService.query(listDB)
   videos = res[0].items
 
   const spotifyInfo = await getSpotify(search)
+  console.log(listRes)
+  if (listRes[0] && listRes[0].length > 0) {
+    return listRes[0]
+  }
 
   const regex = new RegExp(search, 'i')
 
@@ -64,9 +71,11 @@ async function createList(search) {
       artist: spotifyInfo[i].artist,
       album: spotifyInfo[i].album,
       cover: spotifyInfo[i].coverArt,
+      id: utilService.makeId(),
     }
   }
 
+  save(listDB, list)
   return list
 }
 
