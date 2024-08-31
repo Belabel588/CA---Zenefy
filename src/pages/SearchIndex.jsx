@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service.js'
+import { LoadingAnimation } from '../cmps/LoadingAnimation.jsx'
 import {
   loadStations,
   removeStation,
@@ -19,19 +20,22 @@ import { apiService } from '../services/youtube-spotify.service.js'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
+import { SET_IS_LOADING } from '../store/reducers/user.reducer.js'
 
 export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
     stationService.getDefaultFilter()
   )
   const [allTags, setAllTags] = useState([]) // State to store the tags
-  const [searchResults, setSearchResults] = useState({
-    items: [{}, {}, {}, {}],
-  }) // State to store the search results
+  const [searchResults, setSearchResults] = useState({ items: [{}, {}, {}, {}], }) // State to store the search results
   const [refactoredResults, setRefactoredResults] = useState([]) // State to store refactored results
-  const [searchedStation, setSearchedStation] = useState({
-    items: [{}, {}, {}, {}],
-  })
+  const [searchedStation, setSearchedStation] = useState({ items: [{}, {}, {}, {}], })
+
+
+  const loading = useSelector(
+    (storeState) => storeState.stationModule.isLoading
+  )
+
 
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
@@ -102,23 +106,25 @@ export function SearchIndex() {
 
   async function handleSearchResults(searchResults) {
     try {
+      
+
       const refactored = await stationService.createStationFromSearch(
         searchResults,
         filterBy.txt
-      )
+      );
 
-      setRefactoredResults(refactored) // Store the refactored results in the state
+      setRefactoredResults(refactored); // Store the refactored results in the state
 
-      const savedStation = await stationService.save(refactored)
-      console.log(searchResults)
-      console.log(savedStation)
+      const savedStation = await stationService.save(refactored);
 
-      setSearchedStation(savedStation)
-      // console.log('Refactored search results are:', refactored)
+      setSearchedStation(savedStation);
+      dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
-      console.error('Error refactoring search results:', error)
+      console.error('Error refactoring search results:', error);
+      setLoading(false); // Stop loading in case of an error
     }
   }
+
 
   function getAllTags(stations) {
     return stations.map((station) => station.tags).flat() // Flatten the array of arrays into a single array
@@ -211,6 +217,8 @@ export function SearchIndex() {
         ))}
       </ul>
     </section>
+  ) : loading ? (
+    <LoadingAnimation />  // Show loading animation if loading is true
   ) : (
     <>
       <div className='search-results'>
@@ -233,11 +241,11 @@ export function SearchIndex() {
                   <div
                     className='pause-button-container'
                     onMouseEnter={() => {
-                      console.log(isHover.current)
-                      isHover.current = true
+                      console.log(isHover.current);
+                      isHover.current = true;
                     }}
                     onMouseLeave={() => {
-                      isHover.current = false
+                      isHover.current = false;
                     }}
                   >
                     <BiPause
@@ -249,24 +257,20 @@ export function SearchIndex() {
                   <div
                     className='play-button-container'
                     onMouseEnter={() => {
-                      isHover.current = true
+                      isHover.current = true;
                     }}
                     onMouseLeave={() => {
-                      isHover.current = false
+                      isHover.current = false;
                     }}
                   >
-                    {' '}
                     <BiPlay
                       className='play-button'
                       onClick={() => {
-                        if (
-                          currItem.id === item.id
-                          // searchedStation._id === currStation._id
-                        ) {
-                          setIsPlaying(true)
-                          return
+                        if (currItem.id === item.id) {
+                          setIsPlaying(true);
+                          return;
                         }
-                        onPlaySearchedSong(item.id)
+                        onPlaySearchedSong(item.id);
                       }}
                     />
                   </div>
@@ -277,13 +281,11 @@ export function SearchIndex() {
                 <div className='name-container'>
                   <span
                     className={
-                      currItem.id === item.id
-                        ? 'item-name playing'
-                        : 'item-name'
+                      currItem.id === item.id ? 'item-name playing' : 'item-name'
                     }
                     onClick={() => {
-                      if (isHover.current) return
-                      navigate(`/item/${item.id}`)
+                      if (isHover.current) return;
+                      navigate(`/item/${item.id}`);
                     }}
                   >
                     {item.name}
@@ -303,7 +305,8 @@ export function SearchIndex() {
         </section>
       </div>
     </>
-  )
+  );
+  
 }
 
 // <div className='info-container'>
