@@ -45,6 +45,9 @@ export function StationList(gradientRefOne, gradientRefTwo) {
     (stateSelector) => stateSelector.stationModule.currColor
   )
 
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
   const isHover = useRef(false)
 
   const [currPageColor, setCurrColorPage] = useState(currColor)

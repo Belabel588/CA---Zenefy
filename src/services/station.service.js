@@ -20,6 +20,7 @@ export const stationService = {
   getItemsStation,
   getStationData,
   createStationFromSearch,
+  likeSong,
 }
 window.cs = stationService
 
@@ -74,6 +75,10 @@ async function remove(stationIdToRemove) {
 }
 
 async function save(station) {
+  console.log(station)
+  const loggedInUser = userService.getLoggedinUser()
+  console.log(loggedInUser)
+
   var stationToSave
   let savedStation
   if (station._id) {
@@ -83,38 +88,49 @@ async function save(station) {
         items: station.items,
       }
     } else {
+      const likedBy = station.likedByUsers
+      // station.likedByUsers.push({
+      //   id: loggedInUser._id,
+      //   username: loggedInUser.username,
+      // })
+
       stationToSave = {
         _id: station._id,
         title: station.title,
         cover: station.cover,
         preview: station.preview,
         items: station.items,
+        // likedByUsers: station.likedByUsers,
       }
     }
 
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
-    const loggedInUser = userService.getLoggedinUser()
     loggedInUser.likedStationsIds.push(stationToSave._id)
     console.log(loggedInUser)
     await updateUser(loggedInUser)
   } else {
-    var stations = await storageService.query(STORAGE_KEY)
+    // var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {
-      title: station.title || `My playlist #${stations.length}`,
+      title:
+        station.title || `My playlist #${loggedInUser.likedStationsIds.length}`,
       items: station.items || [],
       cover:
         station.cover ||
         'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
       preview: station.preview || '',
       addedAt: station.addedAt || Date.now(),
+      likedByUsers: [{ id: loggedInUser._id, username: loggedInUser.username }],
       // Later, owner is set by the backend
       //   creator: userService.getLoggedinUser(),
     }
+
     savedStation = await storageService.post(STORAGE_KEY, stationToSave)
-    const loggedInUser = userService.getLoggedinUser()
-    loggedInUser.likedStationsIds.push(stationToSave._id)
-    console.log(loggedInUser)
-    await updateUser(loggedInUser)
+
+    if (!station.isSearched) {
+      loggedInUser.likedStationsIds.push(stationToSave._id)
+
+      await updateUser(loggedInUser)
+    }
   }
   return savedStation
 }
@@ -190,6 +206,7 @@ async function getStationData(stationId) {
 async function createStationFromSearch(searchResults) {
   // Create a new station object
   const station = {
+    isSearched: true,
     stationType: 'music', // Assuming the station type is always 'music'
     title: searchResults[0]?.artist || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
     items: searchResults.map((result) => ({
@@ -214,6 +231,26 @@ async function createStationFromSearch(searchResults) {
   }
 
   return station
+}
+
+async function likeSong(itemToAdd) {
+  if (itemToAdd.url === '') return
+  if (!user) return
+
+  try {
+    const stations = await query()
+    const likedStation = stations.find((station) => station.isLiked)
+    likedStation.items.push(itemToAdd)
+    const user = await userService.getLoggedinUser()
+    await saveStation(likedStation)
+    const likedSongsIds = user.likedSongsIds
+    likedSongsIds.push(itemToAdd.id)
+    const userToSave = { ...user, likedSongsIds }
+    await updateUser(userToSave)
+    setLikedStation()
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 function _createStations() {

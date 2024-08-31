@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service.js'
@@ -11,15 +11,20 @@ import {
   setCurrItemIdx,
   setCurrItem,
   setIsPlaying,
+  saveStation,
 } from '../store/actions/station.actions.js'
+import { updateUser } from '../store/actions/user.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
+
+import { BiPlay } from 'react-icons/bi'
+import { BiPause } from 'react-icons/bi'
 
 export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
     stationService.getDefaultFilter()
   )
   const [allTags, setAllTags] = useState([]) // State to store the tags
-  const [searchResults, setSearchResults] = useState([]) // State to store the search results
+  const [searchResults, setSearchResults] = useState({ items: [] }) // State to store the search results
   const [refactoredResults, setRefactoredResults] = useState([]) // State to store refactored results
   const [searchedStation, setSearchedStation] = useState(
     stationService.getEmptyStation()
@@ -32,11 +37,27 @@ export function SearchIndex() {
     (storeState) => storeState.stationModule.filterBy
   )
 
+  const isPlaying = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaying
+  )
+  const currItem = useSelector(
+    (stateSelector) => stateSelector.stationModule.currItem
+  )
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currStation
+  )
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
+
+  const [likedItems, setLikedItems] = useState([])
+
+  const isHover = useRef(false)
+
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    console.log(defaultFilterBy)
-
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilterBy })
     loadStations()
   }, [])
@@ -52,7 +73,7 @@ export function SearchIndex() {
     const fetchSearchResults = async () => {
       try {
         const results = await apiService.getVideos(filterBy.txt)
-        console.log(results)
+
         setSearchResults(results) // Save the results in the state
       } catch (error) {
         console.error('Failed to fetch search results:', error)
@@ -72,14 +93,22 @@ export function SearchIndex() {
     }
   }, [searchResults])
 
+  useEffect(() => {
+    setLikedStation()
+  }, [searchedStation])
+
   async function handleSearchResults(searchResults) {
     try {
       const refactored = await stationService.createStationFromSearch(
         searchResults
       )
+
       setRefactoredResults(refactored) // Store the refactored results in the state
 
       const savedStation = await stationService.save(refactored)
+      console.log(searchResults)
+      console.log(savedStation)
+
       setSearchedStation(savedStation)
       // console.log('Refactored search results are:', refactored)
     } catch (error) {
@@ -98,14 +127,45 @@ export function SearchIndex() {
 
   async function onPlaySearchedSong(songIdx) {
     const stationId = searchedStation._id
+    // console.log(searchedStation)
 
     await setCurrStation(stationId)
     await setCurrItem(songIdx, searchedStation)
     await setIsPlaying(true)
   }
 
+  async function setLikedStation() {
+    const like = await stations.find(
+      (station) => station._id === 'likedSongs123'
+    )
+    // console.log(like)
+    const items = like.items
+    const itemsId = items.map((item) => {
+      return item.id
+    })
+    setLikedItems(itemsId)
+  }
+
+  async function likeSong(itemToAdd) {
+    if (itemToAdd.url === '') return
+    if (!user) return
+
+    const likedStation = stations.find((station) => station.isLiked)
+    likedStation.items.push(itemToAdd)
+    try {
+      await saveStation(likedStation)
+      const likedSongsIds = user.likedSongsIds
+      likedSongsIds.push(itemToAdd.id)
+      const userToSave = { ...user, likedSongsIds }
+      await updateUser(userToSave)
+      setLikedStation()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   // Log the refactored results before the return
-  console.log('Refactored results to render:', refactoredResults)
+  // console.log('Refactored results to render:', refactoredResults)
 
   return filterBy.txt === '' ? (
     <section className='search-section'>
@@ -157,25 +217,117 @@ export function SearchIndex() {
         </section>
         <section className='songs'>
           <h1>Songs</h1>
-          {searchResults.slice(0, 4).map((result, idx) => (
+          {searchedStation.items.slice(0, 4).map((item, idx) => (
             <div
-              key={idx}
+              key={item.id}
               className='song-item'
-              onDoubleClick={() => onPlaySearchedSong(idx)}
+              onDoubleClick={() => onPlaySearchedSong(item.id)}
             >
-              <img
-                src={result.cover}
-                alt={result.name}
-                className='song-cover'
-              />
-              <div className='song-details'>
-                <h2>{result.name}</h2>
-                <h6>{result.artist}</h6>
+              <div className='img-container'>
+                {(isPlaying && currItem.id === item.id && (
+                  <div
+                    className='pause-button-container'
+                    onMouseEnter={() => {
+                      console.log(isHover.current)
+                      isHover.current = true
+                    }}
+                    onMouseLeave={() => {
+                      isHover.current = false
+                    }}
+                  >
+                    <BiPause
+                      className='pause-button'
+                      onClick={() => setIsPlaying(false)}
+                    />
+                  </div>
+                )) || (
+                  <div
+                    className='play-button-container'
+                    onMouseEnter={() => {
+                      isHover.current = true
+                    }}
+                    onMouseLeave={() => {
+                      isHover.current = false
+                    }}
+                  >
+                    {' '}
+                    <BiPlay
+                      className='play-button'
+                      onClick={() => {
+                        if (
+                          currItem.id === item.id &&
+                          searchedStation._id === currStation._id
+                        ) {
+                          setIsPlaying(true)
+                          return
+                        }
+                        onPlaySearchedSong(item.id)
+                      }}
+                    />
+                  </div>
+                )}
+                <img src={item.cover} alt='' />
               </div>
+              <div className='song-details'>
+                <span
+                  className='item-name'
+                  onClick={() => {
+                    if (isHover.current) return
+                    navigate(`/item/${item.id}`)
+                  }}
+                >
+                  {item.name}
+                </span>
+                <span className='artist-name'>{item.artist}</span>
+              </div>
+              <button onClick={() => likeSong(item)}>
+                {(likedItems.includes(item.id) && <AddedIcon />) || (
+                  <PlusIcon />
+                )}
+              </button>
             </div>
           ))}
         </section>
       </div>
     </>
+  )
+}
+
+// <div className='info-container'>
+//   <b
+//     className={
+//       currStation._id === station._id
+//         ? `station-name playing`
+//         : 'station-name'
+//     }
+//   >
+//     {station.title}
+//   </b>
+
+function PlusIcon() {
+  return (
+    <svg
+      role='img'
+      aria-hidden='true'
+      viewBox='0 0 16 16'
+      xmlns='http://www.w3.org/2000/svg'
+      className='svg-icon plus'
+    >
+      <path d='M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z'></path>
+      <path d='M11.75 8a.75.75 0 0 1-.75.75H8.75V11a.75.75 0 0 1-1.5 0V8.75H5a.75.75 0 0 1 0-1.5h2.25V5a.75.75 0 0 1 1.5 0v2.25H11a.75.75 0 0 1 .75.75z'></path>
+    </svg>
+  )
+}
+function AddedIcon() {
+  return (
+    <svg
+      role='img'
+      aria-hidden='true'
+      viewBox='0 0 16 16'
+      xmlns='http://www.w3.org/2000/svg'
+      className='svg-icon added'
+    >
+      <path d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm11.748-1.97a.75.75 0 0 0-1.06-1.06l-4.47 4.47-1.405-1.406a.75.75 0 1 0-1.061 1.06l2.466 2.467 5.53-5.53z'></path>
+    </svg>
   )
 }
