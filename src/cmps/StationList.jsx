@@ -113,6 +113,7 @@ export function StationList(gradientRefOne, gradientRefTwo) {
               <div
                 className='play-button-container'
                 onClick={() => {
+                  if (station.items.length === 0) return
                   if (currStation._id === station._id) {
                     setIsPlaying(true)
                     return

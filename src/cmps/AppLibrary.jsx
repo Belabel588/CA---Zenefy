@@ -121,6 +121,7 @@ export function AppLibrary() {
                     <BiPlay
                       className='play-button'
                       onClick={() => {
+                        if (station.items.length === 0) return
                         if (currStation._id === station._id) {
                           setIsPlaying(true)
                           return

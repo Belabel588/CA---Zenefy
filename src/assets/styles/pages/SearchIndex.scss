@@ -117,13 +117,19 @@
       flex-direction: column;
       justify-content: center;
 
-      .item-name {
-        text-wrap: nowrap;
-        overflow: hidden;
+      .name-container{
         width: 250px;
+        overflow: hidden;
 
-        &:hover{
-          text-decoration: underline;
+        .item-name {
+          width: fit-content;
+          max-width: 250px;
+          text-wrap: nowrap;
+          overflow: hidden;
+          
+          &:hover{
+            text-decoration: underline;
+          }
         }
       }
 
@@ -133,8 +139,12 @@
         color: $grey-light;
         /* A lighter color for the artist name */
       }
-    }
 
+      
+    }
+.time{
+        color: $grey-light;
+      }
     &:hover{
 
 

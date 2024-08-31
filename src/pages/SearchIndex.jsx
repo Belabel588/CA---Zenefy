@@ -18,6 +18,7 @@ import { apiService } from '../services/youtube-spotify.service.js'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
+import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 
 export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
@@ -273,24 +274,30 @@ export function SearchIndex() {
                 <img src={item.cover} alt='' />
               </div>
               <div className='song-details'>
-                <span
-                  className={
-                    currItem.id === item.id ? 'item-name playing' : 'item-name'
-                  }
-                  onClick={() => {
-                    if (isHover.current) return
-                    navigate(`/item/${item.id}`)
-                  }}
-                >
-                  {item.name}
-                </span>
+                <div className='name-container'>
+                  <span
+                    className={
+                      currItem.id === item.id
+                        ? 'item-name playing'
+                        : 'item-name'
+                    }
+                    onClick={() => {
+                      if (isHover.current) return
+                      navigate(`/item/${item.id}`)
+                    }}
+                  >
+                    {item.name}
+                  </span>
+                </div>
                 <span className='artist-name'>{item.artist}</span>
               </div>
+              <span className='time'>3:33</span>
               <button onClick={() => likeSong(item)}>
                 {(likedItems.includes(item.id) && <AddedIcon />) || (
                   <PlusIcon />
                 )}
               </button>
+              <HiOutlineDotsHorizontal />
             </div>
           ))}
         </section>
