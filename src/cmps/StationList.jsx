@@ -55,6 +55,7 @@ export function StationList(gradientRefOne, gradientRefTwo) {
   function onSelectStation(stationId) {
     setCurrStation(stationId)
     setCurrItem(0, currStation)
+    setIsPlaying(true)
   }
   let counter = 0
 
