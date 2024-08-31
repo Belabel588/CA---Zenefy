@@ -16,9 +16,12 @@ import {
 import { updateUser } from '../store/actions/user.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
 
+import { EditOptions } from '../cmps/EditOptions.jsx'
+
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
+import { FaPlus } from 'react-icons/fa'
 
 export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
@@ -52,6 +55,7 @@ export function SearchIndex() {
   const user = useSelector(
     (stateSelector) => stateSelector.userModule.loggedinUser
   )
+  const [userStations, setUserStations] = useState([])
 
   const [likedItems, setLikedItems] = useState([])
 
@@ -98,6 +102,12 @@ export function SearchIndex() {
 
   useEffect(() => {
     setLikedStation()
+
+    const userStationsToSet = stations.filter((station) =>
+      user.likedStationsIds.includes(station._id)
+    )
+    setUserStations(userStationsToSet)
+    console.log(userStations)
   }, [searchedStation])
 
   async function handleSearchResults(searchResults) {
@@ -148,7 +158,6 @@ export function SearchIndex() {
       return item.id
     })
     setLikedItems(itemsId)
-    console.log(likedItems)
   }
 
   async function likeSong(itemToAdd) {
@@ -169,8 +178,72 @@ export function SearchIndex() {
     }
   }
 
-  // Log the refactored results before the return
-  // console.log('Refactored results to render:', refactoredResults)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedSong, setSelectedSong] = useState(null)
+
+  const playlists = user.likedSongsIds
+
+  const handleAddSong = (song) => {
+    setSelectedSong(song)
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setSelectedSong(null)
+  }
+
+  const handleAddToPlaylist = (playlistId) => {
+    console.log(`Adding ${selectedSong} to playlist ${playlistId}`)
+    handleCloseModal()
+  }
+
+  const options = [
+    {
+      text: 'Add to playlist',
+      icon: <FaPlus />,
+      onClick: () => {
+        onCreateNewStation()
+      },
+    },
+  ]
+
+  const [itemToAdd, setItemToAdd] = useState({})
+
+  const editRef = useRef()
+  async function onDeleteStation(stationToDelete) {
+    if (stationToDelete.isLiked === true) return
+
+    try {
+      await removeStation(station._id)
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const [isVisible, setIsVisible] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  function handleClick(event, itemToAdd) {
+    event.preventDefault()
+    setPosition({ x: event.pageX - 100, y: event.pageY })
+
+    setIsVisible(true)
+
+    setItemToAdd(itemToAdd)
+  }
+
+  const handleClickOutside = () => {
+    setIsVisible(false)
+  }
+
+  function toggleModal() {
+    if (modalRef.current.style.display !== 'flex') {
+      modalRef.current.style.display = 'flex'
+    } else {
+      modalRef.current.style.display = 'none'
+    }
+  }
 
   return filterBy.txt === '' ? (
     <section className='search-section'>
@@ -227,6 +300,7 @@ export function SearchIndex() {
               key={item.id}
               className='song-item'
               onDoubleClick={() => onPlaySearchedSong(item.id)}
+              // style={{ position: 'relative' }}
             >
               <div className='img-container'>
                 {(isPlaying && currItem.id === item.id && (
@@ -297,11 +371,23 @@ export function SearchIndex() {
                   <PlusIcon />
                 )}
               </button>
-              <HiOutlineDotsHorizontal />
+              <HiOutlineDotsHorizontal
+                className='options-button'
+                onClick={() => handleClick(event, item)}
+              />
             </div>
           ))}
         </section>
       </div>
+      <EditOptions
+        options={options}
+        editRef={editRef}
+        position={position}
+        isVisible={isVisible}
+        stations={stations}
+        itemToAdd={itemToAdd}
+        userStations={userStations}
+      />
     </>
   )
 }

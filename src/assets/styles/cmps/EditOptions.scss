@@ -7,7 +7,7 @@
     width: 200px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     // position: absolute;
-    // top: 5em;
+
     z-index: 2;
     // display: none;
 
@@ -35,4 +35,39 @@
         font-size: 20px;
       }
     }
+
+    &.add-to-playlist{
+
+
+    }
+  }
+
+  .add-to-stations-container{
+    // height: 200px;
+    // width: 200px;
+    width: 200px;
+    right: 200px;
+    background-color: $grey-dark;
+    border-radius: 10px;
+    position: absolute;
+    .station-container{
+      
+      border-radius: 10px;
+      padding: 1em;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      gap: 1em;
+      
+      &:hover{
+        background-color: $grey-medium;
+      }
+      img{
+        border-radius: 5px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+
   }

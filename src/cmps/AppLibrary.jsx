@@ -52,6 +52,12 @@ export function AppLibrary() {
     }
   }
 
+  function onSelectStation(stationId) {
+    setCurrStation(stationId)
+    setCurrItem(0, currStation)
+    setIsPlaying(true)
+  }
+
   return (
     <div className='library-container'>
       <div className='library-header'>

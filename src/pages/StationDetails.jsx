@@ -19,6 +19,7 @@ import {
   saveStation,
   removeStation,
   setCurrItemIdx,
+  loadStations,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -58,12 +59,17 @@ export function StationDetails() {
   const isHover = useRef(false)
   let counter = 0
 
+  const stations = useSelector(
+    (stateSelector) => stateSelector.stationModule.stations
+  )
+
   const pageRef = useRef()
   const modalRef = useRef()
 
   const currColor = useSelector(
     (stateSelector) => stateSelector.stationModule.currColor
   )
+
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   const [likedItems, setLikedItems] = useState([])
@@ -85,7 +91,8 @@ export function StationDetails() {
         console.error('Error fetching data:', error)
       }
     }
-
+    setLikedStation()
+    console.log(likedItems)
     setCoverColor()
   }, [stationId])
 
@@ -180,9 +187,9 @@ export function StationDetails() {
   ]
 
   async function setLikedStation() {
-    const like = await stations.find(
-      (station) => station._id === 'likedSongs123'
-    )
+    await loadStations()
+
+    const like = stations.find((station) => station._id === 'likedSongs123')
     console.log(like)
     const items = like.items
     const itemsId = items.map((item) => {
@@ -209,6 +216,14 @@ export function StationDetails() {
       console.log(err)
     }
   }
+
+  function onSelectStation(stationId) {
+    setCurrStation(stationId)
+    setCurrItem(0, currStation)
+    setIsPlaying(true)
+  }
+
+  console.log(likedItems)
 
   return (
     <section
@@ -353,14 +368,16 @@ export function StationDetails() {
                   {/* </div> */}
                 </div>
                 <span className='album'>{item.album}</span>
-                <span>{station.addedAt}</span>
+                <span>
+                  {Date(item.addedAt).toLocaleString('he').slice(0, 13)}
+                </span>
                 <span className='time' key={utilService.makeId()}>
                   {'3:33'}
                 </span>
                 <button onClick={() => likeSong(item)} className='like-button'>
-                  {(likedItems.includes(item.id) && <AddedIcon />) || (
-                    <PlusIcon />
-                  )}
+                  {(likedItems.includes(item.id) && (
+                    <AddedIcon className={'added'} />
+                  )) || <PlusIcon className={'to-add'} />}
                 </button>
                 <HiOutlineDotsHorizontal />
               </div>

@@ -14,6 +14,7 @@ import { UserDetails } from '../src/pages/UserDetails.jsx'
 import { LoginSignup } from '../src/pages/LoginSignup.jsx'
 import { SideBar } from './cmps/SideBar.jsx'
 import { StationEditModal } from './cmps/StationEditModal.jsx'
+import { OptionsModal } from './cmps/OptionsModal.jsx'
 
 import { UserMsg } from './cmps/UserMsg.jsx'
 
