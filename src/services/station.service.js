@@ -74,8 +74,6 @@ async function remove(stationIdToRemove) {
 }
 
 async function save(station) {
-  console.log('saving station', station)
-
   var stationToSave
   let savedStation
   if (station._id) {
