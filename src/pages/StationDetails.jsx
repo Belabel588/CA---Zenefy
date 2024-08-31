@@ -18,6 +18,7 @@ import {
   setCurrColor,
   saveStation,
   removeStation,
+  setCurrItemIdx,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -91,8 +92,12 @@ export function StationDetails() {
   }
 
   async function onPlaySong(songId) {
-    await setCurrStation(station._id)
-    await setCurrItem(songId, station)
+    const stationToSet = { ...station }
+    await setCurrStation(stationToSet._id)
+    await setCurrItem(songId, { ...station }, true)
+    const idxToSet = stationToSet.items.findIndex((item) => item.id === songId)
+    console.log(idxToSet)
+    setCurrItemIdx(idxToSet)
     setIsPlaying(true)
   }
 
@@ -220,8 +225,11 @@ export function StationDetails() {
                 <BiPlay
                   className='play-button'
                   onClick={() => {
-                    setIsPlaying(true)
-                    setCurrStation(station._id)
+                    if (currStation._id === station._id) {
+                      setIsPlaying(true)
+                      return
+                    }
+                    onSelectStation(station._id)
                   }}
                 />
               )}
@@ -249,7 +257,9 @@ export function StationDetails() {
               <div
                 className='song-container'
                 key={item.id}
-                onDoubleClick={() => onPlaySong(item.id)}
+                onDoubleClick={() => {
+                  onPlaySong(item.id)
+                }}
                 onMouseEnter={() => {
                   isHover.current = true
                 }}
@@ -279,12 +289,11 @@ export function StationDetails() {
                           className='play-button'
                           onClick={async () => {
                             if (
-                              JSON.stringify(currStation) !==
-                              JSON.stringify(station)
+                              JSON.stringify(currItem) !== JSON.stringify(item)
                             ) {
                               await setCurrStation(station._id)
+                              await setCurrItem(item.id, station)
                             }
-                            await setCurrItem(item.id, station)
 
                             setIsPlaying(true)
                           }}

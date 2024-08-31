@@ -68,10 +68,10 @@ export async function saveStation(station) {
 export async function setCurrStation(stationId) {
   try {
     const station = await stationService.getById(stationId)
-
+    const stationToSet = { ...station }
     store.dispatch({
       type: SET_CURR_STATION,
-      currStation: { ...station },
+      currStation: { ...stationToSet },
     })
 
     return station
@@ -80,15 +80,35 @@ export async function setCurrStation(stationId) {
   }
 }
 
-export async function setCurrItem(itemId, currStation) {
+export async function setCurrItem(itemId, currStation, isDoubleClick = false) {
   if (itemId) {
     // later will get item from search
     const item = currStation.items.find((item) => item.id === itemId)
+    if (isDoubleClick) {
+      const itemToSet = { ...item }
+      const idx = currStation.items.findIndex((item) => item.id === itemId)
+      store.dispatch({
+        type: SET_CURR_ITEM,
+        currItem: itemToSet,
+        currItemIdx: idx,
+      })
+      return
+    }
+
     const idx = currStation.items.findIndex((item) => item.id === itemId)
-    store.dispatch({ type: SET_CURR_ITEM, currItem: item, currItemIdx: idx })
+    store.dispatch({
+      type: SET_CURR_ITEM,
+      currItem: item,
+      currItemIdx: idx,
+    })
   } else {
     const item = currStation.items[0]
-    store.dispatch({ type: SET_CURR_ITEM, currItem: item, currItemIdx: 0 })
+
+    store.dispatch({
+      type: SET_CURR_ITEM,
+      currItem: { ...item },
+      currItemIdx: 0,
+    })
   }
 }
 

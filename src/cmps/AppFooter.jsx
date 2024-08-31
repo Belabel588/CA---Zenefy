@@ -84,6 +84,7 @@ export function AppFooter() {
       }
     }
     setCurrentTime(0)
+
     setCurrColor(currStation.cover)
     setLikedStation()
 
@@ -92,6 +93,10 @@ export function AppFooter() {
       setDuration(durationToSet)
     }, 1000)
   }, [currStation, currIdx])
+
+  useEffect(() => {
+    playerRef.current.seekTo(0)
+  }, [currItem])
 
   useEffect(() => {
     if (!isPlaying) return

@@ -203,15 +203,18 @@ async function getStationData(stationId) {
     combinedTags,
   }
 }
-async function createStationFromSearch(searchResults) {
+async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
+  console.log(keyWord)
+  // if()
   const station = {
+    keyWord,
     isSearched: true,
     stationType: 'music', // Assuming the station type is always 'music'
     title: searchResults[0]?.artist || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
     items: searchResults.map((result) => ({
       artist: result.artist,
-      id: utilService.makeId(), // Generate a unique ID for each item
+      id: result.id, // Generate a unique ID for each item
       name: result.name,
       album: result.album,
       url: result.url,

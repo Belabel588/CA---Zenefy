@@ -24,11 +24,13 @@ export function SearchIndex() {
     stationService.getDefaultFilter()
   )
   const [allTags, setAllTags] = useState([]) // State to store the tags
-  const [searchResults, setSearchResults] = useState({ items: [] }) // State to store the search results
+  const [searchResults, setSearchResults] = useState({
+    items: [{}, {}, {}, {}],
+  }) // State to store the search results
   const [refactoredResults, setRefactoredResults] = useState([]) // State to store refactored results
-  const [searchedStation, setSearchedStation] = useState(
-    stationService.getEmptyStation()
-  )
+  const [searchedStation, setSearchedStation] = useState({
+    items: [{}, {}, {}, {}],
+  })
 
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
@@ -100,7 +102,8 @@ export function SearchIndex() {
   async function handleSearchResults(searchResults) {
     try {
       const refactored = await stationService.createStationFromSearch(
-        searchResults
+        searchResults,
+        filterBy.txt
       )
 
       setRefactoredResults(refactored) // Store the refactored results in the state
@@ -138,12 +141,13 @@ export function SearchIndex() {
     const like = await stations.find(
       (station) => station._id === 'likedSongs123'
     )
-    // console.log(like)
+    console.log(like)
     const items = like.items
     const itemsId = items.map((item) => {
       return item.id
     })
     setLikedItems(itemsId)
+    console.log(likedItems)
   }
 
   async function likeSong(itemToAdd) {
@@ -255,8 +259,8 @@ export function SearchIndex() {
                       className='play-button'
                       onClick={() => {
                         if (
-                          currItem.id === item.id &&
-                          searchedStation._id === currStation._id
+                          currItem.id === item.id
+                          // searchedStation._id === currStation._id
                         ) {
                           setIsPlaying(true)
                           return
@@ -270,7 +274,9 @@ export function SearchIndex() {
               </div>
               <div className='song-details'>
                 <span
-                  className='item-name'
+                  className={
+                    currItem.id === item.id ? 'item-name playing' : 'item-name'
+                  }
                   onClick={() => {
                     if (isHover.current) return
                     navigate(`/item/${item.id}`)

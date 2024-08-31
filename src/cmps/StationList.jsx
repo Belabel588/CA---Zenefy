@@ -54,7 +54,7 @@ export function StationList(gradientRefOne, gradientRefTwo) {
 
   function onSelectStation(stationId) {
     setCurrStation(stationId)
-    setCurrItem('', currStation)
+    setCurrItem(0, currStation)
   }
   let counter = 0
 
@@ -113,9 +113,11 @@ export function StationList(gradientRefOne, gradientRefTwo) {
               <div
                 className='play-button-container'
                 onClick={() => {
+                  if (currStation._id === station._id) {
+                    setIsPlaying(true)
+                    return
+                  }
                   onSelectStation(station._id)
-
-                  setIsPlaying(true)
                 }}
               >
                 <BiPlay
