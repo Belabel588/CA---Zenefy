@@ -204,12 +204,19 @@ export function SearchIndex() {
     handleCloseModal()
   }
 
+  const [addToPlaylist, setAddToPlaylist] = useState(false)
   const options = [
     {
       text: 'Add to playlist',
       icon: <FaPlus />,
       onClick: () => {
-        onCreateNewStation()
+        // onCreateNewStation()
+        console.log(addToPlaylist)
+        // if (!addToPlaylist) {
+        //   setAddToPlaylist(true)
+        // } else {
+        //   setAddToPlaylist(false)
+        // }
       },
     },
   ]
@@ -292,7 +299,7 @@ export function SearchIndex() {
       </ul>
     </section>
   ) : loading ? (
-    <LoadingAnimation /> // Show loading animation if loading is true
+    <LoadingAnimation />
   ) : (
     <>
       <div className='search-results' onClick={handleClickOutside}>
@@ -309,6 +316,9 @@ export function SearchIndex() {
               key={item.id}
               className='song-item'
               onDoubleClick={() => onPlaySearchedSong(item.id)}
+              onMouseLeave={() => {
+                if (!isHover.current) setIsVisible(false)
+              }}
               // style={{ position: 'relative' }}
             >
               <div className='img-container'>
@@ -393,6 +403,9 @@ export function SearchIndex() {
         itemToAdd={itemToAdd}
         userStations={userStations}
         handleClickOutside={handleClickOutside}
+        addToPlaylist={addToPlaylist}
+        setAddToPlaylist={setAddToPlaylist}
+        setIsVisible={setIsVisible}
       />
     </>
   )

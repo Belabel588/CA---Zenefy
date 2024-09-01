@@ -105,9 +105,6 @@ async function save(station) {
     }
 
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
-    loggedInUser.likedStationsIds.push(stationToSave._id)
-    console.log(loggedInUser)
-    await updateUser(loggedInUser)
   } else {
     // var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {

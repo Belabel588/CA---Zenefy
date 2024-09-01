@@ -59,6 +59,7 @@ export async function saveStation(station) {
     const type = station._id ? UPDATE_STATION : ADD_STATION
 
     store.dispatch({ type, station: savedStation })
+    console.log(savedStation)
     return savedStation
   } catch (err) {
     console.error('Error saving station:', err)
@@ -138,4 +139,8 @@ export async function setCurrColor(
   } catch (err) {
     console.log(err)
   }
+}
+
+export function setIsLoading(isLoading) {
+  store.dispatch({ type: SET_IS_LOADING, isLoading })
 }

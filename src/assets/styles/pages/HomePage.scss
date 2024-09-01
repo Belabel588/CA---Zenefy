@@ -119,9 +119,11 @@
         a{
             color: $white;
             text-decoration: none;
-
+            
         }
         span{
+            text-wrap: nowrap;
+            overflow: hidden;
             // text-overflow: ellipsis;
         }
 

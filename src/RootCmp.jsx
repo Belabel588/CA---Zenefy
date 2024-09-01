@@ -17,6 +17,7 @@ import { StationEditModal } from './cmps/StationEditModal.jsx'
 import { OptionsModal } from './cmps/OptionsModal.jsx'
 
 import { UserMsg } from './cmps/UserMsg.jsx'
+import { LoadingAnimation } from './cmps/LoadingAnimation.jsx'
 
 export function RootCmp() {
   return (
@@ -24,6 +25,8 @@ export function RootCmp() {
       <AppHeader />
       <SideBar />
       <UserMsg />
+      <LoadingAnimation />
+      <LoginSignup />
 
       <div className='main-content'>
         <main>
@@ -36,7 +39,7 @@ export function RootCmp() {
             <Route path='/station/:stationId' element={<StationDetails />} />
             <Route path='/item/:itemId' element={<ItemDetails />} />
             <Route path='/user/:userId' element={<UserDetails />} />
-            <Route path='/login' element={<LoginSignup />} />
+            {/* <Route path='/login' element={<LoginSignup />} /> */}
           </Routes>
           {/* <StationEditModal /> */}
         </main>

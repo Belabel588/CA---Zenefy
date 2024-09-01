@@ -45,6 +45,7 @@ export function stationReducer(state = initialState, action = {}) {
       const updatedStations = state.stations.map((station) =>
         station._id === action.station._id ? action.station : station
       )
+
       return { ...state, stations: updatedStations }
 
     case SET_FILTER_BY:

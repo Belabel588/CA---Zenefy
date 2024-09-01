@@ -32,8 +32,9 @@ export function AppLibrary() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // loadStations(filterBy)
-  }, [filterBy])
+    // loadStations()
+    console.log(stations)
+  }, [stations])
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying

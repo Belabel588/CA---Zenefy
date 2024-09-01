@@ -57,6 +57,9 @@ export function StationDetails() {
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
   )
+  const isLoading = useSelector(
+    (stateSelector) => stateSelector.stationModule.isLoading
+  )
 
   const isHover = useRef(false)
   let counter = 0
@@ -241,170 +244,172 @@ export function StationDetails() {
     setIsPlaying(true)
   }
 
-  console.log(likedItems)
+  if (!isLoading)
+    return (
+      <section
+        className='station-details-container'
+        ref={pageRef}
+        onClick={handleClickOutside}
+      >
+        <StationEditModal
+          station={station}
+          modalRef={modalRef}
+          toggleModal={toggleModal}
+          saveStation={sendToSaveStation}
+        />
+        <EditOptions
+          options={options}
+          station={station}
+          toggleModal={toggleModal}
+          editRef={editRef}
+          position={position}
+          isVisible={isVisible}
+          onDeleteStation={onDeleteStation}
+          onCreateNewStation={onCreateNewStation}
+        />
 
-  return (
-    <section
-      className='station-details-container'
-      ref={pageRef}
-      onClick={handleClickOutside}
-    >
-      <StationEditModal
-        station={station}
-        modalRef={modalRef}
-        toggleModal={toggleModal}
-        saveStation={sendToSaveStation}
-      />
-      <EditOptions
-        options={options}
-        station={station}
-        toggleModal={toggleModal}
-        editRef={editRef}
-        position={position}
-        isVisible={isVisible}
-        onDeleteStation={onDeleteStation}
-        onCreateNewStation={onCreateNewStation}
-      />
+        <header className='station-header' onContextMenu={handleRightClick}>
+          <img className='station-cover' src={station.cover} />
 
-      <header className='station-header' onContextMenu={handleRightClick}>
-        <img className='station-cover' src={station.cover} />
-
-        <div className='title-container'>
-          <span>Playlist</span>
-          <b className='station-title' onClick={toggleModal}>
-            {station.title}
-          </b>
-          {(station.preview && (
-            <p className='playlist-summery'>{station.preview}</p>
-          )) || <p className='playlist-summery'>Playlist summery here</p>}
-          <span className='playlist-artist'>Playlist artist here</span>
-        </div>
-      </header>
-      <div className='user-interface-container'>
-        <div className='buttons-container'>
-          <div className='play-container'>
-            <div className='play-button-container'>
-              {(isPlaying && currStation._id === station._id && (
-                <BiPause
-                  className='pause-button'
-                  onClick={() => setIsPlaying(false)}
-                />
-              )) || (
-                <BiPlay
-                  className='play-button'
-                  onClick={() => {
-                    if (station.items.length === 0) return
-                    if (currStation._id === station._id) {
-                      setIsPlaying(true)
-                      return
-                    }
-                    onSelectStation(station._id)
-                  }}
-                />
-              )}
-            </div>
-            <RxPlusCircled className='option-button plus-button' />
-            <BsThreeDots className='option-button more-button' />
+          <div className='title-container'>
+            <span>Playlist</span>
+            <b className='station-title' onClick={toggleModal}>
+              {station.title}
+            </b>
+            {(station.preview && (
+              <p className='playlist-summery'>{station.preview}</p>
+            )) || <p className='playlist-summery'>Playlist summery here</p>}
+            <span className='playlist-artist'>Playlist artist here</span>
           </div>
-          <div className='list-container'>
-            <span>List</span>
-            <IoListSharp />
-          </div>
-        </div>
-        <div className='items-container'>
-          <div className='info-container'>
-            <div className='title-container'>
-              <span>#</span>
-              <span>Title</span>
-            </div>
-            <span className='album'>Album</span>
-            <span className='date-added span'>Date Added</span>
-            <LuClock3 className='time' />
-          </div>
-          {station.items.map((item) => {
-            return (
-              <div
-                className='song-container'
-                key={item.id}
-                onDoubleClick={() => {
-                  onPlaySong(item.id)
-                }}
-                onMouseEnter={() => {
-                  isHover.current = true
-                }}
-                onMouseLeave={() => {
-                  isHover.current = false
-                }}
-              >
-                {/* <div className='song-title-container'> */}
-                <div className='idx-play-container'>
-                  <div className='item-idx-container'>
-                    {currItem.id === item.id ? (
-                      <PlayingAnimation />
-                    ) : (
-                      <span className='item-idx'>{++counter}</span>
-                    )}
-                  </div>
-                  <div className='play-pause-container'>
-                    {currItem.id === item.id && isPlaying ? (
-                      <BiPause
-                        className='pause-button'
-                        onClick={() => {
-                          setIsPlaying(false)
-                        }}
-                      />
-                    ) : (
-                      <BiPlay
-                        className='play-button'
-                        onClick={async () => {
-                          if (
-                            JSON.stringify(currItem) !== JSON.stringify(item)
-                          ) {
-                            await setCurrStation(station._id)
-                            await setCurrItem(item.id, station)
-                          }
-
-                          setIsPlaying(true)
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-                <img src={item.cover} alt='' />
-                <div className='name-artist-container'>
-                  <Link
-                    to={`/item/${item.id}`}
-                    className={
-                      currItem.id === item.id
-                        ? `song-name playing`
-                        : 'song-name'
-                    }
-                  >
-                    {item.name}
-                  </Link>
-                  <span>{item.artist}</span>
-                  {/* </div> */}
-                </div>
-                <span className='album'>{item.album}</span>
-                <span>
-                  {Date(item.addedAt).toLocaleString('he').slice(0, 13)}
-                </span>
-                <span className='time' key={utilService.makeId()}>
-                  {'3:33'}
-                </span>
-                <button onClick={() => likeSong(item)} className='like-button'>
-                  {(likedItems.includes(item.id) && (
-                    <AddedIcon className={'added'} />
-                  )) || <PlusIcon className={'to-add'} />}
-                </button>
-                <HiOutlineDotsHorizontal />
+        </header>
+        <div className='user-interface-container'>
+          <div className='buttons-container'>
+            <div className='play-container'>
+              <div className='play-button-container'>
+                {(isPlaying && currStation._id === station._id && (
+                  <BiPause
+                    className='pause-button'
+                    onClick={() => setIsPlaying(false)}
+                  />
+                )) || (
+                  <BiPlay
+                    className='play-button'
+                    onClick={() => {
+                      if (station.items.length === 0) return
+                      if (currStation._id === station._id) {
+                        setIsPlaying(true)
+                        return
+                      }
+                      onSelectStation(station._id)
+                    }}
+                  />
+                )}
               </div>
-            )
-          })}
-        </div>{' '}
-      </div>
-    </section>
-  )
+              <RxPlusCircled className='option-button plus-button' />
+              <BsThreeDots className='option-button more-button' />
+            </div>
+            <div className='list-container'>
+              <span>List</span>
+              <IoListSharp />
+            </div>
+          </div>
+          <div className='items-container'>
+            <div className='info-container'>
+              <div className='title-container'>
+                <span>#</span>
+                <span>Title</span>
+              </div>
+              <span className='album'>Album</span>
+              <span className='date-added span'>Date Added</span>
+              <LuClock3 className='time' />
+            </div>
+            {station.items.map((item) => {
+              return (
+                <div
+                  className='song-container'
+                  key={item.id}
+                  onDoubleClick={() => {
+                    onPlaySong(item.id)
+                  }}
+                  onMouseEnter={() => {
+                    isHover.current = true
+                  }}
+                  onMouseLeave={() => {
+                    isHover.current = false
+                  }}
+                >
+                  {/* <div className='song-title-container'> */}
+                  <div className='idx-play-container'>
+                    <div className='item-idx-container'>
+                      {currItem.id === item.id ? (
+                        <PlayingAnimation />
+                      ) : (
+                        <span className='item-idx'>{++counter}</span>
+                      )}
+                    </div>
+                    <div className='play-pause-container'>
+                      {currItem.id === item.id && isPlaying ? (
+                        <BiPause
+                          className='pause-button'
+                          onClick={() => {
+                            setIsPlaying(false)
+                          }}
+                        />
+                      ) : (
+                        <BiPlay
+                          className='play-button'
+                          onClick={async () => {
+                            if (
+                              JSON.stringify(currItem) !== JSON.stringify(item)
+                            ) {
+                              await setCurrStation(station._id)
+                              await setCurrItem(item.id, station)
+                            }
+
+                            setIsPlaying(true)
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <img src={item.cover} alt='' />
+                  <div className='name-artist-container'>
+                    <Link
+                      to={`/item/${item.id}`}
+                      className={
+                        currItem.id === item.id
+                          ? `song-name playing`
+                          : 'song-name'
+                      }
+                    >
+                      {item.name}
+                    </Link>
+                    <span>{item.artist}</span>
+                    {/* </div> */}
+                  </div>
+                  <span className='album'>{item.album}</span>
+                  <span>
+                    {Date(item.addedAt).toLocaleString('he').slice(0, 13)}
+                  </span>
+                  <span className='time' key={utilService.makeId()}>
+                    {'3:33'}
+                  </span>
+                  <button
+                    onClick={() => likeSong(item)}
+                    className='like-button'
+                  >
+                    {(likedItems.includes(item.id) && (
+                      <AddedIcon className={'added'} />
+                    )) || <PlusIcon className={'to-add'} />}
+                  </button>
+                  <HiOutlineDotsHorizontal />
+                </div>
+              )
+            })}
+          </div>{' '}
+        </div>
+      </section>
+    )
 }
 
 function PlusIcon() {

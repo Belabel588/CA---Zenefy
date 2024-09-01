@@ -3,10 +3,11 @@ import { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { saveStation } from '../store/actions/station.actions.js'
+import { loadStations, saveStation } from '../store/actions/station.actions.js'
 import { stationService } from '../services/station.service.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
+import { setIsLoading } from '../store/actions/station.actions.js'
 
 import { FiEdit2 } from 'react-icons/fi'
 import { CiCircleMinus } from 'react-icons/ci'
@@ -25,12 +26,19 @@ export function EditOptions({
   itemToAdd,
   userStations,
   handleClickOutside,
+  addToPlaylist,
+  setAddToPlaylist,
+  setIsVisible,
 }) {
   let id = 0
 
   const user = useSelector(
     (stateSelector) => stateSelector.userModule.loggedinUser
   )
+  const isLoading = useSelector(
+    (stateSelector) => stateSelector.stationModule.isLoading
+  )
+
   // const userStations = stations.filter((station) =>
   //   user.likedStationsIds.includes(station._id)
   // )
@@ -40,14 +48,22 @@ export function EditOptions({
     console.log(stationId)
     console.log(itemToAdd)
     try {
+      console.log(isLoading)
+      setIsLoading(true)
+      console.log(isLoading)
       handleClickOutside()
       const station = await stationService.getById(stationId)
       station.items.push(itemToAdd)
+      console.log(stations)
       await saveStation(station)
+      // await loadStations()
 
       showSuccessMsg('Song added')
+      console.log(stations)
     } catch (err) {
       console.log(err)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -58,8 +74,15 @@ export function EditOptions({
           className='edit-options-container add-to-playlist'
           style={{
             top: `${position.y}px`,
-            left: `calc( ${position.x}px)`,
+            left: `calc( ${position.x - 15}px)`,
             position: 'absolute',
+          }}
+          onMouseLeave={() => {
+            setAddToPlaylist(false)
+            setIsVisible(false)
+          }}
+          onMouseEnter={() => {
+            setIsVisible(true)
           }}
         >
           {options.map((option) => (
@@ -67,12 +90,16 @@ export function EditOptions({
               className='option-container'
               key={++id}
               onClick={option.onClick}
+              onMouseEnter={() => {
+                console.log(option)
+                if (option.text === 'Add to playlist') setAddToPlaylist(true)
+              }}
             >
               {option.icon}
               <span>{option.text}</span>
             </div>
           ))}
-          {options[0].text === 'Add to playlist' && (
+          {addToPlaylist && (
             <div className='add-to-stations-container'>
               {userStations.map((station) => {
                 return (
