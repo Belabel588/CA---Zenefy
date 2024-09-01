@@ -233,7 +233,8 @@ export function SearchIndex() {
     setItemToAdd(itemToAdd)
   }
 
-  const handleClickOutside = () => {
+  function handleClickOutside() {
+    // event.preventDefault()
     setIsVisible(false)
   }
 
@@ -286,7 +287,7 @@ export function SearchIndex() {
     </section>
   ) : (
     <>
-      <div className='search-results'>
+      <div className='search-results' onClick={handleClickOutside}>
         <section className='info'>
           <h1>Top result</h1>
           <img src={searchResults[0]?.cover} alt={searchResults[0]?.artist} />
@@ -373,7 +374,7 @@ export function SearchIndex() {
               </button>
               <HiOutlineDotsHorizontal
                 className='options-button'
-                onClick={() => handleClick(event, item)}
+                onContextMenu={() => handleClick(event, item)}
               />
             </div>
           ))}
@@ -387,21 +388,11 @@ export function SearchIndex() {
         stations={stations}
         itemToAdd={itemToAdd}
         userStations={userStations}
+        handleClickOutside={handleClickOutside}
       />
     </>
   )
 }
-
-// <div className='info-container'>
-//   <b
-//     className={
-//       currStation._id === station._id
-//         ? `station-name playing`
-//         : 'station-name'
-//     }
-//   >
-//     {station.title}
-//   </b>
 
 function PlusIcon() {
   return (

@@ -22,6 +22,8 @@ import {
   loadStations,
 } from '../store/actions/station.actions.js'
 
+import { updateUser } from '../store/actions/user.actions.js'
+
 import { LuClock3 } from 'react-icons/lu'
 import { FaCirclePlay } from 'react-icons/fa6'
 import { RxPlusCircled } from 'react-icons/rx'
@@ -70,6 +72,10 @@ export function StationDetails() {
     (stateSelector) => stateSelector.stationModule.currColor
   )
 
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
+
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   const [likedItems, setLikedItems] = useState([])
@@ -91,8 +97,9 @@ export function StationDetails() {
         console.error('Error fetching data:', error)
       }
     }
+
     setLikedStation()
-    console.log(likedItems)
+    console.log(stations)
     setCoverColor()
   }, [stationId])
 
@@ -200,15 +207,26 @@ export function StationDetails() {
   }
 
   async function likeSong(itemToAdd) {
+    console.log(user)
     if (itemToAdd.url === '') return
     if (!user) return
 
     const likedStation = stations.find((station) => station.isLiked)
-    likedStation.items.push(itemToAdd)
+    const likedSongsIds = user.likedSongsIds
+    if (user.likedSongsIds.includes(itemToAdd.id)) {
+      const idx = likedStation.items.findIndex(
+        (item) => item.id === itemToAdd.id
+      )
+      likedStation.items.splice(idx, 1)
+      const songIdx = likedSongsIds.findIndex((id) => id === itemToAdd.id)
+      likedSongsIds.splice(songIdx, 1)
+    } else {
+      likedStation.items.push(itemToAdd)
+      likedSongsIds.push(itemToAdd.id)
+    }
+
     try {
       await saveStation(likedStation)
-      const likedSongsIds = user.likedSongsIds
-      likedSongsIds.push(itemToAdd.id)
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()

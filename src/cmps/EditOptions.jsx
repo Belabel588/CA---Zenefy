@@ -24,6 +24,7 @@ export function EditOptions({
   stations,
   itemToAdd,
   userStations,
+  handleClickOutside,
 }) {
   let id = 0
 
@@ -39,9 +40,11 @@ export function EditOptions({
     console.log(stationId)
     console.log(itemToAdd)
     try {
+      handleClickOutside()
       const station = await stationService.getById(stationId)
       station.items.push(itemToAdd)
       await saveStation(station)
+
       showSuccessMsg('Song added')
     } catch (err) {
       console.log(err)
@@ -69,27 +72,29 @@ export function EditOptions({
               <span>{option.text}</span>
             </div>
           ))}
-          <div className='add-to-stations-container'>
-            {userStations.map((station) => {
-              return (
-                <div
-                  className='station-container'
-                  key={station._id}
-                  onClick={() => onAddToStation(station._id)}
-                  style={
-                    {
-                      // top: `${position.y}px`,
-                      // left: `calc( ${position.x}px)`,
-                      // position: 'absolute',
+          {options[0].text === 'Add to playlist' && (
+            <div className='add-to-stations-container'>
+              {userStations.map((station) => {
+                return (
+                  <div
+                    className='station-container'
+                    key={station._id}
+                    onClick={() => onAddToStation(station._id)}
+                    style={
+                      {
+                        // top: `${position.y}px`,
+                        // left: `calc( ${position.x}px)`,
+                        // position: 'absolute',
+                      }
                     }
-                  }
-                >
-                  <span>{station.title}</span>
-                  <img src={station.cover} alt='' />
-                </div>
-              )
-            })}
-          </div>
+                  >
+                    <span>{station.title}</span>
+                    <img src={station.cover} alt='' />
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
     </>
