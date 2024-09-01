@@ -85,7 +85,7 @@ export function EditOptions({
               key={++id}
               onClick={option.onClick}
               onMouseEnter={() => {
-                console.log(option)
+                console.log(addToPlaylist)
                 if (option.text === 'Add to playlist') setAddToPlaylist(true)
               }}
             >

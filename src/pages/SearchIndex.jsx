@@ -110,16 +110,17 @@ export function SearchIndex() {
     }
   }, [searchResults])
 
-  // useEffect(() => {
-  //   // setLikedStation()
-  //   console.log(user)
-  //   console.log(stations)
-  //   const userStationsToSet = stations.filter((station) =>
-  //     user.likedStationsIds.includes(station._id)
-  //   )
-  //   setUserStations(userStationsToSet)
-  //   console.log(userStations)
-  // }, [searchedStation])
+  useEffect(() => {
+    // setLikedStation()
+    console.log(user)
+    console.log(stations)
+    const userStationsToSet = stations.filter((station) =>
+      user.likedStationsIds.includes(station._id)
+    )
+    setUserStations(userStationsToSet)
+    console.log(userStations)
+    console.log(stations)
+  }, [searchedStation])
 
   async function handleSearchResults(searchResults) {
     try {
@@ -159,7 +160,7 @@ export function SearchIndex() {
   }
 
   async function setLikedStation(likedStation) {
-    const likedItems = likedStation.items
+    const likedItems = likedStation?.items
     console.log(likedItems)
     const itemsId = likedItems.map((item) => {
       return item.id
@@ -321,7 +322,7 @@ export function SearchIndex() {
     <LoadingAnimation />
   ) : (
     <>
-      <div className='search-results' onClick={handleClickOutside}>
+      <div className='search-results'>
         <section className='info'>
           <h1>Top result</h1>
           <img src={searchResults[0]?.cover} alt={searchResults[0]?.artist} />

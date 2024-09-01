@@ -28,12 +28,20 @@ export function AppLibrary() {
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
   )
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
 
   const navigate = useNavigate()
 
+  // const [stationsToSet, setStationToSet] = useState([
+  //   stationService.getEmptyStation(),
+  // ])
+
   useEffect(() => {
-    // loadStations()
+    //   loadStations()
     console.log(stations)
+    //   setStationToSet(stations)
   }, [stations])
 
   const isPlaying = useSelector(

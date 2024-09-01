@@ -234,10 +234,13 @@ async function likeSong(itemToAdd) {
   if (!user) return
 
   try {
-    const stations = await query()
-    const likedStation = stations.find((station) => station.isLiked)
-    likedStation.items.push(itemToAdd)
     const user = await userService.getLoggedinUser()
+    const stations = await query()
+    const likedStation = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
+    console.log(likedStation)
+    likedStation.items.push(itemToAdd)
     await saveStation(likedStation)
     const likedSongsIds = user.likedSongsIds
     likedSongsIds.push(itemToAdd.id)
