@@ -20,6 +20,7 @@ import {
   removeStation,
   setCurrItemIdx,
   loadStations,
+  setIsLoading,
 } from '../store/actions/station.actions.js'
 
 import { updateUser } from '../store/actions/user.actions.js'
@@ -132,8 +133,15 @@ export function StationDetails() {
   }
 
   async function sendToSaveStation(stationToSave) {
-    const newStation = await saveStation(stationToSave)
-    setStation(newStation)
+    try {
+      setIsLoading(true)
+      const newStation = await saveStation(stationToSave)
+      setStation(newStation)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
   }
   const editRef = useRef()
   async function onDeleteStation(stationToDelete) {
@@ -197,9 +205,11 @@ export function StationDetails() {
   ]
 
   async function setLikedStation() {
-    await loadStations()
+    // await loadStations()
 
-    const like = stations.find((station) => station.isLiked)
+    const like = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
     console.log(like)
     const items = like.items
     const itemsId = items.map((item) => {
@@ -214,7 +224,9 @@ export function StationDetails() {
     if (itemToAdd.url === '') return
     if (!user) return
 
-    const likedStation = stations.find((station) => station.isLiked)
+    const likedStation = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
     const likedSongsIds = user.likedSongsIds
     if (user.likedSongsIds.includes(itemToAdd.id)) {
       const idx = likedStation.items.findIndex(

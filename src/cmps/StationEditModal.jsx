@@ -60,10 +60,14 @@ export function StationEditModal({
   }
 
   async function uploadFile(ev) {
-    const res = await uploadService.uploadImg(ev)
-    console.log(res.url)
-    const coverSrc = res.url
-    setCoverSrc(coverSrc)
+    try {
+      const res = await uploadService.uploadImg(ev)
+      console.log(res.url)
+      const coverSrc = res.url
+      setCoverSrc(coverSrc)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   function onSaveStation() {

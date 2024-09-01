@@ -46,22 +46,6 @@ function login({ username, password }) {
 
 async function signup({ username, password, fullname }) {
   const likedUserId = utilService.makeId()
-  const userLikedStation = {
-    _id: likedUserId,
-    isLiked: true,
-    stationType: 'music',
-    title: 'Liked Songs',
-    items: [],
-    cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png', // Spotify's Liked Songs cover
-    tags: [],
-    createdBy: {
-      _id: '',
-      fullname: '',
-      imgUrl: '',
-    },
-    likedByUsers: [],
-    addedAt: Date.now(),
-  }
 
   const user = {
     username,
@@ -72,9 +56,28 @@ async function signup({ username, password, fullname }) {
     createdAt: Date.now(),
     updatedAt: Date.now(),
   }
-  await storageService.post('stationDB', userLikedStation)
+
   const savedUser = await storageService.post(STORAGE_KEY, user)
-  // _setLoggedinUser(savedUser)
+  _setLoggedinUser(savedUser)
+
+  const userLikedStation = {
+    _id: likedUserId,
+    isLiked: true,
+    stationType: 'music',
+    title: 'Liked Songs',
+    items: [],
+    cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png', // Spotify's Liked Songs cover
+    tags: [],
+    createdBy: {
+      _id: savedUser._id,
+      fullname,
+      imgUrl: '',
+    },
+    likedByUsers: [{ fullname, id: savedUser._id }],
+    addedAt: Date.now(),
+  }
+
+  await storageService.post('stationDB', userLikedStation)
   return _setLoggedinUser(savedUser)
 }
 
@@ -112,13 +115,13 @@ function updateUser(updatedUser) {
   console.log(updatedUser)
   const loggedinUser = getLoggedinUser()
   if (!loggedinUser) return Promise.reject('User not logged in')
-
   // Update the prefs of the logged-in user
   console.log(updatedUser)
 
   return storageService.put(STORAGE_KEY, updatedUser).then((user) => {
-    _setLoggedinUser(user) // Update sessionStorage as well
-    return user
+    console.log(user)
+    // Update sessionStorage as well
+    return _setLoggedinUser(user)
   })
 }
 

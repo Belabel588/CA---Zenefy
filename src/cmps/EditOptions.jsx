@@ -45,21 +45,15 @@ export function EditOptions({
   // console.log(userStations)
 
   async function onAddToStation(stationId) {
-    console.log(stationId)
-    console.log(itemToAdd)
     try {
-      console.log(isLoading)
       setIsLoading(true)
-      console.log(isLoading)
       handleClickOutside()
       const station = await stationService.getById(stationId)
       station.items.push(itemToAdd)
-      console.log(stations)
       await saveStation(station)
       // await loadStations()
 
       showSuccessMsg('Song added')
-      console.log(stations)
     } catch (err) {
       console.log(err)
     } finally {

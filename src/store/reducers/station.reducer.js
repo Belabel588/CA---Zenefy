@@ -42,10 +42,12 @@ export function stationReducer(state = initialState, action = {}) {
       return { ...state, stations: [...state.stations, action.station] }
 
     case UPDATE_STATION:
+      console.log(state)
+      console.log(action)
       const updatedStations = state.stations.map((station) =>
         station._id === action.station._id ? action.station : station
       )
-
+      console.log(updatedStations)
       return { ...state, stations: updatedStations }
 
     case SET_FILTER_BY:

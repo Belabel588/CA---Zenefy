@@ -61,6 +61,7 @@ export async function removeStation(stationId) {
 export async function saveStation(station) {
   try {
     const savedStation = await stationService.save(station)
+    console.log(savedStation)
     const type = station._id ? UPDATE_STATION : ADD_STATION
 
     store.dispatch({ type, station: savedStation })

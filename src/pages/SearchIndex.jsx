@@ -13,9 +13,12 @@ import {
   setCurrItem,
   setIsPlaying,
   saveStation,
+  setIsLoading,
 } from '../store/actions/station.actions.js'
 import { updateUser } from '../store/actions/user.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
+import { showErrorMsg } from '../services/event-bus.service.js'
+import { showSuccessMsg } from '../services/event-bus.service.js'
 
 import { EditOptions } from '../cmps/EditOptions.jsx'
 
@@ -107,15 +110,16 @@ export function SearchIndex() {
     }
   }, [searchResults])
 
-  useEffect(() => {
-    setLikedStation()
-
-    const userStationsToSet = stations.filter((station) =>
-      user.likedStationsIds.includes(station._id)
-    )
-    setUserStations(userStationsToSet)
-    console.log(userStations)
-  }, [searchedStation])
+  // useEffect(() => {
+  //   // setLikedStation()
+  //   console.log(user)
+  //   console.log(stations)
+  //   const userStationsToSet = stations.filter((station) =>
+  //     user.likedStationsIds.includes(station._id)
+  //   )
+  //   setUserStations(userStationsToSet)
+  //   console.log(userStations)
+  // }, [searchedStation])
 
   async function handleSearchResults(searchResults) {
     try {
@@ -132,7 +136,7 @@ export function SearchIndex() {
       dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
       console.error('Error refactoring search results:', error)
-      setLoading(false) // Stop loading in case of an error
+      // setLoading(false) // Stop loading in case of an error
     }
   }
 
@@ -154,13 +158,14 @@ export function SearchIndex() {
     await setIsPlaying(true)
   }
 
-  async function setLikedStation() {
-    const like = await stations.find((station) => station.isLiked)
-    console.log(like)
-    const items = like.items
-    const itemsId = items.map((item) => {
+  async function setLikedStation(likedStation) {
+    const likedItems = likedStation.items
+    console.log(likedItems)
+    const itemsId = likedItems.map((item) => {
       return item.id
     })
+
+    console.log(itemsId)
     setLikedItems(itemsId)
   }
 
@@ -168,17 +173,33 @@ export function SearchIndex() {
     if (itemToAdd.url === '') return
     if (!user) return
 
-    const likedStation = stations.find((station) => station.isLiked)
-    likedStation.items.push(itemToAdd)
     try {
-      await saveStation(likedStation)
+      setIsLoading(true)
+      const likedStation = stations.find(
+        (station) => station.isLiked && station.createdBy._id === user._id
+      )
+      likedStation.items.push(itemToAdd)
+
+      const stationToSave = await saveStation(likedStation)
+
       const likedSongsIds = user.likedSongsIds
       likedSongsIds.push(itemToAdd.id)
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
-      setLikedStation()
+
+      setLikedStation(stationToSave)
+      const userStationsToSet = stations.filter((station) =>
+        user.likedStationsIds.includes(station._id)
+      )
+
+      setUserStations([...userStationsToSet])
+      // await loadStations()
+      showSuccessMsg('Song added')
     } catch (err) {
       console.log(err)
+      showErrorMsg(`Couldn't like song`)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -308,7 +329,7 @@ export function SearchIndex() {
           <h6>Artist</h6>
         </section>
         <section className='songs'>
-          <h1>Songs</h1>
+          {/* <h1>Songs</h1> */}
           {searchedStation.items.slice(0, 4).map((item, idx) => (
             <div
               key={item.id}
