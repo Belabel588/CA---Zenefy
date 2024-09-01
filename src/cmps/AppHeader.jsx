@@ -11,7 +11,7 @@ import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 import zenefyLogo from '/public/img/zenefy-logo.png'
-import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
+import { SET_FILTER_BY, SET_IS_LOADING } from '../store/reducers/station.reducer.js'
 
 import { loadStations } from '../store/actions/station.actions.js'
 
@@ -69,6 +69,13 @@ export function AppHeader() {
     // Reload the stations with the updated filter
     // loadStations() stopped the filtering of the stations on the side.
   }, 800) // Debounce with a 300ms delay
+
+  useEffect(() => {
+    if (filterBy.txt !== '') {
+      dispatch({ type: SET_IS_LOADING, isLoading: true })
+    }
+  }, [filterBy])
+
 
   async function onLogout() {
     try {

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service.js'
+import { LoadingAnimation } from '../cmps/LoadingAnimation.jsx'
 import {
   loadStations,
   removeStation,
@@ -23,6 +24,8 @@ import { BiPause } from 'react-icons/bi'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import { FaPlus } from 'react-icons/fa'
 
+import { SET_IS_LOADING } from '../store/reducers/user.reducer.js'
+
 export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
     stationService.getDefaultFilter()
@@ -35,6 +38,10 @@ export function SearchIndex() {
   const [searchedStation, setSearchedStation] = useState({
     items: [{}, {}, {}, {}],
   })
+
+  const loading = useSelector(
+    (storeState) => storeState.stationModule.isLoading
+  )
 
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
@@ -120,13 +127,12 @@ export function SearchIndex() {
       setRefactoredResults(refactored) // Store the refactored results in the state
 
       const savedStation = await stationService.save(refactored)
-      console.log(searchResults)
-      console.log(savedStation)
 
       setSearchedStation(savedStation)
-      // console.log('Refactored search results are:', refactored)
+      dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
       console.error('Error refactoring search results:', error)
+      setLoading(false) // Stop loading in case of an error
     }
   }
 
@@ -285,6 +291,8 @@ export function SearchIndex() {
         ))}
       </ul>
     </section>
+  ) : loading ? (
+    <LoadingAnimation /> // Show loading animation if loading is true
   ) : (
     <>
       <div className='search-results' onClick={handleClickOutside}>
@@ -330,14 +338,10 @@ export function SearchIndex() {
                       isHover.current = false
                     }}
                   >
-                    {' '}
                     <BiPlay
                       className='play-button'
                       onClick={() => {
-                        if (
-                          currItem.id === item.id
-                          // searchedStation._id === currStation._id
-                        ) {
+                        if (currItem.id === item.id) {
                           setIsPlaying(true)
                           return
                         }
