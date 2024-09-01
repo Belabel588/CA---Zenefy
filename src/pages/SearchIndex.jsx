@@ -13,13 +13,20 @@ import {
   setCurrItem,
   setIsPlaying,
   saveStation,
+  setIsLoading,
 } from '../store/actions/station.actions.js'
 import { updateUser } from '../store/actions/user.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
+import { showErrorMsg } from '../services/event-bus.service.js'
+import { showSuccessMsg } from '../services/event-bus.service.js'
+
+import { EditOptions } from '../cmps/EditOptions.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
+import { FaPlus } from 'react-icons/fa'
+
 import { SET_IS_LOADING } from '../store/reducers/user.reducer.js'
 
 export function SearchIndex() {
@@ -27,15 +34,17 @@ export function SearchIndex() {
     stationService.getDefaultFilter()
   )
   const [allTags, setAllTags] = useState([]) // State to store the tags
-  const [searchResults, setSearchResults] = useState({ items: [{}, {}, {}, {}], }) // State to store the search results
+  const [searchResults, setSearchResults] = useState({
+    items: [{}, {}, {}, {}],
+  }) // State to store the search results
   const [refactoredResults, setRefactoredResults] = useState([]) // State to store refactored results
-  const [searchedStation, setSearchedStation] = useState({ items: [{}, {}, {}, {}], })
-
+  const [searchedStation, setSearchedStation] = useState({
+    items: [{}, {}, {}, {}],
+  })
 
   const loading = useSelector(
     (storeState) => storeState.stationModule.isLoading
   )
-
 
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
@@ -56,6 +65,7 @@ export function SearchIndex() {
   const user = useSelector(
     (stateSelector) => stateSelector.userModule.loggedinUser
   )
+  const [userStations, setUserStations] = useState([])
 
   const [likedItems, setLikedItems] = useState([])
 
@@ -100,31 +110,35 @@ export function SearchIndex() {
     }
   }, [searchResults])
 
-  useEffect(() => {
-    setLikedStation()
-  }, [searchedStation])
+  // useEffect(() => {
+  //   // setLikedStation()
+  //   console.log(user)
+  //   console.log(stations)
+  //   const userStationsToSet = stations.filter((station) =>
+  //     user.likedStationsIds.includes(station._id)
+  //   )
+  //   setUserStations(userStationsToSet)
+  //   console.log(userStations)
+  // }, [searchedStation])
 
   async function handleSearchResults(searchResults) {
     try {
-      
-
       const refactored = await stationService.createStationFromSearch(
         searchResults,
         filterBy.txt
-      );
+      )
 
-      setRefactoredResults(refactored); // Store the refactored results in the state
+      setRefactoredResults(refactored) // Store the refactored results in the state
 
-      const savedStation = await stationService.save(refactored);
+      const savedStation = await stationService.save(refactored)
 
-      setSearchedStation(savedStation);
+      setSearchedStation(savedStation)
       dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
-      console.error('Error refactoring search results:', error);
-      setLoading(false); // Stop loading in case of an error
+      console.error('Error refactoring search results:', error)
+      // setLoading(false) // Stop loading in case of an error
     }
   }
-
 
   function getAllTags(stations) {
     return stations.map((station) => station.tags).flat() // Flatten the array of arrays into a single array
@@ -144,39 +158,125 @@ export function SearchIndex() {
     await setIsPlaying(true)
   }
 
-  async function setLikedStation() {
-    const like = await stations.find(
-      (station) => station._id === 'likedSongs123'
-    )
-    console.log(like)
-    const items = like.items
-    const itemsId = items.map((item) => {
+  async function setLikedStation(likedStation) {
+    const likedItems = likedStation.items
+    console.log(likedItems)
+    const itemsId = likedItems.map((item) => {
       return item.id
     })
+
+    console.log(itemsId)
     setLikedItems(itemsId)
-    console.log(likedItems)
   }
 
   async function likeSong(itemToAdd) {
     if (itemToAdd.url === '') return
     if (!user) return
 
-    const likedStation = stations.find((station) => station.isLiked)
-    likedStation.items.push(itemToAdd)
     try {
-      await saveStation(likedStation)
+      setIsLoading(true)
+      const likedStation = stations.find(
+        (station) => station.isLiked && station.createdBy._id === user._id
+      )
+      likedStation.items.push(itemToAdd)
+
+      const stationToSave = await saveStation(likedStation)
+
       const likedSongsIds = user.likedSongsIds
       likedSongsIds.push(itemToAdd.id)
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
-      setLikedStation()
+
+      setLikedStation(stationToSave)
+      const userStationsToSet = stations.filter((station) =>
+        user.likedStationsIds.includes(station._id)
+      )
+
+      setUserStations([...userStationsToSet])
+      // await loadStations()
+      showSuccessMsg('Song added')
+    } catch (err) {
+      console.log(err)
+      showErrorMsg(`Couldn't like song`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const [showModal, setShowModal] = useState(false)
+  const [selectedSong, setSelectedSong] = useState(null)
+
+  const playlists = user.likedSongsIds
+
+  const handleAddSong = (song) => {
+    setSelectedSong(song)
+    setShowModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setSelectedSong(null)
+  }
+
+  const handleAddToPlaylist = (playlistId) => {
+    console.log(`Adding ${selectedSong} to playlist ${playlistId}`)
+    handleCloseModal()
+  }
+
+  const [addToPlaylist, setAddToPlaylist] = useState(false)
+  const options = [
+    {
+      text: 'Add to playlist',
+      icon: <FaPlus />,
+      onClick: () => {
+        // onCreateNewStation()
+        console.log(addToPlaylist)
+        // if (!addToPlaylist) {
+        //   setAddToPlaylist(true)
+        // } else {
+        //   setAddToPlaylist(false)
+        // }
+      },
+    },
+  ]
+
+  const [itemToAdd, setItemToAdd] = useState({})
+
+  const editRef = useRef()
+  async function onDeleteStation(stationToDelete) {
+    if (stationToDelete.isLiked === true) return
+
+    try {
+      await removeStation(station._id)
+      navigate('/')
     } catch (err) {
       console.log(err)
     }
   }
 
-  // Log the refactored results before the return
-  // console.log('Refactored results to render:', refactoredResults)
+  const [isVisible, setIsVisible] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  function handleClick(event, itemToAdd) {
+    event.preventDefault()
+    setPosition({ x: event.pageX - 100, y: event.pageY })
+
+    setIsVisible(true)
+
+    setItemToAdd(itemToAdd)
+  }
+
+  function handleClickOutside() {
+    // event.preventDefault()
+    setIsVisible(false)
+  }
+
+  function toggleModal() {
+    if (modalRef.current.style.display !== 'flex') {
+      modalRef.current.style.display = 'flex'
+    } else {
+      modalRef.current.style.display = 'none'
+    }
+  }
 
   return filterBy.txt === '' ? (
     <section className='search-section'>
@@ -218,10 +318,10 @@ export function SearchIndex() {
       </ul>
     </section>
   ) : loading ? (
-    <LoadingAnimation />  // Show loading animation if loading is true
+    <LoadingAnimation />
   ) : (
     <>
-      <div className='search-results'>
+      <div className='search-results' onClick={handleClickOutside}>
         <section className='info'>
           <h1>Top result</h1>
           <img src={searchResults[0]?.cover} alt={searchResults[0]?.artist} />
@@ -229,23 +329,27 @@ export function SearchIndex() {
           <h6>Artist</h6>
         </section>
         <section className='songs'>
-          <h1>Songs</h1>
+          {/* <h1>Songs</h1> */}
           {searchedStation.items.slice(0, 4).map((item, idx) => (
             <div
               key={item.id}
               className='song-item'
               onDoubleClick={() => onPlaySearchedSong(item.id)}
+              onMouseLeave={() => {
+                if (!isHover.current) setIsVisible(false)
+              }}
+              // style={{ position: 'relative' }}
             >
               <div className='img-container'>
                 {(isPlaying && currItem.id === item.id && (
                   <div
                     className='pause-button-container'
                     onMouseEnter={() => {
-                      console.log(isHover.current);
-                      isHover.current = true;
+                      console.log(isHover.current)
+                      isHover.current = true
                     }}
                     onMouseLeave={() => {
-                      isHover.current = false;
+                      isHover.current = false
                     }}
                   >
                     <BiPause
@@ -257,20 +361,20 @@ export function SearchIndex() {
                   <div
                     className='play-button-container'
                     onMouseEnter={() => {
-                      isHover.current = true;
+                      isHover.current = true
                     }}
                     onMouseLeave={() => {
-                      isHover.current = false;
+                      isHover.current = false
                     }}
                   >
                     <BiPlay
                       className='play-button'
                       onClick={() => {
                         if (currItem.id === item.id) {
-                          setIsPlaying(true);
-                          return;
+                          setIsPlaying(true)
+                          return
                         }
-                        onPlaySearchedSong(item.id);
+                        onPlaySearchedSong(item.id)
                       }}
                     />
                   </div>
@@ -281,11 +385,13 @@ export function SearchIndex() {
                 <div className='name-container'>
                   <span
                     className={
-                      currItem.id === item.id ? 'item-name playing' : 'item-name'
+                      currItem.id === item.id
+                        ? 'item-name playing'
+                        : 'item-name'
                     }
                     onClick={() => {
-                      if (isHover.current) return;
-                      navigate(`/item/${item.id}`);
+                      if (isHover.current) return
+                      navigate(`/item/${item.id}`)
                     }}
                   >
                     {item.name}
@@ -299,26 +405,30 @@ export function SearchIndex() {
                   <PlusIcon />
                 )}
               </button>
-              <HiOutlineDotsHorizontal />
+              <HiOutlineDotsHorizontal
+                className='options-button'
+                onContextMenu={() => handleClick(event, item)}
+              />
             </div>
           ))}
         </section>
       </div>
+      <EditOptions
+        options={options}
+        editRef={editRef}
+        position={position}
+        isVisible={isVisible}
+        stations={stations}
+        itemToAdd={itemToAdd}
+        userStations={userStations}
+        handleClickOutside={handleClickOutside}
+        addToPlaylist={addToPlaylist}
+        setAddToPlaylist={setAddToPlaylist}
+        setIsVisible={setIsVisible}
+      />
     </>
-  );
-  
+  )
 }
-
-// <div className='info-container'>
-//   <b
-//     className={
-//       currStation._id === station._id
-//         ? `station-name playing`
-//         : 'station-name'
-//     }
-//   >
-//     {station.title}
-//   </b>
 
 function PlusIcon() {
   return (

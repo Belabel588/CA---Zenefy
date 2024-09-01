@@ -2,7 +2,7 @@ import { userService } from '../../services/user.service.js'
 import { UPDATE_USER, SET_LOGGED_USER } from '../reducers/user.reducer.js'
 import { store } from '../store.js'
 
-export function logInUser(credentials) {
+export function login(credentials) {
   return userService.login(credentials).then((loggedInUser) => {
     console.log(loggedInUser)
     store.dispatch({ type: SET_LOGGED_USER, loggedinUser: loggedInUser })
@@ -10,7 +10,7 @@ export function logInUser(credentials) {
   })
 }
 
-export function signUpUser(credentials) {
+export function signup(credentials) {
   return userService.signup(credentials).then((loggedInUser) => {
     store.dispatch({ type: SET_LOGGED_USER, loggedinUser: loggedInUser })
     return loggedInUser // Ensure this returns the user

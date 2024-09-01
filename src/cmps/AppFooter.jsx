@@ -110,8 +110,8 @@ export function AppFooter() {
   }, [duration, isPlaying, currentTime])
 
   async function setLikedStation() {
-    const like = await stations.find(
-      (station) => station._id === 'likedSongs123'
+    const like = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
     )
     console.log(like)
     const items = like.items
@@ -254,10 +254,15 @@ export function AppFooter() {
     if (itemToAdd.url === '') return
     if (!user) return
 
-    const likedStation = stations.find((station) => station.isLiked)
+    const likedStation = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
     likedStation.items.push(itemToAdd)
+
+    console.log(likedStation)
     try {
-      await saveStation(likedStation)
+      const saved = await saveStation(likedStation)
+      console.log(saved)
       const likedSongsIds = user.likedSongsIds
       likedSongsIds.push(itemToAdd.id)
       const userToSave = { ...user, likedSongsIds }
@@ -276,7 +281,7 @@ export function AppFooter() {
           <b className='song-name'>{currItem.name}</b>
           <span className='song-artist'>{currItem.artist}</span>
         </div>
-        <button onClick={() => likeSong(currItem)}>
+        <button onClick={async () => await likeSong(currItem)}>
           {(likedItems.includes(currItem.id) && <AddedIcon />) || <PlusIcon />}
         </button>
       </div>

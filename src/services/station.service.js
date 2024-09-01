@@ -75,25 +75,19 @@ async function remove(stationIdToRemove) {
 }
 
 async function save(station) {
-  console.log(station)
   const loggedInUser = userService.getLoggedinUser()
-  console.log(loggedInUser)
 
   var stationToSave
   let savedStation
+
   if (station._id) {
-    if (station.isLiked) {
-      stationToSave = {
-        _id: station._id,
-        items: station.items,
-      }
-    } else {
+    if (!station.isLiked) {
       const likedBy = station.likedByUsers
       // station.likedByUsers.push({
       //   id: loggedInUser._id,
       //   username: loggedInUser.username,
       // })
-
+      console.log(station)
       stationToSave = {
         _id: station._id,
         title: station.title,
@@ -102,12 +96,11 @@ async function save(station) {
         items: station.items,
         // likedByUsers: station.likedByUsers,
       }
+    } else {
+      stationToSave = station
     }
 
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
-    loggedInUser.likedStationsIds.push(stationToSave._id)
-    console.log(loggedInUser)
-    await updateUser(loggedInUser)
   } else {
     // var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {

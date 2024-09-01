@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import { logInUser } from '../store/actions/user.actions.js'
+import { login } from '../store/actions/user.actions.js'
 import { store } from '../store/store.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
 import {

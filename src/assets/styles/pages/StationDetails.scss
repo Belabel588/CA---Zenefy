@@ -215,11 +215,15 @@
         
         display: none;
       }
+      justify-self: start;
+      // margin-inline-start: -1em;
 
+      
     }
-
+    
     .time{
-      justify-self: end;
+
+      justify-self: start;
     }
 
   
@@ -296,6 +300,37 @@
 
           }
         }
+ &:hover{
+        .like-button{
+          opacity: 1;
+        }
+      }
+
+      .like-button{
+        opacity: 0;
+        svg{
+          fill: $grey-light;
+          width: 17px;
+        }
+        
+        svg.added{
+          fill: $green;
+          
+        }
+        
+        
+        &:hover{
+          svg{
+            fill: $white;
+            transform: scale();
+          }
+          svg.added{
+            fill: $green;
+            
+          }
+          
+        }
+
 
       }
 
@@ -368,18 +403,7 @@
         color: $grey-light;
       }
 
-      .like-button{
-        svg{
-          fill: $grey-light;
-          width: 17px;
-        }
-        &:hover{
-          svg{
-            fill: $white;
-            transform: scale();
-          }
-
-        }
+     
       }
 
       // @container (max-width: 600px) {

@@ -59,6 +59,10 @@ export function StationList(gradientRefOne, gradientRefTwo) {
   }
   let counter = 0
 
+  useEffect(() => {
+    console.log(stations)
+  }, [stations])
+
   return (
     <div className='stations-container'>
       {stations.map((station) => {

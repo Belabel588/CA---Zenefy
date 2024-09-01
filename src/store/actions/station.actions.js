@@ -18,7 +18,7 @@ import { store } from '../store.js'
 
 export async function loadStations() {
   const filterBy = store.getState().stationModule.filterBy
-  console.log(filterBy)
+  // console.log(filterBy)
 
   store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
@@ -31,9 +31,14 @@ export async function loadStations() {
       store.dispatch({ type: SET_STATIONS, stations })
     } else {
       const stationIds = loggedInUser.likedStationsIds
-      const userStations = stations.filter((station) =>
-        loggedInUser.likedStationsIds.includes(station._id)
-      )
+      let userStations
+      if (stationIds && stationIds.length > 0) {
+        userStations = stations.filter((station) =>
+          loggedInUser.likedStationsIds.includes(station._id)
+        )
+      } else {
+        userStations = []
+      }
 
       store.dispatch({ type: SET_STATIONS, stations: userStations })
     }
@@ -56,9 +61,11 @@ export async function removeStation(stationId) {
 export async function saveStation(station) {
   try {
     const savedStation = await stationService.save(station)
+    console.log(savedStation)
     const type = station._id ? UPDATE_STATION : ADD_STATION
 
     store.dispatch({ type, station: savedStation })
+    console.log(savedStation)
     return savedStation
   } catch (err) {
     console.error('Error saving station:', err)
@@ -138,4 +145,8 @@ export async function setCurrColor(
   } catch (err) {
     console.log(err)
   }
+}
+
+export function setIsLoading(isLoading) {
+  store.dispatch({ type: SET_IS_LOADING, isLoading })
 }

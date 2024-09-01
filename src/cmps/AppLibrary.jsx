@@ -32,8 +32,9 @@ export function AppLibrary() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // loadStations(filterBy)
-  }, [filterBy])
+    // loadStations()
+    console.log(stations)
+  }, [stations])
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -54,7 +55,7 @@ export function AppLibrary() {
 
   function onSelectStation(stationId) {
     setCurrStation(stationId)
-    setCurrItem('', currStation)
+    setCurrItem(0, currStation)
     setIsPlaying(true)
   }
 

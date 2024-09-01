@@ -13,6 +13,7 @@ import {
   setCurrStation,
   setCurrItem,
   setIsPlaying,
+  setIsLoading,
 } from '../store/actions/station.actions.js'
 
 import { LuClock3 } from 'react-icons/lu'
@@ -30,6 +31,9 @@ export function ItemDetails() {
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
   )
+  const isLoading = useSelector(
+    (stateSelector) => stateSelector.stationModule.isLoading
+  )
 
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
@@ -43,64 +47,71 @@ export function ItemDetails() {
   }, [itemId])
 
   async function getItem(itemId) {
-    const itemToSet = await stationService.getItem(itemId)
-    console.log(itemToSet);
-    
-    setItem(itemToSet)
+    try {
+      setIsLoading(true)
+      const itemToSet = await stationService.getItem(itemId)
+      console.log(itemToSet)
+
+      setItem(itemToSet)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
   }
-  
 
-  return (
-    <section className='item-details-container'>
-      <header className='item-header'>
-        <img className='item-cover' src={item.cover} />
+  if (!isLoading)
+    return (
+      <section className='item-details-container'>
+        <header className='item-header'>
+          <img className='item-cover' src={item.cover} />
 
-        <div className='title-container'>
-          <span>Song</span>
-          <b className='item-title'>{item.name}</b>
-          <span className='playlist-artist'>{item.artist}</span>
-        </div>
-      </header>
-      <div className='user-interface-container'>
-        <div className='buttons-container'>
-          <div className='play-container'>
-            <div className='play-button-container'>
-              {currItem.id === item.id && isPlaying ? (
-                <BiPause
-                  className='pause-button'
-                  onClick={() => {
-                    setIsPlaying(false)
-                  }}
-                />
-              ) : (
-                <BiPlay
-                  className='play-button'
-                  onClick={async () => {
-                    const station = await stationService.getItemsStation(
-                      item.id
-                    )
-                    if (
-                      JSON.stringify(currStation) !== JSON.stringify(station)
-                    ) {
-                      await setCurrStation(station._id)
-                    }
-                    await setCurrItem(item.id, station)
-
-                    setIsPlaying(true)
-                  }}
-                />
-              )}
-            </div>
-            <RxPlusCircled className='option-button plus-button' />
-            <BsThreeDots className='option-button more-button' />
+          <div className='title-container'>
+            <span>Song</span>
+            <b className='item-title'>{item.name}</b>
+            <span className='playlist-artist'>{item.artist}</span>
           </div>
-        </div>
-        <div className='item-info-container'>
-          <div className='lyrics-container'>
-            <b>Lyrics</b>
-            <p>
-              {item.lyrics ||
-                `Load up on guns, bring your friends
+        </header>
+        <div className='user-interface-container'>
+          <div className='buttons-container'>
+            <div className='play-container'>
+              <div className='play-button-container'>
+                {currItem.id === item.id && isPlaying ? (
+                  <BiPause
+                    className='pause-button'
+                    onClick={() => {
+                      setIsPlaying(false)
+                    }}
+                  />
+                ) : (
+                  <BiPlay
+                    className='play-button'
+                    onClick={async () => {
+                      const station = await stationService.getItemsStation(
+                        item.id
+                      )
+                      if (
+                        JSON.stringify(currStation) !== JSON.stringify(station)
+                      ) {
+                        await setCurrStation(station._id)
+                      }
+                      await setCurrItem(item.id, station)
+
+                      setIsPlaying(true)
+                    }}
+                  />
+                )}
+              </div>
+              <RxPlusCircled className='option-button plus-button' />
+              <BsThreeDots className='option-button more-button' />
+            </div>
+          </div>
+          <div className='item-info-container'>
+            <div className='lyrics-container'>
+              <b>Lyrics</b>
+              <p>
+                {item.lyrics ||
+                  `Load up on guns, bring your friends
 It's fun to lose and to pretend
 She's over-bored and self-assured
 Oh no, I know a dirty word
@@ -157,17 +168,17 @@ A denial
 A denial
 A denial
 A denial`}
-            </p>
-          </div>
-          <div className='artist-container'>
-            <img src={item.cover} alt='' />
-            <div className='title-container'>
-              <b>Artist</b>
-              <b>{item.artist}</b>
+              </p>
+            </div>
+            <div className='artist-container'>
+              <img src={item.cover} alt='' />
+              <div className='title-container'>
+                <b>Artist</b>
+                <b>{item.artist}</b>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  )
+      </section>
+    )
 }

@@ -226,6 +226,22 @@
 
       }
     }
+    &:hover{
+      .options-button{
+
+        opacity: 1;
+      }
+    }
+
+    .options-button{
+      font-size: 1.2em;
+      color: $white;
+      opacity: 0;
+
+      &:hover{
+        color: $grey-light;
+      }
+    }
 
     .info-container{
 
