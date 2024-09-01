@@ -5,7 +5,9 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { userService } from '../services/user.service.js'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
-import { logInUser } from '../store/actions/user.actions.js'
+import { login } from '../store/actions/user.actions.js'
+import { signup } from '../store/actions/user.actions.js'
+
 import { loadStations } from '../store/actions/station.actions.js'
 import zenefyLogo from '/public/img/zenefy-logo.png'
 
@@ -16,7 +18,7 @@ export function LoginSignup() {
     try {
       const user = await userService.guestLogin()
       const cred = { username: user.username, password: '' }
-      const res = await logInUser(cred)
+      const res = await login(cred)
       await loadStations()
       navigate('/')
     } catch (err) {
@@ -46,7 +48,6 @@ export function LoginSignup() {
   }
 
   function handleSubmit(ev) {
-    console.log(credentials)
     ev.preventDefault()
     onLogin(credentials)
   }
@@ -54,22 +55,19 @@ export function LoginSignup() {
     isSignup
       ? signup(credentials)
           .then((loggedinUser) => {
-            console.log(loggedinUser)
-            // backshadowRef.current.style.display = 'none'
-
-            onSetUser(loggedinUser)
-            // navigate('/game')
+            setCredentials(userService.getEmptyCredentials())
             showSuccessMsg('Signed in successfully')
           })
 
           .catch((err) => {
+            console.log(err)
             showErrorMsg('Oops try again')
           })
       : login(credentials)
           .then((data) => {
+            setCredentials(userService.getEmptyCredentials())
             // backshadowRef.current.style.display = 'none'
-
-            onSetUser(data)
+            loadStations()
             showSuccessMsg('Logged in successfully')
           })
           .catch((err) => {

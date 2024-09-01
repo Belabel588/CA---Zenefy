@@ -199,7 +199,7 @@ export function StationDetails() {
   async function setLikedStation() {
     await loadStations()
 
-    const like = stations.find((station) => station._id === 'likedSongs123')
+    const like = stations.find((station) => station.isLiked)
     console.log(like)
     const items = like.items
     const itemsId = items.map((item) => {

@@ -81,7 +81,7 @@ async function save(station) {
 
   var stationToSave
   let savedStation
-  if (station._id) {
+  if (station._id && station._id !== '') {
     if (station.isLiked) {
       stationToSave = {
         _id: station._id,

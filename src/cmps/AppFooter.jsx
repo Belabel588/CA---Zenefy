@@ -110,9 +110,7 @@ export function AppFooter() {
   }, [duration, isPlaying, currentTime])
 
   async function setLikedStation() {
-    const like = await stations.find(
-      (station) => station._id === 'likedSongs123'
-    )
+    const like = await stations.find((station) => station.isLiked)
     console.log(like)
     const items = like.items
     const itemsId = items.map((item) => {

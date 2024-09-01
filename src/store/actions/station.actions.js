@@ -31,9 +31,14 @@ export async function loadStations() {
       store.dispatch({ type: SET_STATIONS, stations })
     } else {
       const stationIds = loggedInUser.likedStationsIds
-      const userStations = stations.filter((station) =>
-        loggedInUser.likedStationsIds.includes(station._id)
-      )
+      let userStations
+      if (stationIds && stationIds.length > 0) {
+        userStations = stations.filter((station) =>
+          loggedInUser.likedStationsIds.includes(station._id)
+        )
+      } else {
+        userStations = []
+      }
 
       store.dispatch({ type: SET_STATIONS, stations: userStations })
     }
