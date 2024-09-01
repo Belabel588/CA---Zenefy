@@ -11,7 +11,10 @@ import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 import zenefyLogo from '/public/img/zenefy-logo.png'
-import { SET_FILTER_BY, SET_IS_LOADING } from '../store/reducers/station.reducer.js'
+import {
+  SET_FILTER_BY,
+  SET_IS_LOADING,
+} from '../store/reducers/station.reducer.js'
 
 import { loadStations } from '../store/actions/station.actions.js'
 
@@ -76,13 +79,12 @@ export function AppHeader() {
     }
   }, [filterBy])
 
-
   async function onLogout() {
     try {
+      navigate('/')
       await logout()
       await loadStations()
 
-      navigate('/')
       showSuccessMsg(`Bye now`)
     } catch (err) {
       showErrorMsg('Cannot logout')
