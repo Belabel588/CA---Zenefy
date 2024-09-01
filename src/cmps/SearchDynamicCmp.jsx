@@ -15,6 +15,10 @@ export function SearchDynamicCmp() {
 
     const filterBy = useSelector((storeState) => storeState.stationModule.filterBy)
     const stations = useSelector((storeState) => storeState.stationModule.stations)
+    const generateColor = (index, total) => {
+        const hue = (index / total) * 360
+        return `hsl(${hue}, 70%, 50%)`
+    }
 
     useEffect(() => {
         async function getData() {
@@ -44,6 +48,9 @@ export function SearchDynamicCmp() {
         }
     }, [filterBy, dispatch])
 
+
+
+
     if (error) return <h1>{error}</h1>
 
     console.log('STATIONS TO RENDER ARE::', stations)
@@ -55,9 +62,10 @@ export function SearchDynamicCmp() {
             {stationDataObj?.combinedTags && (
                 <div className="search-tags">
                     {stationDataObj.combinedTags.map((tag, idx) => (
-                        <div key={idx} className="tag">
+                        <div key={idx} className="tag" style={{
+                            backgroundColor: generateColor(idx, stations.length),
+                        }}>
                             <span>{tag}</span>
-
                         </div>
                     ))}
                 </div>
