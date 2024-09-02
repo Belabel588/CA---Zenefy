@@ -192,6 +192,7 @@ export function SearchIndex() {
       const userStationsToSet = stations.filter((station) =>
         user.likedStationsIds.includes(station._id)
       )
+      console.log(userStationsToSet)
 
       setUserStations([...userStationsToSet])
       // await loadStations()
