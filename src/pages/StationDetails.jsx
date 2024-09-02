@@ -94,6 +94,20 @@ export function StationDetails() {
   // }, [stationId, currColor])
 
   useEffect(() => {
+    const setCoverColor = async () => {
+      try {
+        await loadStation(stationId)
+        await setCurrColor(station.cover)
+        pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+        // setCurrColorPage((prev) => (prev = currColor))
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+
+    setLikedStation()
+    
+    setCoverColor()
     loadStation(stationId)
     setCurrColorPage(currColor)
   }, [stationId])
@@ -115,7 +129,7 @@ export function StationDetails() {
     await setCurrStation(stationToSet._id)
     await setCurrItem(songId, { ...station }, true)
     const idxToSet = stationToSet.items.findIndex((item) => item.id === songId)
-    console.log(idxToSet)
+    
     setCurrItemIdx(idxToSet)
     setIsPlaying(true)
   }
@@ -158,7 +172,7 @@ export function StationDetails() {
     if (station.isLiked) return
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
-    console.log(position)
+    
     setIsVisible(true)
   }
 
@@ -215,6 +229,15 @@ export function StationDetails() {
         {
           text: 'Add to playlist',
           icon: <FaPlus />,
+          onClick: () => {
+            // onCreateNewStation()
+            
+            // if (!addToPlaylist) {
+            //   setAddToPlaylist(true)
+            // } else {
+            //   setAddToPlaylist(false)
+            // }
+          },
           onClick: () => {},
         },
         {
@@ -228,6 +251,15 @@ export function StationDetails() {
         {
           text: 'Remove from playlist',
           icon: <CiCircleMinus />,
+          onClick: () => {
+            // onCreateNewStation()
+            
+            // if (!addToPlaylist) {
+            //   setAddToPlaylist(true)
+            // } else {
+            //   setAddToPlaylist(false)
+            // }
+          },
           onClick: () => {},
         },
       ])
@@ -238,13 +270,13 @@ export function StationDetails() {
     const like = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
-    // console.log(like)
+    
     const items = like.items || []
     const itemsId = items.map((item) => {
       return item.id
     })
     setLikedItems(itemsId)
-    console.log(likedItems)
+    
   }
 
   async function likeSong(itemToEdit) {
@@ -284,12 +316,12 @@ export function StationDetails() {
   }
 
   function openSongOptions(event, item) {
-    console.log(options)
+    
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
-    console.log(position)
+    
     setIsVisible(true)
-    console.log(isVisible)
+    
   }
   const [addToPlaylist, setAddToPlaylist] = useState(false)
   const [create, setCreate] = useState(false)

@@ -150,7 +150,6 @@ async function getCategoryStats() {
 async function playStation(stationId) {
   try {
     const station = await getStationById(stationId)
-    console.log('Station found:', station) // Log the station after it is resolved
     return station
   } catch (error) {
     console.error('Error fetching station:', error)
