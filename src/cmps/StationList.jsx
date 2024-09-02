@@ -77,6 +77,9 @@ export function StationList(gradientRefOne, gradientRefTwo) {
               if (isHover.current) return
               navigate(`/station/${station._id}`)
             }}
+            onMouseEnter={() => {
+              setCurrColor(station.cover)
+            }}
           >
             <img className='station-cover' src={station.cover} alt='' />
             <span>{station.title}</span>

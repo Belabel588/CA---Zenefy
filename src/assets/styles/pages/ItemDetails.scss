@@ -8,7 +8,7 @@
 }
 
 .item-header{
-    background: linear-gradient(180deg, #7300ff, #191414);
+    // background: linear-gradient(180deg, #7300ff, #191414);
 
     display: grid;
     grid-template-columns: auto 1fr;
@@ -83,7 +83,7 @@
   }
 
   .user-interface-container{
-    background: linear-gradient(180deg,  #7300ff08 ,#191414);
+    // background: linear-gradient(180deg,  #7300ff08 ,#191414);
     padding-top: 0.5em;
     height: calc(100vh - 410px);
     overflow: auto;

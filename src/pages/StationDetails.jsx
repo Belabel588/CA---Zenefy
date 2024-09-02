@@ -72,6 +72,9 @@ export function StationDetails() {
   const pageRef = useRef()
   const modalRef = useRef()
 
+  const headerRef = useRef()
+  const gradientRef = useRef()
+
   const currColor = useSelector(
     (stateSelector) => stateSelector.stationModule.currColor
   )
@@ -80,7 +83,7 @@ export function StationDetails() {
     (stateSelector) => stateSelector.userModule.loggedinUser
   )
 
-  const [currPageColor, setCurrColorPage] = useState(currColor)
+  const [currPageColor, setCurrColorPage] = useState()
 
   const [likedItems, setLikedItems] = useState([])
 
@@ -91,29 +94,19 @@ export function StationDetails() {
   // }, [stationId, currColor])
 
   useEffect(() => {
-    const setCoverColor = async () => {
-      try {
-        await loadStation(stationId)
-        await setCurrColor(station.cover)
-        pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-        // setCurrColorPage((prev) => (prev = currColor))
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
-
-    setLikedStation()
-    console.log(stations)
-    setCoverColor()
+    loadStation(stationId)
+    setCurrColorPage(currColor)
   }, [stationId])
 
-  useEffect(() => {
-    loadStation(stationId)
-  }, [stations])
+  useEffect(() => {}, [stations])
 
   async function loadStation(stationId) {
     const stationToSet = await stationService.getById(stationId)
-
+    console.log(stationToSet)
+    const hex = await setCurrColor(stationToSet.cover)
+    console.log(hex)
+    headerRef.current.style.backgroundColor = hex
+    gradientRef.current.style.backgroundColor = hex
     setStation(stationToSet)
   }
 
@@ -222,15 +215,7 @@ export function StationDetails() {
         {
           text: 'Add to playlist',
           icon: <FaPlus />,
-          onClick: () => {
-            // onCreateNewStation()
-            console.log(addToPlaylist)
-            // if (!addToPlaylist) {
-            //   setAddToPlaylist(true)
-            // } else {
-            //   setAddToPlaylist(false)
-            // }
-          },
+          onClick: () => {},
         },
         {
           text: 'Create',
@@ -243,15 +228,7 @@ export function StationDetails() {
         {
           text: 'Remove from playlist',
           icon: <CiCircleMinus />,
-          onClick: () => {
-            // onCreateNewStation()
-            console.log(addToPlaylist)
-            // if (!addToPlaylist) {
-            //   setAddToPlaylist(true)
-            // } else {
-            //   setAddToPlaylist(false)
-            // }
-          },
+          onClick: () => {},
         },
       ])
 
@@ -320,7 +297,7 @@ export function StationDetails() {
 
   if (!isLoading)
     return (
-      <section className='station-details-container' ref={pageRef}>
+      <section className='station-details-container'>
         <StationEditModal
           station={station}
           modalRef={modalRef}
@@ -349,11 +326,7 @@ export function StationDetails() {
           itemToEdit={itemToEdit}
         />
 
-        <header
-          className='station-header'
-          // onContextMenu={handleRightClick}
-          // onMouseLeave={handleClickOutside}
-        >
+        <header className='station-header' ref={headerRef}>
           <img className='station-cover' src={station.cover} />
 
           <div className='title-container'>
@@ -368,6 +341,7 @@ export function StationDetails() {
           </div>
         </header>
         <div className='user-interface-container'>
+          <div ref={gradientRef} className='gradient'></div>
           <div className='buttons-container'>
             <div className='play-container'>
               <div className='play-button-container'>

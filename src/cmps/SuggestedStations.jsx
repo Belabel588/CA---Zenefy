@@ -68,6 +68,8 @@ export function SuggestedStations({ stations }) {
             }}
           >
             <div className='cover-container'>
+              <div className='playlist-cover-overlay'></div>
+              {/* <Waves cover={station.cover} title={station.title} /> */}
               <img className='station-cover' src={station.cover} alt='' />
               <span className='title'>{station.title}</span>
               {isPlaying && currStation._id === station._id ? (
@@ -121,6 +123,29 @@ export function SuggestedStations({ stations }) {
           </div>
         )
       })}
+    </div>
+  )
+}
+
+function Waves({ cover, title }) {
+  return (
+    <div className='station-cover-container'>
+      <img src={cover} alt={title} className='station-cover-image' />
+      <div className='station-cover-overlay'>
+        <svg viewBox='0 0 1440 320'>
+          <path
+            fill='#0099ff'
+            fillOpacity='0.8'
+            d='M0,96L1440,224L1440,320L0,320Z'
+          ></path>
+          <path
+            fill='#ff0099'
+            fillOpacity='0.8'
+            d='M0,224L1440,96L1440,320L0,320Z'
+          ></path>
+        </svg>
+      </div>
+      <div className='station-title'>{title}</div>
     </div>
   )
 }

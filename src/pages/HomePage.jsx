@@ -88,13 +88,10 @@ export function HomePage() {
     }
   }, [windowDimensions])
 
-  // useEffect(() => {
-  //   if (currColor === '#706da4') return
-  //   gradientRefOne.current.style.opacity = '0'
-  //   gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-  //   gradientRefTwo.current.style.opacity = '0'
-  //   gradientRefOne.current.style.opacity = '1'
-  // }, [currColor])
+  useEffect(() => {
+    pageRef.current.style.backgroundColor = currColor
+    setCurrColorPage(currColor)
+  }, [currColor])
 
   function onSelectStation(stationId) {
     setCurrStation(stationId)
@@ -152,15 +149,17 @@ export function HomePage() {
 
   return (
     <section className='section home-container' ref={pageRef}>
-      <div className='gradient-container-1' ref={gradientRefOne}></div>
-      <div className='gradient-container-2' ref={gradientRefTwo}></div>
+      <div className='gradient-container' ref={gradientRefOne}></div>
+      {/* <div className='gradient-container-2' ref={gradientRefTwo}></div> */}
       <Sort />
       <StationList
         gradientRefOne={gradientRefOne}
         gradientRefTwo={gradientRefTwo}
       />
-      {user && <h2>Made for {user.fullname}</h2>}
+      {user && <h2 className='made-for'>Made for {user.fullname}</h2>}
       {user && <SuggestedStations stations={allStations} />}
+      {user && <h2 className='made-for'>Jump back in</h2>}
+      {user && <SuggestedStations stations={stations} />}
     </section>
   )
 }

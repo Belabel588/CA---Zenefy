@@ -23,7 +23,7 @@ const initialState = {
   filterBy: stationService.getDefaultFilter(),
   isLoading: false,
   isPlaying: false,
-  currColor: '#4B0E8B',
+  currColor: '#8e8be8',
 }
 
 export function stationReducer(state = initialState, action = {}) {

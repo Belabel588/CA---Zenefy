@@ -1,8 +1,17 @@
+.made-for{
+    margin-inline-start: 0.5em;
+    font-size: 1.3em;
+    font-family: 'GothamMedium';
+}
+
 .suggested-stations-container{
+    margin-inline-start: 0.5em;
+    margin-inline-end: 0.5em;
+    margin-bottom: 2.5em;
     display: flex;
     gap: 1em;
     max-width: 100%;
-    overflow: auto;
+    overflow-x: hidden;
 
     .station-container{
         cursor: pointer;
@@ -10,28 +19,95 @@
    border-radius: 8px;
    transition: 0.2s;
    width: fit-content;
-
+   
    &:hover{
-
+       
        background-color: rgba(255, 255, 255, 0.141);
-   }
+       .cover-container{
+
+           .title{
+            opacity: 1;
+           }
+       }
+    }
     .cover-container{
         position: relative;
         display: flex;
         border-radius: 8px;
-        width: 200px;
+        width: 11vw;
         img{
-            width: 200px;
+            width: 11vw;
             border-radius: 8px;
         }
+        .playlist-cover-overlay {
+            border-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+          }
 
         .title{
             position: absolute;
-            bottom: 2em;
-            inset-inline-start: 1em;
+            bottom: 20px;
+            left: 12px;
             color: $white;
             text-decoration: none;
+            opacity: 0;
+            transition: 0.2s;
         }
+
+        // 
+
+        // .station-cover-container {
+        //     position: relative;
+        //     width: 300px;
+
+        //     height: calc(11vw);
+        //     overflow: hidden;
+        //     border-radius: 15px;
+        //   }
+          
+        //   .station-cover-image {
+        //     // width: 100%;
+        //     // height: 100%;
+
+        //     height: calc(11vw);
+        //     object-fit: cover;
+        //     border-radius: 15px;
+        //   }
+          
+        //   .station-cover-overlay {
+        //     position: absolute;
+        //     top: 0;
+        //     left: 0;
+        //     width: 100%;
+        //     height: 100%;
+        //     display: flex;
+        //     justify-content: center;
+        //     align-items: center;
+        //     border-radius: 15px;
+        //   }
+          
+        //   .station-cover-overlay svg {
+        //     position: absolute;
+        //     bottom: 0;
+        //     width: 100%;
+        //     height: auto;
+        //   }
+          
+        //   .station-title {
+        //     position: absolute;
+        //     bottom: 20px;
+        //     left: 20px;
+        //     color: $white;
+        //     font-size: 24px;
+        //     font-weight: bold;
+        //   }
+
+        // 
 
         .playing-container, .play-button-container{
             position: absolute;
@@ -155,7 +231,7 @@
     .artists{
         font-size: 0.7em;
         color: $grey-light;
-        width: 200px;
+        width:  12vw;
 
         overflow-x: hidden;  
         //  text-wrap: nowrap;

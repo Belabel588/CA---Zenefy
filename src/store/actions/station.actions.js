@@ -142,6 +142,7 @@ export async function setCurrColor(
     console.log(hex)
 
     store.dispatch({ type: SET_CURR_COLOR, currColor: hex })
+    return hex
   } catch (err) {
     console.log(err)
   }
