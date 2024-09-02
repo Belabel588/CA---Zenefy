@@ -874,7 +874,7 @@ function _createStations() {
       addedAt: 1724685172590,
     },
     {
-      stationId: 'zWyX45',
+      _id: 'zWyX45',
       stationType: 'music',
       title: 'Indie Anthems',
       items: [
@@ -926,7 +926,7 @@ function _createStations() {
       addedAt: 1724685172590,
     },
     {
-      stationId: 'uWq9bH',
+      _id: 'uWq9bH',
       stationType: 'music',
       title: 'Jazz Vibes',
       items: [
@@ -978,7 +978,7 @@ function _createStations() {
       addedAt: 1724685172590,
     },
     {
-      stationId: 'pTm8bV',
+      _id: 'pTm8bV',
       stationType: 'music',
       title: 'Electronic Beats',
       items: [
@@ -1030,7 +1030,7 @@ function _createStations() {
       addedAt: 1724685172590,
     },
     {
-      stationId: 'hU8zWd',
+      _id: 'hU8zWd',
       stationType: 'music',
       title: 'Classical Greats',
       items: [
