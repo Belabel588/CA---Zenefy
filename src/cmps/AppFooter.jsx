@@ -13,7 +13,11 @@ import {
   setCurrItemIdx,
   setCurrColor,
   saveStation,
+  setIsLoading,
+  loadStations,
 } from '../store/actions/station.actions.js'
+import { showSuccessMsg } from '../services/event-bus.service.js'
+import { showErrorMsg } from '../services/event-bus.service.js'
 
 import { updateUser } from '../store/actions/user.actions.js'
 
@@ -72,6 +76,7 @@ export function AppFooter() {
   const [isRepeat, setIsRepeat] = useState(false)
 
   const [likedItems, setLikedItems] = useState([])
+  const [likedStation, likedStationToSet] = useState({})
 
   useEffect(() => {
     // setStation(currStation)
@@ -109,16 +114,23 @@ export function AppFooter() {
     return () => clearInterval(interval)
   }, [duration, isPlaying, currentTime])
 
-  async function setLikedStation() {
-    const like = stations.find(
-      (station) => station.isLiked && station.createdBy._id === user._id
-    )
-    console.log(like)
+  async function setLikedStation(savedStation) {
+    let like
+    if (!savedStation) {
+      like = stations.find(
+        (station) => station.isLiked && station.createdBy._id === user._id
+      )
+    } else {
+      like = savedStation
+    }
+    likedStationToSet(like)
+
     const items = like.items
     const itemsId = items.map((item) => {
       return item.id
     })
-    setLikedItems(itemsId)
+
+    setLikedItems([...itemsId])
   }
 
   function next() {
@@ -273,6 +285,27 @@ export function AppFooter() {
     }
   }
 
+  async function onRemoveItem(stationId) {
+    try {
+      setIsLoading(true)
+      // handleClickOutside()
+      // setIsVisible(false)
+      const station = await stationService.getById(stationId)
+      const idxToRemove = station.items.findIndex(
+        (item) => item.id === currItem.id
+      )
+      station.items.splice(idxToRemove, 1)
+      const savedStation = await saveStation(station)
+      // await loadStations()
+      setLikedStation(savedStation)
+      showSuccessMsg('Song removed')
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <footer className='app-footer play-bar-container'>
       <div className='song-details-container'>
@@ -281,7 +314,15 @@ export function AppFooter() {
           <b className='song-name'>{currItem.name}</b>
           <span className='song-artist'>{currItem.artist}</span>
         </div>
-        <button onClick={async () => await likeSong(currItem)}>
+        <button
+          onClick={async () => {
+            if (likedItems.includes(currItem.id)) {
+              onRemoveItem(likedStation._id)
+            } else {
+              await likeSong(currItem)
+            }
+          }}
+        >
           {(likedItems.includes(currItem.id) && <AddedIcon />) || <PlusIcon />}
         </button>
       </div>

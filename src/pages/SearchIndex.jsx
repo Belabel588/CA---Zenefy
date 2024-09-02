@@ -170,8 +170,8 @@ export function SearchIndex() {
     setLikedItems(itemsId)
   }
 
-  async function likeSong(itemToAdd) {
-    if (itemToAdd.url === '') return
+  async function likeSong(itemToEdit) {
+    if (itemToEdit.url === '') return
     if (!user) return
 
     try {
@@ -179,12 +179,14 @@ export function SearchIndex() {
       const likedStation = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
-      likedStation.items.push(itemToAdd)
+      if (likedStation.items.find((item) => item.id === itemToEdit.id)) return
+
+      likedStation.items.push(itemToEdit)
 
       const stationToSave = await saveStation(likedStation)
 
       const likedSongsIds = user.likedSongsIds
-      likedSongsIds.push(itemToAdd.id)
+      likedSongsIds.push(itemToEdit.id)
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
 
@@ -242,7 +244,7 @@ export function SearchIndex() {
     },
   ]
 
-  const [itemToAdd, setItemToAdd] = useState({})
+  const [itemToEdit, setItemToEdit] = useState({})
 
   const editRef = useRef()
   async function onDeleteStation(stationToDelete) {
@@ -258,13 +260,13 @@ export function SearchIndex() {
 
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
-  function handleClick(event, itemToAdd) {
+  function handleClick(event, itemToEdit) {
     event.preventDefault()
-    setPosition({ x: event.pageX - 100, y: event.pageY })
+    setPosition({ x: event.pageX, y: event.pageY })
 
     setIsVisible(true)
 
-    setItemToAdd(itemToAdd)
+    setItemToEdit(itemToEdit)
   }
 
   function handleClickOutside() {
@@ -337,9 +339,9 @@ export function SearchIndex() {
               key={item.id}
               className='song-item'
               onDoubleClick={() => onPlaySearchedSong(item.id)}
-              onMouseLeave={() => {
-                if (!isHover.current) setIsVisible(false)
-              }}
+              // onMouseLeave={() => {
+              //   if (!isHover.current) setIsVisible(false)
+              // }}
               // style={{ position: 'relative' }}
             >
               <div className='img-container'>
@@ -421,7 +423,7 @@ export function SearchIndex() {
         position={position}
         isVisible={isVisible}
         stations={stations}
-        itemToAdd={itemToAdd}
+        itemToEdit={itemToEdit}
         userStations={userStations}
         handleClickOutside={handleClickOutside}
         addToPlaylist={addToPlaylist}

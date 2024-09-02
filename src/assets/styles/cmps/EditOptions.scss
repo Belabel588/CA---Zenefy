@@ -51,11 +51,13 @@
     }
   }
 
-  .add-to-stations-container{
+  .song-edit-container{
     // height: 200px;
     // width: 200px;
     width: 200px;
     right: 200px;
+    max-height: 200px;
+    overflow: auto;
     background-color: $grey-dark;
     border-radius: 10px;
     position: absolute;
@@ -87,3 +89,28 @@
 
 
   }
+
+  .remove{
+    .station-container{
+      display: flex;
+      justify-content: space-around;
+
+      .info-container{
+        display: flex;
+        font: 0.8em;
+      }
+      svg{
+        font-size: 25px;
+      }
+
+      .svg-icon{
+        width: 25px;
+      }
+
+      .svg-icon.added{
+        fill: $green;
+      }
+      
+    }
+  }
+  

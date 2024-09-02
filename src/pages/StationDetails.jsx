@@ -53,7 +53,7 @@ export function StationDetails() {
 
   const { stationId } = useParams()
 
-  const [station, setStation] = useState({ items: [{ id: '' }] })
+  const [station, setStation] = useState({ _id: '', items: [{ id: '' }] })
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -106,6 +106,10 @@ export function StationDetails() {
     console.log(stations)
     setCoverColor()
   }, [stationId])
+
+  useEffect(() => {
+    loadStation(stationId)
+  }, [stations])
 
   async function loadStation(stationId) {
     const stationToSet = await stationService.getById(stationId)
@@ -182,6 +186,7 @@ export function StationDetails() {
 
   const optionsState = useRef()
   let options
+  const [itemToEdit, setItemToEdit] = useState({})
 
   optionsState.current === 'station'
     ? (options = [
@@ -189,6 +194,8 @@ export function StationDetails() {
           text: 'Edit',
           icon: <FiEdit2 />,
           onClick: () => {
+            setIsVisible(false)
+
             toggleModal()
           },
         },
@@ -196,6 +203,8 @@ export function StationDetails() {
           text: 'Delete',
           icon: <CiCircleMinus />,
           onClick: () => {
+            setIsVisible(false)
+
             onDeleteStation(station)
           },
         },
@@ -203,6 +212,8 @@ export function StationDetails() {
           text: 'Create',
           icon: <FaPlus />,
           onClick: () => {
+            setIsVisible(false)
+
             onCreateNewStation()
           },
         },
@@ -225,6 +236,7 @@ export function StationDetails() {
           text: 'Create',
           icon: <FaPlus />,
           onClick: () => {
+            setIsVisible(false)
             onCreateNewStation()
           },
         },
@@ -249,8 +261,8 @@ export function StationDetails() {
     const like = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
-    console.log(like)
-    const items = like.items
+    // console.log(like)
+    const items = like.items || []
     const itemsId = items.map((item) => {
       return item.id
     })
@@ -258,25 +270,24 @@ export function StationDetails() {
     console.log(likedItems)
   }
 
-  async function likeSong(itemToAdd) {
-    console.log(user)
-    if (itemToAdd.url === '') return
+  async function likeSong(itemToEdit) {
+    if (itemToEdit.url === '') return
     if (!user) return
 
     const likedStation = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
     const likedSongsIds = user.likedSongsIds
-    if (user.likedSongsIds.includes(itemToAdd.id)) {
+    if (user.likedSongsIds.includes(itemToEdit.id)) {
       const idx = likedStation.items.findIndex(
-        (item) => item.id === itemToAdd.id
+        (item) => item.id === itemToEdit.id
       )
       likedStation.items.splice(idx, 1)
-      const songIdx = likedSongsIds.findIndex((id) => id === itemToAdd.id)
+      const songIdx = likedSongsIds.findIndex((id) => id === itemToEdit.id)
       likedSongsIds.splice(songIdx, 1)
     } else {
-      likedStation.items.push(itemToAdd)
-      likedSongsIds.push(itemToAdd.id)
+      likedStation.items.push(itemToEdit)
+      likedSongsIds.push(itemToEdit.id)
     }
 
     try {
@@ -334,6 +345,8 @@ export function StationDetails() {
           removeFromPlaylist={removeFromPlaylist}
           setRemoveFromPlaylist={setRemoveFromPlaylist}
           optionsState={optionsState}
+          handleClickOutside={handleClickOutside}
+          itemToEdit={itemToEdit}
         />
 
         <header
@@ -377,7 +390,7 @@ export function StationDetails() {
                   />
                 )}
               </div>
-              <RxPlusCircled className='option-button plus-button' />
+              {/* <RxPlusCircled className='option-button plus-button' /> */}
               <BsThreeDots
                 className='option-button more-button'
                 onClick={(event) => {
@@ -475,6 +488,7 @@ export function StationDetails() {
                   <button
                     onClick={(event) => {
                       if (likedItems.includes(item.id)) {
+                        setItemToEdit(item)
                         optionsState.current = 'song'
                         openSongOptions(event, item)
                       } else {

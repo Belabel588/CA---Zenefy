@@ -372,11 +372,10 @@ function _createStations() {
       cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png', // Spotify's Liked Songs cover
       tags: ['favorites', 'liked', 'personal'],
       createdBy: {
-        _id: 'creator1',
-        fullname: 'Alice Johnson',
-        imgUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
+        _id: 'guest',
+        fullname: 'Guest',
       },
-      likedByUsers: [],
+      likedByUsers: [{ fullname: 'Guest', id: 'guest' }],
       addedAt: 1724685172590,
     },
     {
