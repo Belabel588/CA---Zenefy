@@ -161,7 +161,7 @@ export function StationDetails() {
     if (station.isLiked) return
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
-
+    console.log(position)
     setIsVisible(true)
   }
 
@@ -180,29 +180,68 @@ export function StationDetails() {
     }
   }
 
-  const options = [
-    {
-      text: 'Edit',
-      icon: <FiEdit2 />,
-      onClick: () => {
-        toggleModal()
-      },
-    },
-    {
-      text: 'Delete',
-      icon: <CiCircleMinus />,
-      onClick: () => {
-        onDeleteStation(station)
-      },
-    },
-    {
-      text: 'Create',
-      icon: <FaPlus />,
-      onClick: () => {
-        onCreateNewStation()
-      },
-    },
-  ]
+  const optionsState = useRef()
+  let options
+
+  optionsState.current === 'station'
+    ? (options = [
+        {
+          text: 'Edit',
+          icon: <FiEdit2 />,
+          onClick: () => {
+            toggleModal()
+          },
+        },
+        {
+          text: 'Delete',
+          icon: <CiCircleMinus />,
+          onClick: () => {
+            onDeleteStation(station)
+          },
+        },
+        {
+          text: 'Create',
+          icon: <FaPlus />,
+          onClick: () => {
+            onCreateNewStation()
+          },
+        },
+      ])
+    : (options = [
+        {
+          text: 'Add to playlist',
+          icon: <FaPlus />,
+          onClick: () => {
+            // onCreateNewStation()
+            console.log(addToPlaylist)
+            // if (!addToPlaylist) {
+            //   setAddToPlaylist(true)
+            // } else {
+            //   setAddToPlaylist(false)
+            // }
+          },
+        },
+        {
+          text: 'Create',
+          icon: <FaPlus />,
+          onClick: () => {
+            onCreateNewStation()
+          },
+        },
+        {
+          text: 'Remove from playlist',
+          icon: <CiCircleMinus />,
+          onClick: () => {
+            // onCreateNewStation()
+            console.log(addToPlaylist)
+            // if (!addToPlaylist) {
+            //   setAddToPlaylist(true)
+            // } else {
+            //   setAddToPlaylist(false)
+            // }
+          },
+        },
+      ])
 
   async function setLikedStation() {
     // await loadStations()
@@ -256,13 +295,21 @@ export function StationDetails() {
     setIsPlaying(true)
   }
 
+  function openSongOptions(event, item) {
+    console.log(options)
+    event.preventDefault()
+    setPosition({ x: event.pageX, y: event.pageY })
+    console.log(position)
+    setIsVisible(true)
+    console.log(isVisible)
+  }
+  const [addToPlaylist, setAddToPlaylist] = useState(false)
+  const [create, setCreate] = useState(false)
+  const [removeFromPlaylist, setRemoveFromPlaylist] = useState(false)
+
   if (!isLoading)
     return (
-      <section
-        className='station-details-container'
-        ref={pageRef}
-        onClick={handleClickOutside}
-      >
+      <section className='station-details-container' ref={pageRef}>
         <StationEditModal
           station={station}
           modalRef={modalRef}
@@ -276,11 +323,24 @@ export function StationDetails() {
           editRef={editRef}
           position={position}
           isVisible={isVisible}
+          setIsVisible={setIsVisible}
           onDeleteStation={onDeleteStation}
           onCreateNewStation={onCreateNewStation}
+          addToPlaylist={addToPlaylist}
+          setAddToPlaylist={setAddToPlaylist}
+          userStations={stations}
+          create={create}
+          setCreate={setCreate}
+          removeFromPlaylist={removeFromPlaylist}
+          setRemoveFromPlaylist={setRemoveFromPlaylist}
+          optionsState={optionsState}
         />
 
-        <header className='station-header' onContextMenu={handleRightClick}>
+        <header
+          className='station-header'
+          // onContextMenu={handleRightClick}
+          // onMouseLeave={handleClickOutside}
+        >
           <img className='station-cover' src={station.cover} />
 
           <div className='title-container'>
@@ -318,7 +378,13 @@ export function StationDetails() {
                 )}
               </div>
               <RxPlusCircled className='option-button plus-button' />
-              <BsThreeDots className='option-button more-button' />
+              <BsThreeDots
+                className='option-button more-button'
+                onClick={(event) => {
+                  optionsState.current = 'station'
+                  handleRightClick(event)
+                }}
+              />
             </div>
             <div className='list-container'>
               <span>List</span>
@@ -407,7 +473,14 @@ export function StationDetails() {
                     {'3:33'}
                   </span>
                   <button
-                    onClick={() => likeSong(item)}
+                    onClick={(event) => {
+                      if (likedItems.includes(item.id)) {
+                        optionsState.current = 'song'
+                        openSongOptions(event, item)
+                      } else {
+                        likeSong(item)
+                      }
+                    }}
                     className='like-button'
                   >
                     {(likedItems.includes(item.id) && (

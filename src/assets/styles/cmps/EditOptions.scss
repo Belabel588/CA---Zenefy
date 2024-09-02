@@ -7,11 +7,12 @@
     width: 200px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     // position: absolute;
+    // left: 50px;
     
-    z-index: 2;
+    z-index: 50;
     // display: none;
     
-    transform: translate(-50%,-50%);
+    // transform: translate(-50%,-50%);
     
     .option-container {
       display: flex;

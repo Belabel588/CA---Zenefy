@@ -29,6 +29,11 @@ export function EditOptions({
   addToPlaylist,
   setAddToPlaylist,
   setIsVisible,
+  create,
+  setCreate,
+  removeFromPlaylist,
+  setRemoveFromPlaylist,
+  optionsState,
 }) {
   let id = 0
 
@@ -60,23 +65,50 @@ export function EditOptions({
       setIsLoading(false)
     }
   }
+  console.log(isVisible)
 
+  function handleOptionHover(optionText) {
+    if (optionText === 'Add to playlist') {
+      setAddToPlaylist(true)
+      setCreate(false)
+      setRemoveFromPlaylist(false)
+    } else if (optionText === 'Create') {
+      setAddToPlaylist(false)
+      setCreate(true)
+      setRemoveFromPlaylist(false)
+    } else if (optionText === 'Remove from playlist') {
+      setAddToPlaylist(false)
+      setCreate(false)
+      setRemoveFromPlaylist(true)
+    }
+  }
+
+  function handleParentLeave() {
+    setIsVisible(false)
+    setAddToPlaylist(false)
+    setCreate(false)
+    setRemoveFromPlaylist(false)
+  }
   return (
     <>
       {isVisible && (
         <div
           className='edit-options-container add-to-playlist'
           style={{
+            // left: '0px',
+            left: `${position.x - 200}px`,
             top: `${position.y}px`,
-            left: `calc( ${position.x - 15}px)`,
             position: 'absolute',
+            zIndex: '5',
+            opacity: '1',
           }}
           onMouseLeave={() => {
-            setAddToPlaylist(false)
-            setIsVisible(false)
+            // setAddToPlaylist(false)
+            // setIsVisible(false)
+            handleParentLeave()
           }}
           onMouseEnter={() => {
-            setIsVisible(true)
+            // setIsVisible(true)
           }}
         >
           {options.map((option) => (
@@ -85,8 +117,7 @@ export function EditOptions({
               key={++id}
               onClick={option.onClick}
               onMouseEnter={() => {
-                console.log(addToPlaylist)
-                if (option.text === 'Add to playlist') setAddToPlaylist(true)
+                handleOptionHover(option.text)
               }}
             >
               {option.icon}
