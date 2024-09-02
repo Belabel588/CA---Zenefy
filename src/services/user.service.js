@@ -133,7 +133,14 @@ function _createDemoUser() {
     fullname: 'Guest',
     username: 'Guest',
 
-    likedStationsIds: ['likedSongs123'],
+    likedStationsIds: [
+      'likedSongs123',
+      'yPlzCv',
+      'UDmm7S',
+      '0HP0UA',
+      '0eNciX',
+      '9F2K2W',
+    ],
     likedSongsIds: [
       'creator1',
       'JX6Dy3',
