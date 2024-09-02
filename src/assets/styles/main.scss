@@ -1,0 +1,55 @@
+// Setup
+@import "setup/variables";
+@import "setup/functions";
+@import "setup/mixins";
+@import "setup/typography";
+
+// Basics
+@import "basics/helpers";
+@import "basics/layout";
+@import "basics/base";
+@import "basics/links";
+@import "basics/forms";
+
+
+// pages
+@import "RootCmp";
+
+@import "pages/AboutUs";
+@import "pages/HomePage";
+@import "pages/SearchIndex";
+@import "pages/ReviewIndex";
+@import "pages/UserDetails";
+@import "pages/TaskDetails";
+@import "pages/LoginSignup";
+
+// Components
+@import "cmps/list";
+@import "cmps/preview";
+
+@import "cmps/AppHeader";
+@import "cmps/AppFooter";
+@import "cmps/UserMsg";
+@import "cmps/SearchDynamicCmp.scss";
+
+@import "cmps/CarFilter.scss";
+@import "cmps/ReviewEdit.scss";
+@import "cmps/ReviewList.scss";
+@import "cmps/ReviewPreview.scss";
+@import "cmps/StationEditModal.scss";
+@import "cmps/EditOptions.scss";
+@import "cmps/PlayingAnimation.scss";
+@import "cmps/LoadingAnimation.scss";
+@import "cmps/OptionsModal.scss";
+// @import "cmps/CarList";
+// @import "cmps/CarPreview";
+
+
+@import "cmps/PlayBar.scss";
+@import "cmps/AppNav.scss";
+@import "cmps/SideBar.scss";
+@import "cmps/AppLibrary.scss";
+@import "cmps/LikedSongs.scss";
+@import "pages/StationDetails.scss";
+@import "pages/ItemDetails.scss";
+@import "pages/LoginSignup.scss";
