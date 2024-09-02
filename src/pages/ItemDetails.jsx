@@ -50,7 +50,7 @@ export function ItemDetails() {
     try {
       setIsLoading(true)
       const itemToSet = await stationService.getItem(itemId)
-      console.log(itemToSet)
+      
 
       setItem(itemToSet)
     } catch (err) {

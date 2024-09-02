@@ -28,71 +28,42 @@ import { BiPause } from 'react-icons/bi'
 
 // import playingAnimation from '../../public/img/playing.gif'
 
-export function StationList(gradientRefOne, gradientRefTwo) {
-  const navigate = useNavigate()
+export function StationList({ stations: propStations }) {
+  const navigate = useNavigate();
 
-  const stations = useSelector(
+  // Fallback to stations from Redux store if not provided as a prop
+  const reduxStations = useSelector(
     (storeState) => storeState.stationModule.stations
-  )
+  );
+
+  const stations = propStations || reduxStations;
 
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
-  )
+  );
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
-  )
-  const currColor = useSelector(
-    (stateSelector) => stateSelector.stationModule.currColor
-  )
+  );
 
-  const user = useSelector(
-    (stateSelector) => stateSelector.userModule.loggedinUser
-  )
-  const isHover = useRef(false)
-
-  const [currPageColor, setCurrColorPage] = useState(currColor)
+  const isHover = useRef(false);
 
   function onSelectStation(stationId) {
-    setCurrStation(stationId)
-    setCurrItem(0, currStation)
-    setIsPlaying(true)
+    setCurrStation(stationId);
+    setCurrItem(0, currStation);
+    setIsPlaying(true);
   }
-  let counter = 0
-
-  useEffect(() => {
-    console.log(stations)
-  }, [stations])
 
   return (
     <div className='stations-container'>
-      {stations.map((station) => {
-        if (counter >= 8) return
-        counter++
+      {stations.map((station, index) => {
+        if (index >= 8) return null; // Limit to 8 stations
         return (
           <div
-            to={`/station/${station._id}`}
             className='station-container'
             key={station._id}
             onClick={() => {
-              if (isHover.current) return
-              navigate(`/station/${station._id}`)
-            }}
-            onMouseEnter={async () => {
-              // gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
-              // gradientRefTwo.current.style.opacity = '1'
-              // await setCurrColor(station.cover)
-              // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-              // gradientRefTwo.current.style.opacity = '0'
-              // gradientRefOne.current.style.opacity = '1'
-              // gradientRefOne.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
-              // gradientRefTwo.current.style.opacity = '0'
-              // setCurrColorPage((prev) => (prev = currColor))
-            }}
-            onMouseLeave={async () => {
-              // gradientRefTwo.current.style.background = `linear-gradient(0deg, #191414 60%, rgb(30, 0, 69) 90%, #4B0E8B 100%)`
-              // gradientRefOne.current.style.opacity = '0'
-              // gradientRefTwo.current.style.opacity = '1'
-              // await setCurrColor()
+              if (isHover.current) return;
+              navigate(`/station/${station._id}`);
             }}
           >
             <img className='station-cover' src={station.cover} alt='' />
@@ -103,10 +74,10 @@ export function StationList(gradientRefOne, gradientRefTwo) {
                 <BiPause
                   className='pause-button'
                   onMouseEnter={() => {
-                    isHover.current = true
+                    isHover.current = true;
                   }}
                   onMouseLeave={() => {
-                    isHover.current = false
+                    isHover.current = false;
                   }}
                   onClick={() => setIsPlaying(false)}
                 />
@@ -118,28 +89,28 @@ export function StationList(gradientRefOne, gradientRefTwo) {
               <div
                 className='play-button-container'
                 onClick={() => {
-                  if (station.items.length === 0) return
+                  if (station.items.length === 0) return;
                   if (currStation._id === station._id) {
-                    setIsPlaying(true)
-                    return
+                    setIsPlaying(true);
+                    return;
                   }
-                  onSelectStation(station._id)
+                  onSelectStation(station._id);
                 }}
               >
                 <BiPlay
                   className='play-button'
                   onMouseEnter={() => {
-                    isHover.current = true
+                    isHover.current = true;
                   }}
                   onMouseLeave={() => {
-                    isHover.current = false
+                    isHover.current = false;
                   }}
                 />
               </div>
             )}
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

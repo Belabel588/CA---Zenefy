@@ -46,10 +46,6 @@ export function EditOptions({
     (stateSelector) => stateSelector.stationModule.isLoading
   )
 
-  // const userStations = stations.filter((station) =>
-  //   user.likedStationsIds.includes(station._id)
-  // )
-  // console.log(userStations)
 
   async function onAddToStation(stationId) {
     try {

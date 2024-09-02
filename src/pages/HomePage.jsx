@@ -68,7 +68,7 @@ export function HomePage() {
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy })
     getAllStations()
-    console.log(allStations)
+    
   }, [])
 
   // useEffect(() => {
@@ -88,7 +88,7 @@ export function HomePage() {
     const stations = await stationService.query({ stationType: 'music' })
     stations.splice(0, 1)
     setAllStations(stations)
-    console.log(stations)
+    
   }
 
   return (
@@ -96,10 +96,10 @@ export function HomePage() {
       <div className='gradient-container-1' ref={gradientRefOne}></div>
       <div className='gradient-container-2' ref={gradientRefTwo}></div>
       <Sort />
-      <StationList
+      {/* <StationList
         gradientRefOne={gradientRefOne}
         gradientRefTwo={gradientRefTwo}
-      />
+      /> */}
       <h3>Made for {user.fullname}</h3>
       <SuggestedStations stations={allStations} />
     </section>

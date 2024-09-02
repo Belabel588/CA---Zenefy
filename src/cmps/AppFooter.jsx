@@ -271,17 +271,17 @@ export function AppFooter() {
     )
     likedStation.items.push(itemToAdd)
 
-    console.log(likedStation)
+    
     try {
       const saved = await saveStation(likedStation)
-      console.log(saved)
+      
       const likedSongsIds = user.likedSongsIds
       likedSongsIds.push(itemToAdd.id)
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()
     } catch (err) {
-      console.log(err)
+      
     }
   }
 

@@ -42,7 +42,7 @@ export function AppLibrary() {
   useEffect(() => {
     //   loadStations()
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
-    console.log(stations)
+    
     //   setStationToSet(stations)
   }, [stations])
 
@@ -112,7 +112,7 @@ export function AppLibrary() {
                   <div
                     className='pause-button-container'
                     onMouseEnter={() => {
-                      console.log(isHover.current)
+                      
                       isHover.current = true
                     }}
                     onMouseLeave={() => {

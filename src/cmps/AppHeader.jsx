@@ -56,7 +56,7 @@ export function AppHeader() {
   }
 
   const handleSearch = debounce(({ target }) => {
-    console.log('searching')
+    
     const field = target.name
     let value = target.value
 

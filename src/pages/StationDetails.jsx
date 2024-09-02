@@ -103,7 +103,7 @@ export function StationDetails() {
     }
 
     setLikedStation()
-    console.log(stations)
+    
     setCoverColor()
   }, [stationId])
 
@@ -122,7 +122,7 @@ export function StationDetails() {
     await setCurrStation(stationToSet._id)
     await setCurrItem(songId, { ...station }, true)
     const idxToSet = stationToSet.items.findIndex((item) => item.id === songId)
-    console.log(idxToSet)
+    
     setCurrItemIdx(idxToSet)
     setIsPlaying(true)
   }
@@ -165,7 +165,7 @@ export function StationDetails() {
     if (station.isLiked) return
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
-    console.log(position)
+    
     setIsVisible(true)
   }
 
@@ -224,7 +224,7 @@ export function StationDetails() {
           icon: <FaPlus />,
           onClick: () => {
             // onCreateNewStation()
-            console.log(addToPlaylist)
+            
             // if (!addToPlaylist) {
             //   setAddToPlaylist(true)
             // } else {
@@ -245,7 +245,7 @@ export function StationDetails() {
           icon: <CiCircleMinus />,
           onClick: () => {
             // onCreateNewStation()
-            console.log(addToPlaylist)
+            
             // if (!addToPlaylist) {
             //   setAddToPlaylist(true)
             // } else {
@@ -261,13 +261,13 @@ export function StationDetails() {
     const like = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
-    // console.log(like)
+    
     const items = like.items || []
     const itemsId = items.map((item) => {
       return item.id
     })
     setLikedItems(itemsId)
-    console.log(likedItems)
+    
   }
 
   async function likeSong(itemToEdit) {
@@ -307,12 +307,12 @@ export function StationDetails() {
   }
 
   function openSongOptions(event, item) {
-    console.log(options)
+    
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
-    console.log(position)
+    
     setIsVisible(true)
-    console.log(isVisible)
+    
   }
   const [addToPlaylist, setAddToPlaylist] = useState(false)
   const [create, setCreate] = useState(false)

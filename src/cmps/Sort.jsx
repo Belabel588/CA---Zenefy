@@ -1,54 +1,72 @@
-import { useState, useEffect, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
-
-import { utilService } from '../services/util.service.js'
-import { loadStations } from '../store/actions/station.actions.js'
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { utilService } from '../services/util.service.js';
+import { StationList } from './StationList.jsx'; // Import the StationList component
 
 export function Sort() {
-  const [checkedLabel, setCheckedLabel] = useState('all')
-  let filterByToEdit = useSelector((storeState) => storeState.stationModule.filterBy)
-  const dispatch = useDispatch()
-
-
+  const [checkedLabel, setCheckedLabel] = useState('all');
+  const [filteredStations, setFilteredStations] = useState([]); // State for the filtered list of stations
+  
+  // Get the stations from the global store
+  const stations = useSelector((storeState) => storeState.stationModule.stations);
 
   useEffect(() => {
+    // Set the initial filtered stations list based on the stations in the store
+    setFilteredStations(stations);
+  }, [stations]);
 
-    loadStations()
+  useEffect(() => {
+    
 
-  }, [filterByToEdit])
+    // Filter stations based on the selected label
+    const filteredStations = filterStations(checkedLabel);
 
-  function onSetCheckedLabel({ target }) {
-    console.log(target.id)
-    // if (target.id === checkedLabel) { whats the purpose here?
-    //   setCheckedLabel('all')
-    //   return
-    // }
-    setCheckedLabel(target.id)
-    filterByToEdit = { ...filterByToEdit, stationType: target.id }
-    dispatch({ type: SET_FILTER_BY, filterBy: filterByToEdit })
-    // console.log(filterByToEdit);
+    
+
+    // Set the filtered stations list in the local state
+    setFilteredStations(filteredStations);
+  }, [checkedLabel]);
+
+  function filterStations(label) {
+    
+
+    if (label === 'all') {
+      
+      return stations; // Use the original stations from the store
+    }
+
+    const filtered = stations.filter(station => station.stationType === label);
+
+    
+
+    return filtered;
   }
 
-  const labels = [{ name: 'all' }, { name: 'music' }, { name: 'podcast' }]
+  function onSetCheckedLabel({ target }) {
+    
+    setCheckedLabel(target.id);
+  }
+
+  const labels = [{ name: 'all' }, { name: 'music' }, { name: 'podcast' }];
 
   return (
     <div className='filter-container'>
-      {labels.map((label) => {
-        return (
-          <div className='label-container' key={label.name}>
-            <input
-              type='checkbox'
-              id={label.name}
-              onChange={onSetCheckedLabel}
-              checked={checkedLabel === label.name ? true : false}
-            />
-            <label className='sort-label' htmlFor={label.name}>
-              {utilService.capitalizeFirstLetter(label.name)}
-            </label>
-          </div>
-        )
-      })}
+      {labels.map((label) => (
+        <div className='label-container' key={label.name}>
+          <input
+            type='checkbox'
+            id={label.name}
+            onChange={onSetCheckedLabel}
+            checked={checkedLabel === label.name}
+          />
+          <label className='sort-label' htmlFor={label.name}>
+            {utilService.capitalizeFirstLetter(label.name)}
+          </label>
+        </div>
+      ))}
+
+      {/* Render the StationList with filtered stations */}
+      <StationList stations={filteredStations} />
     </div>
-  )
+  );
 }
