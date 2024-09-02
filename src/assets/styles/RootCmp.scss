@@ -19,7 +19,7 @@ body{
   &.main-layout {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    min-height: 100vh;
+    min-height:100vh;
     
 
     header {
@@ -29,12 +29,13 @@ body{
 
 
   .main{
-    height:100%;
+    height:fit-content;
+    
   }
   .main-content{
     background-color:$background-black;
     border-radius: 0.5rem;
-    height:calc(100vh - 70px);
+    height:fit-content;
     width:98%;
     // margin: 1rem 0;
   }

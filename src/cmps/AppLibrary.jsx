@@ -1,9 +1,9 @@
 import { FaPlus } from 'react-icons/fa6'
 import { useState, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector , useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
-
+import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service'
 import { loadStations } from '../store/actions/station.actions'
 import {
@@ -20,7 +20,8 @@ import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
 export function AppLibrary() {
-  const [filterBy, setFilterBy] = useState(stationService.getDefaultFilter())
+  const dispatch = useDispatch()
+  const [defaultFilter, setFilterBy] = useState(stationService.getDefaultFilter())
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
@@ -40,6 +41,7 @@ export function AppLibrary() {
 
   useEffect(() => {
     //   loadStations()
+    dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
     console.log(stations)
     //   setStationToSet(stations)
   }, [stations])
