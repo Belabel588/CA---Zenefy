@@ -5,6 +5,7 @@
   flex-direction: column;
   padding: 2rem;
   background-color: $dark-mode-background;
+
   /* Dark background for a Spotify-like look */
   color: #ffffff;
   /* White text on a dark background */
@@ -60,7 +61,7 @@
 
 .search-results {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   // height: 300px;
   gap: 1em;
   /* Adds some spacing between the grid columns */
@@ -78,18 +79,150 @@
     align-items: left;
     justify-content: left;
     padding: 10px;
-    background-color: $grey-darkest;
-
-
+    background-color: $dark-mode-background;
+    
+    
     h2,
     h6,
     img {
       margin-left: 20px;
     }
 
+
+    
+  }
+  
+  .station-container{
+    background-color: $grey-darkest;
+    padding: 1em;
+    border-radius: 8px;
+    transition: 0.2s;
+    position: relative;
+    
+    &:hover{
+      background-color: $dark-mode-active;
+      
+    }
+    .playing-container, .play-button-container{
+      position: absolute;
+      inset-inline-end: 0.25em;
+      bottom: -25px;
+      transition: 0.2s;
+      opacity: 0;
+  }
+  &:hover{
+      // background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.15) 100%);
+      background-color: rgba(255, 255, 255, 0.25);
+      
+      .playing-container, .play-button-container{
+          
+          opacity: 1;
+          bottom: 5px;
+
+      }            
+      .play-button, .pause-button{
+          display: flex;
+
+      }  
+       .animation-container{
+          display: none;
+      }
   }
 
+
+  a{
+      color: $white;
+      text-decoration: none;
+      
+  }
+  span{
+      text-wrap: nowrap;
+      overflow: hidden;
+      // text-overflow: ellipsis;
+  }
+
+  // .station-cover{
+  //     // padding: 5px;
+  //     border-top-left-radius: 5px;
+  //     border-bottom-left-radius: 5px;
+
+  //     height: calc(3.5vw);
+  //     width: 3.5vw;
+  //     object-fit:scale-down;
+
+  //     min-width: 60px;
+  //     min-height: 60px;
+
+  // }
+
+  .play-button-container, .playing-container{
+
+      margin: 0.5em;
+      min-width: 36px;
+      width: clamp(16px, 5vw, 42px);
+      height: clamp(16px, 5vw, 42px);
+
+  }
+  .play-button, .pause-button{
+      display: none;
+      background-color: $green;
+      color: black;
+      // font-size: 2em;
+      // padding: 10px;
+      border: none;
+      border-radius: 50%;
+      padding: 0px 0px 0px 5px;
+      // padding: clamp(10px, 2vw, 20px);
+
+      @media (max-width: 900px) {
+          padding: 0px 0px 0px 2px;
+      }
+      cursor: pointer;
+      transition: 0.1s;
+      font-size: clamp(16px, 5vw, 42px);
+      width: clamp(16px, 5vw, 42px);
+      height: clamp(16px, 5vw, 42px);
+      // font-size: calc(3vw);
+      // font-size: 1em;
+      box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3), 0 4px 4px rgba(0, 0, 0, 0.2);
+
+  }
+  .pause-button{
+      padding: 0px;
+  }
+  .animation-container {
+      // justify-self: center;
+      // background-color: black;
+      // border-radius: 50%;
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      // color: $green;
+
+
+      width: clamp(16px, 5vw, 42px);
+      height: clamp(16px, 5vw, 42px);
+      display: flex;
+      svg{
+          margin-inline-start: 0.8em;
+          justify-self: center;
+          align-self: center;
+
+          // width: 50%;
+          // height: 50%;
+      }
+
+  }
+  
+  .play-button:hover, .pause-button:hover {
+      transform: scale(1.05);
+
+  }
+  }
+  
   .songs {
+
+    background-color: $dark-mode-background;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -21,6 +21,7 @@ import { showErrorMsg } from '../services/event-bus.service.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
 
 import { EditOptions } from '../cmps/EditOptions.jsx'
+import { PlayingAnimation } from '../cmps/PlayingAnimation.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -282,6 +283,12 @@ export function SearchIndex() {
     }
   }
 
+  function onSelectStation(stationId) {
+    setCurrStation(stationId)
+    setCurrItem(0, currStation)
+    setIsPlaying(true)
+  }
+
   return filterBy.txt === '' ? (
     <section className='search-section'>
       <h1>Browse all</h1>
@@ -328,93 +335,137 @@ export function SearchIndex() {
       <div className='search-results'>
         <section className='info'>
           <h1>Top result</h1>
-          <img src={searchResults[0]?.cover} alt={searchResults[0]?.artist} />
-          <h2>{searchResults[0]?.artist}</h2>
-          <h6>Artist</h6>
+          <div className='station-container'>
+            <img src={searchResults[0]?.cover} alt={searchResults[0]?.artist} />
+            <h2>{searchResults[0]?.artist}</h2>
+            <h6>Artist</h6>
+            {isPlaying && currStation._id === searchedStation._id ? (
+              <div className='playing-container'>
+                <BiPause
+                  className='pause-button'
+                  onMouseEnter={() => {
+                    isHover.current = true
+                  }}
+                  onMouseLeave={() => {
+                    isHover.current = false
+                  }}
+                  onClick={() => setIsPlaying(false)}
+                  style={{ position: 'absolute', bottom: '5px', opacity: '1' }}
+                />
+                <div className='animation-container'>
+                  <PlayingAnimation />
+                </div>
+              </div>
+            ) : (
+              <div
+                className='play-button-container'
+                onClick={() => {
+                  if (searchedStation.items.length === 0) return
+                  if (currStation._id === searchedStation._id) {
+                    setIsPlaying(true)
+                    return
+                  }
+                  onSelectStation(searchedStation._id)
+                }}
+              >
+                <BiPlay
+                  className='play-button'
+                  onMouseEnter={() => {
+                    isHover.current = true
+                  }}
+                  onMouseLeave={() => {
+                    isHover.current = false
+                  }}
+                />
+              </div>
+            )}{' '}
+          </div>
         </section>
         <section className='songs'>
-          {/* <h1>Songs</h1> */}
-          {searchedStation.items.slice(0, 4).map((item, idx) => (
-            <div
-              key={item.id}
-              className='song-item'
-              onDoubleClick={() => onPlaySearchedSong(item.id)}
-              // onMouseLeave={() => {
-              //   if (!isHover.current) setIsVisible(false)
-              // }}
-              // style={{ position: 'relative' }}
-            >
-              <div className='img-container'>
-                {(isPlaying && currItem.id === item.id && (
-                  <div
-                    className='pause-button-container'
-                    onMouseEnter={() => {
-                      console.log(isHover.current)
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                  >
-                    <BiPause
-                      className='pause-button'
-                      onClick={() => setIsPlaying(false)}
-                    />
-                  </div>
-                )) || (
-                  <div
-                    className='play-button-container'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                  >
-                    <BiPlay
-                      className='play-button'
-                      onClick={() => {
-                        if (currItem.id === item.id) {
-                          setIsPlaying(true)
-                          return
-                        }
-                        onPlaySearchedSong(item.id)
+          <h1 key={'headerSongs'}>Songs</h1>
+          <div className='results-container'>
+            {searchedStation.items.slice(0, 4).map((item, idx) => (
+              <div
+                key={item.id}
+                className='song-item'
+                onDoubleClick={() => onPlaySearchedSong(item.id)}
+                // onMouseLeave={() => {
+                //   if (!isHover.current) setIsVisible(false)
+                // }}
+                // style={{ position: 'relative' }}
+              >
+                <div className='img-container'>
+                  {(isPlaying && currItem.id === item.id && (
+                    <div
+                      className='pause-button-container'
+                      onMouseEnter={() => {
+                        console.log(isHover.current)
+                        isHover.current = true
                       }}
-                    />
-                  </div>
-                )}
-                <img src={item.cover} alt='' />
-              </div>
-              <div className='song-details'>
-                <div className='name-container'>
-                  <span
-                    className={
-                      currItem.id === item.id
-                        ? 'item-name playing'
-                        : 'item-name'
-                    }
-                    onClick={() => {
-                      if (isHover.current) return
-                      navigate(`/item/${item.id}`)
-                    }}
-                  >
-                    {item.name}
-                  </span>
+                      onMouseLeave={() => {
+                        isHover.current = false
+                      }}
+                    >
+                      <BiPause
+                        className='pause-button'
+                        onClick={() => setIsPlaying(false)}
+                      />
+                    </div>
+                  )) || (
+                    <div
+                      className='play-button-container'
+                      onMouseEnter={() => {
+                        isHover.current = true
+                      }}
+                      onMouseLeave={() => {
+                        isHover.current = false
+                      }}
+                    >
+                      <BiPlay
+                        className='play-button'
+                        onClick={() => {
+                          if (currItem.id === item.id) {
+                            setIsPlaying(true)
+                            return
+                          }
+                          onPlaySearchedSong(item.id)
+                        }}
+                      />
+                    </div>
+                  )}
+                  <img src={item.cover} alt='' />
                 </div>
-                <span className='artist-name'>{item.artist}</span>
+                <div className='song-details'>
+                  <div className='name-container'>
+                    <span
+                      className={
+                        currItem.id === item.id
+                          ? 'item-name playing'
+                          : 'item-name'
+                      }
+                      onClick={() => {
+                        if (isHover.current) return
+                        navigate(`/item/${item.id}`)
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </div>
+                  <span className='artist-name'>{item.artist}</span>
+                </div>
+                <span className='time'>3:33</span>
+                <button onClick={() => likeSong(item)}>
+                  {(likedItems.includes(item.id) && <AddedIcon />) || (
+                    <PlusIcon />
+                  )}
+                </button>
+                <HiOutlineDotsHorizontal
+                  className='options-button'
+                  onContextMenu={() => handleClick(event, item)}
+                />
               </div>
-              <span className='time'>3:33</span>
-              <button onClick={() => likeSong(item)}>
-                {(likedItems.includes(item.id) && <AddedIcon />) || (
-                  <PlusIcon />
-                )}
-              </button>
-              <HiOutlineDotsHorizontal
-                className='options-button'
-                onContextMenu={() => handleClick(event, item)}
-              />
-            </div>
-          ))}
+            ))}{' '}
+          </div>
         </section>
       </div>
       <EditOptions
