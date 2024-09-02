@@ -7,70 +7,77 @@ import { SET_FILTER_BY } from '../store/reducers/station.reducer'
 import { StationList } from './StationList'
 
 export function SearchDynamicCmp() {
-    const params = useParams()
-    const dispatch = useDispatch()
+  const params = useParams()
+  const dispatch = useDispatch()
 
-    const [stationDataObj, setStationDataObj] = useState(null)
-    const [error, setError] = useState(null)
+  const [stationDataObj, setStationDataObj] = useState(null)
+  const [error, setError] = useState(null)
 
-    const filterBy = useSelector((storeState) => storeState.stationModule.filterBy)
-    const stations = useSelector((storeState) => storeState.stationModule.stations)
-    const generateColor = (index, total) => {
-        const hue = (index / total) * 360
-        return `hsl(${hue}, 70%, 50%)`
+  const filterBy = useSelector(
+    (storeState) => storeState.stationModule.filterBy
+  )
+  const stations = useSelector(
+    (storeState) => storeState.stationModule.stations
+  )
+  const generateColor = (index, total) => {
+    const hue = (index / total) * 360
+    return `hsl(${hue}, 70%, 50%)`
+  }
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const data = await stationService.getStationData(params.stationId)
+        setStationDataObj(data)
+
+        if (data.stationsWithSameType && data.stationsWithSameType.length > 0) {
+          const stationType = data.stationsWithSameType[0].stationType
+          dispatch({
+            type: SET_FILTER_BY,
+            filterBy: { ...filterBy, stationType },
+          })
+        }
+
+        console.log('Fetched data:', data)
+      } catch (err) {
+        console.error('Failed to fetch data', err)
+        setError('Failed to fetch data')
+      }
     }
 
-    useEffect(() => {
-        async function getData() {
-            try {
-                const data = await stationService.getStationData(params.stationId)
-                setStationDataObj(data)
+    getData()
+  }, [params.stationId, dispatch])
 
-                if (data.stationsWithSameType && data.stationsWithSameType.length > 0) {
-                    const stationType = data.stationsWithSameType[0].stationType
-                    dispatch({ type: SET_FILTER_BY, filterBy: { ...filterBy, stationType } })
-                }
+  useEffect(() => {
+    if (filterBy) {
+      console.log('FILTERBY INSIDE OF DYNM CMP BEFORE LOAD STATIONS', filterBy)
+      loadStations()
+    }
+  }, [filterBy, dispatch])
 
-                console.log('Fetched data:', data)
-            } catch (err) {
-                console.error('Failed to fetch data', err)
-                setError('Failed to fetch data')
-            }
-        }
+  if (error) return <h1>{error}</h1>
 
-        getData()
-    }, [params.stationId, dispatch])
+  console.log('STATIONS TO RENDER ARE::', stations)
 
-    useEffect(() => {
-        if (filterBy) {
-            console.log('FILTERBY INSIDE OF DYNM CMP BEFORE LOAD STATIONS', filterBy)
-            loadStations()
-        }
-    }, [filterBy, dispatch])
+  return (
+    <div className='main-search-container'>
+      <StationList />
 
-
-
-
-    if (error) return <h1>{error}</h1>
-
-    console.log('STATIONS TO RENDER ARE::', stations)
-
-    return (
-        <div className='main-search-container'>
-            <StationList />
-
-            {stationDataObj?.combinedTags && (
-                <div className="search-tags">
-                    {stationDataObj.combinedTags.map((tag, idx) => (
-                        <div key={idx} className="tag" style={{
-                            backgroundColor: generateColor(idx, stations.length),
-                        }}>
-                            <span>{tag}</span>
-                        </div>
-                    ))}
-                </div>
-            )}
-
+      {stationDataObj?.combinedTags && (
+        <div className='search-tags'>
+          {stationDataObj.combinedTags.map((tag, idx) => (
+            <div
+              key={idx}
+              className='tag'
+              style={{
+                backgroundColor: generateColor(idx, stations.length),
+              }}
+            >
+              <span>{tag}</span>
+            </div>
+          ))}
         </div>
-    )
+      )}
+    </div>
+  )
 }

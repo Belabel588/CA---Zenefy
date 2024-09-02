@@ -8,6 +8,7 @@ import { FastAverageColor } from 'fast-average-color'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
+import { utilService } from '../services/util.service.js'
 
 import { StationList } from '../cmps/StationList.jsx'
 
@@ -58,6 +59,10 @@ export function HomePage() {
 
   const isHover = useRef(false)
 
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  )
+
   const pageRef = useRef()
   const gradientRefOne = useRef()
   const gradientRefTwo = useRef()
@@ -70,6 +75,18 @@ export function HomePage() {
     getAllStations()
     console.log(allStations)
   }, [])
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions())
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      // getAllStations()
+    }
+  }, [windowDimensions])
 
   // useEffect(() => {
   //   if (currColor === '#706da4') return
@@ -85,10 +102,52 @@ export function HomePage() {
   }
 
   async function getAllStations() {
+    const { width } = windowDimensions
     const stations = await stationService.query({ stationType: 'music' })
-    stations.splice(0, 1)
-    setAllStations(stations)
-    console.log(stations)
+    const filtered = stations.filter(
+      (station) => !station.isLiked || station.isLiked === undefined
+    )
+
+    let numStationsToReturn
+    const idxsToExclude = []
+
+    if (width >= 1800) {
+      numStationsToReturn = 7
+    } else if (width >= 1200) {
+      numStationsToReturn = 5
+    } else if (width >= 600) {
+      numStationsToReturn = 4
+    } else if (width >= 300) {
+      numStationsToReturn = 3
+    } else {
+      numStationsToReturn = 1
+    }
+
+    const stationsToReturn = filtered.reduce((accu, station, index) => {
+      if (accu.length >= numStationsToReturn) return accu
+
+      let randomIdx
+      do {
+        randomIdx = utilService.getRandomIntInclusive(0, filtered.length - 1)
+      } while (idxsToExclude.includes(randomIdx))
+
+      idxsToExclude.push(randomIdx)
+      accu.push(filtered[randomIdx])
+
+      return accu
+    }, [])
+
+    console.log(stationsToReturn)
+    setAllStations(stationsToReturn)
+  }
+
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window
+    console.log(width)
+    return {
+      width,
+      height,
+    }
   }
 
   return (
@@ -100,8 +159,8 @@ export function HomePage() {
         gradientRefOne={gradientRefOne}
         gradientRefTwo={gradientRefTwo}
       />
-      <h3>Made for {user.fullname}</h3>
-      <SuggestedStations stations={allStations} />
+      {user && <h2>Made for {user.fullname}</h2>}
+      {user && <SuggestedStations stations={allStations} />}
     </section>
   )
 }
