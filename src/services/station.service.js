@@ -49,6 +49,7 @@ async function query(filterBy = { txt: '', stationType: '' }) {
   //     speed,
   //     owner,
   //   }))
+  console.log(stations)
   return stations
 }
 

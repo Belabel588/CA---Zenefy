@@ -22,6 +22,7 @@ import {
 import { apiService } from '../services/youtube-spotify.service.js'
 
 import { Sort } from '../cmps/Sort.jsx'
+import { SuggestedStations } from '../cmps/SuggestedStations.jsx'
 
 import { GoContainer } from 'react-icons/go'
 import { FaCirclePlay } from 'react-icons/fa6'
@@ -62,8 +63,12 @@ export function HomePage() {
   const gradientRefTwo = useRef()
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
+  const [allStations, setAllStations] = useState([])
+
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy })
+    getAllStations()
+    console.log(allStations)
   }, [])
 
   // useEffect(() => {
@@ -79,6 +84,13 @@ export function HomePage() {
     setCurrItem('', currStation)
   }
 
+  async function getAllStations() {
+    const stations = await stationService.query({ stationType: 'music' })
+    stations.splice(0, 1)
+    setAllStations(stations)
+    console.log(stations)
+  }
+
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container-1' ref={gradientRefOne}></div>
@@ -88,6 +100,8 @@ export function HomePage() {
         gradientRefOne={gradientRefOne}
         gradientRefTwo={gradientRefTwo}
       />
+      <h3>Made for {user.fullname}</h3>
+      <SuggestedStations stations={allStations} />
     </section>
   )
 }
