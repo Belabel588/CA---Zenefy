@@ -14,6 +14,26 @@ body{
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: #878787 $background-black;
+  /* Chrome, Edge, and Safari */
+  &::-webkit-scrollbar {
+    width: 8px;
+    cursor: pointer;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 25px;
+    background-color: transparent;
+    cursor: pointer;
+    // border: 1px double #FFFFFF;
+  }
+}
+
 
 .app {
   &.main-layout {

@@ -204,6 +204,7 @@ export function SearchIndex() {
         user.likedStationsIds.includes(station._id)
       )
 
+      debugger
       setUserStations([...userStationsToSet])
       showSuccessMsg('Song added')
     } catch (err) {
@@ -211,6 +212,8 @@ export function SearchIndex() {
       showErrorMsg(`Couldn't like song`)
     } finally {
       setIsLoading(false)
+      console.log(filterBy)
+      console.log(searchedStation)
     }
   }
 

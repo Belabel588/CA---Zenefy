@@ -10,7 +10,10 @@ import { GoHome, GoHomeFill } from 'react-icons/go'
 import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
+import { IoClose } from 'react-icons/io5'
+
 import zenefyLogo from '/public/img/zenefy-logo.png'
+
 import {
   SET_FILTER_BY,
   SET_IS_LOADING,
@@ -43,7 +46,7 @@ export function AppHeader() {
     }
     // Step 2: Reset the input value on route change using the ref
     if (inputRef.current) {
-      inputRef.current.value = '' // Clear the input value
+      // inputRef.current.value = '' // Clear the input value
     }
   }, [location])
 
@@ -56,7 +59,8 @@ export function AppHeader() {
   }
 
   const handleSearch = debounce(({ target }) => {
-    
+    console.log(target.value)
+
     const field = target.name
     let value = target.value
 
@@ -137,7 +141,13 @@ export function AppHeader() {
             placeholder='What do you want to play?'
             ref={inputRef} // Step 3: Bind the ref to the input field
           />
-          <PiBrowsersThin className='icon browse' />
+          {(filterBy.txt && (
+            <IoClose
+              onClick={() => {
+                inputRef.current.value = ''
+              }}
+            />
+          )) || <PiBrowsersThin className='icon browse' />}
         </div>
       </div>
 

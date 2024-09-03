@@ -122,11 +122,11 @@
                 
                 &:hover{
                     background-color: $grey-medium;
-                    border: 1px solid $grey-light;
+                    outline: 1px solid $grey-light;
                 }
 
                 &:has(input:focus){
-                border: 2.5px solid $white;
+                    outline: 2.5px solid $white;
 
        
                 }
