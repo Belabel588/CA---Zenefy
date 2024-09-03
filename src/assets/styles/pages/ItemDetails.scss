@@ -3,7 +3,7 @@
     height: 100%;
     // background-color: #2e1a47; 
     // background: linear-gradient(180deg, #7300ff, #191414);
-    container-type: inline-size;
+
     
 }
 
@@ -128,6 +128,19 @@
           }
           
         }
+        .like-button-container{
+           .svg-icon{
+            width: 20px;
+          cursor: pointer;
+          fill: $grey-light;
+        }
+
+        .added{
+          width: 20px;
+          fill: $green;
+        }
+
+        }
         .option-button{
           color: $grey-light;
           font-size: 1.5em;
@@ -137,7 +150,12 @@
             color: $white;
             transform: scale(1.05);
           }
+
+
         }
+
+       
+
         
         .more-button{
           

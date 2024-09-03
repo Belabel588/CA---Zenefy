@@ -216,6 +216,7 @@ async function createStationFromSearch(searchResults, keyWord) {
       likedBy: [], // Empty likedBy array
       addedAt: Date.now(), // Current timestamp
       lyrics: result.lyrics,
+      duration: result.duration || '00:00',
     })),
     cover: searchResults[0]?.cover || 'default_cover_url', // Use the first song's cover as the station cover, fallback to a default URL
     tags: [], // Empty tags array

@@ -23,13 +23,15 @@ async function getVideos(search) {
       &videoEmbeddable=true&type=video&key=${API_URL}&q=${search}`
 
     const res = await axios.get(url)
+
     await storageService.post(`${db}`, res.data)
   }
+  const videosWithDurations = await addVideoDurations(search)
 
-  return createList(search)
+  return createList(search, videosWithDurations)
 }
 
-async function createList(search) {
+async function createList(search, videosWithDuration) {
   const db = `${search}Youtube`
   let videos
   const list = []
@@ -40,7 +42,7 @@ async function createList(search) {
   videos = res[0].items
 
   const spotifyInfo = await getSpotify(search)
-  console.log(listRes)
+
   if (listRes[0] && listRes[0].length > 0) {
     return listRes[0]
   }
@@ -59,8 +61,7 @@ async function createList(search) {
   //     cover: spotifyInfo[i].coverArt,
   //   }
   // })
-  console.log(videos)
-  console.log(spotifyInfo)
+
   let counter
   if (spotifyInfo.length > videos.length) counter = videos.length
   if (
@@ -84,10 +85,9 @@ async function createList(search) {
         'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
       id: utilService.makeId(),
       lyrics: spotifyInfo[i].lyrics || 'Lyrics not available',
+      duration: videosWithDuration[i].duration || '00:00',
     }
-    console.log(list)
   }
-  console.log(list)
 
   save(listDB, list)
   return list
@@ -96,10 +96,12 @@ async function createList(search) {
 // Spotify
 
 function createVideo(video) {
+  console.log(video)
   const youtubeVideo = {
     url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
     title: video.snippet.title,
   }
+  console.log(youtubeVideo)
 
   return youtubeVideo
 }
@@ -131,7 +133,11 @@ async function getSpotify(search) {
         track.artists[0]
       let lyrics
       if (title && artist) {
-        lyrics = await getLyrics(title, artist)
+        try {
+          lyrics = await getLyrics(title, artist)
+        } catch (err) {
+          console.log(err)
+        }
       } else {
         lyrics = 'Lyrics not found'
       }
@@ -148,6 +154,42 @@ async function getSpotify(search) {
 
   save(db, tracksToSave)
   return tracksToSave
+}
+
+async function addVideoDurations(search) {
+  const db = `${search}Youtube`
+  const localRes = await storageService.query(db)
+
+  // Extract video IDs from the saved search results
+  const videoIds = localRes[0].items.map((video) => video.id.videoId).join(',')
+
+  // Fetch video details including duration
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_URL}`
+  const res = await axios.get(url)
+  const videoDetails = res.data.items
+
+  // Combine video details with durations
+  return localRes[0].items.map((video, index) => {
+    const duration = convertDuration(
+      videoDetails[index].contentDetails.duration
+    )
+    return {
+      ...video,
+      duration,
+    }
+  })
+}
+
+function convertDuration(isoDuration) {
+  const match = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/)
+  const hours = (match[1] || '0H').slice(0, -1)
+  const minutes = (match[2] || '0M').slice(0, -1)
+  const seconds = (match[3] || '0S').slice(0, -1)
+
+  return `${hours > 0 ? hours + ':' : ''}${minutes.padStart(
+    2,
+    '0'
+  )}:${seconds.padStart(2, '0')}`
 }
 
 async function getLyrics(trackName, artistName) {

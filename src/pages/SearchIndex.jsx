@@ -75,7 +75,7 @@ export function SearchIndex() {
   const navigate = useNavigate()
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
-  console.log('categoriesWithImages', categoriesWithImages)
+  // console.log('categoriesWithImages', categoriesWithImages)
 
   const tagColors = [
     '#006450',
@@ -338,7 +338,7 @@ export function SearchIndex() {
                     isHover.current = false
                   }}
                   onClick={() => setIsPlaying(false)}
-                  style={{ position: 'absolute', bottom: '5px', opacity: '1' }}
+                  // style={{ position: 'absolute', bottom: '5px', opacity: '1' }}
                 />
                 <div className='animation-container'>
                   <PlayingAnimation />
@@ -412,6 +412,8 @@ export function SearchIndex() {
                             setIsPlaying(true)
                             return
                           }
+                          onSelectStation(searchedStation._id)
+
                           onPlaySearchedSong(item.id)
                         }}
                       />
@@ -437,12 +439,12 @@ export function SearchIndex() {
                   </div>
                   <span className='artist-name'>{item.artist}</span>
                 </div>
-                <span className='time'>3:33</span>
                 <button onClick={() => likeSong(item)}>
                   {(likedItems.includes(item.id) && <AddedIcon />) || (
                     <PlusIcon />
                   )}
                 </button>
+                <span className='time'>{item.duration || '00:00'}</span>
                 <HiOutlineDotsHorizontal
                   className='options-button'
                   onClick={() => handleClick(event, item)}
