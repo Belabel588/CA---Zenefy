@@ -16,7 +16,6 @@ let search = 'naruto'
 
 async function getVideos(search) {
   const db = `${search}Youtube`
-  console.log(db)
   const localRes = await storageService.query(db)
 
   if (localRes.length === 0) {
@@ -60,23 +59,37 @@ async function createList(search) {
   //     cover: spotifyInfo[i].coverArt,
   //   }
   // })
-  for (var i = 0; i < videos.length; i++) {
+  console.log(videos)
+  console.log(spotifyInfo)
+  let counter
+  if (spotifyInfo.length > videos.length) counter = videos.length
+  if (
+    spotifyInfo.length < videos.length ||
+    spotifyInfo.length === videos.length
+  )
+    counter = spotifyInfo.length
+
+  for (var i = 0; i < counter; i++) {
     const currVideo = createVideo(videos[i])
 
     spotifyInfo.filter((track) => regex.test(track.name === currVideo.title))
 
     list[i] = {
       url: currVideo.url,
-      name: spotifyInfo[i].name,
-      artist: spotifyInfo[i].artist,
-      album: spotifyInfo[i].album,
-      cover: spotifyInfo[i].coverArt,
+      name: spotifyInfo[i].name || 'Title not available',
+      artist: spotifyInfo[i].artist || 'Artist not available',
+      album: spotifyInfo[i].album || 'Album not available',
+      cover:
+        spotifyInfo[i].cover ||
+        'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
       id: utilService.makeId(),
-      lyrics: spotifyInfo[i].lyrics,
+      lyrics: spotifyInfo[i].lyrics || 'Lyrics not available',
     }
+    console.log(list)
   }
+  console.log(list)
 
-  // save(listDB, list)
+  save(listDB, list)
   return list
 }
 
@@ -112,28 +125,32 @@ async function getSpotify(search) {
 
   const tracksToSave = await Promise.all(
     tracks.map(async (track) => {
-      const lyrics = await getLyrics(
-        track.name,
-        track.artists.map((artist) => artist.name).join(', ')
-      )
+      const title = track.name
+      const artist =
+        track.artists.map((artist) => artist.name).join(', ') ||
+        track.artists[0]
+      let lyrics
+      if (title && artist) {
+        lyrics = await getLyrics(title, artist)
+      } else {
+        lyrics = 'Lyrics not found'
+      }
 
       return {
         name: track.name,
         artist: track.artists.map((artist) => artist.name).join(', '),
         album: track.album.name,
-        coverArt: track.album.images[0]?.url,
+        cover: track.album.images[0]?.url,
         lyrics: lyrics || 'Lyrics not found',
-        stationType: track.type === 'track' ? 'music' : 'podcast',
       }
     })
   )
 
-  // save(db, tracksToSave)
+  save(db, tracksToSave)
   return tracksToSave
 }
 
 async function getLyrics(trackName, artistName) {
-  // Replace with actual API call logic
   const response = await fetch(
     `https://api.lyrics.ovh/v1/${artistName}/${trackName}`
   )
