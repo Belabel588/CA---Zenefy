@@ -247,7 +247,7 @@ export function SearchIndex() {
     {
       text: 'Add to playlist',
       icon: <FaPlus />,
-      onClick: () => {},
+      onClick: () => { },
     },
   ]
 
@@ -293,6 +293,7 @@ export function SearchIndex() {
     setCurrItem(0, currStation)
     setIsPlaying(true)
   }
+  
 
   return currSearch === '' ? (
     <section className='search-section'>
@@ -347,7 +348,7 @@ export function SearchIndex() {
                     isHover.current = false
                   }}
                   onClick={() => setIsPlaying(false)}
-                  // style={{ position: 'absolute', bottom: '5px', opacity: '1' }}
+                // style={{ position: 'absolute', bottom: '5px', opacity: '1' }}
                 />
                 <div className='animation-container'>
                   <PlayingAnimation />
@@ -405,29 +406,29 @@ export function SearchIndex() {
                       />
                     </div>
                   )) || (
-                    <div
-                      className='play-button-container'
-                      onMouseEnter={() => {
-                        isHover.current = true
-                      }}
-                      onMouseLeave={() => {
-                        isHover.current = false
-                      }}
-                    >
-                      <BiPlay
-                        className='play-button'
-                        onClick={() => {
-                          if (currItem.id === item.id) {
-                            setIsPlaying(true)
-                            return
-                          }
-                          onSelectStation(searchedStation._id)
-
-                          onPlaySearchedSong(item.id)
+                      <div
+                        className='play-button-container'
+                        onMouseEnter={() => {
+                          isHover.current = true
                         }}
-                      />
-                    </div>
-                  )}
+                        onMouseLeave={() => {
+                          isHover.current = false
+                        }}
+                      >
+                        <BiPlay
+                          className='play-button'
+                          onClick={() => {
+                            if (currItem.id === item.id) {
+                              setIsPlaying(true)
+                              return
+                            }
+                            onSelectStation(searchedStation._id)
+
+                            onPlaySearchedSong(item.id)
+                          }}
+                        />
+                      </div>
+                    )}
                   <img src={item.cover} alt='' />
                 </div>
                 <div className='song-details'>
@@ -475,7 +476,7 @@ export function SearchIndex() {
         addToPlaylist={addToPlaylist}
         setAddToPlaylist={setAddToPlaylist}
         setIsVisible={setIsVisible}
-        // setCreate={setCreate}
+      // setCreate={setCreate}
       />
     </>
   )
