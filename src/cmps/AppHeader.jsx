@@ -18,8 +18,9 @@ import {
   SET_FILTER_BY,
   SET_IS_LOADING,
 } from '../store/reducers/station.reducer.js'
+import { setCurrSearch } from '../store/actions/station.actions.js'
 
-import { loadStations } from '../store/actions/station.actions.js'
+import { loadStations, setIsActive } from '../store/actions/station.actions.js'
 
 import { login, signup } from '../store/actions/user.actions.js'
 
@@ -27,6 +28,12 @@ export function AppHeader() {
   const user = useSelector((storeState) => storeState.userModule.loggedinUser)
   const filterBy = useSelector(
     (storeState) => storeState.stationModule.filterBy
+  )
+  const currSearch = useSelector(
+    (stateSelector) => stateSelector.stationModule.currSearch
+  )
+  const isActive = useSelector(
+    (stateSelector) => stateSelector.stationModule.isActive
   )
 
   const navigate = useNavigate()
@@ -41,9 +48,11 @@ export function AppHeader() {
   useEffect(() => {
     if (location.pathname === '/') {
       setIsHome(true)
+      setCurrSearch('')
     } else {
       setIsHome(false)
     }
+    setIsActive(false)
     // Step 2: Reset the input value on route change using the ref
     if (inputRef.current) {
       // inputRef.current.value = '' // Clear the input value
@@ -59,8 +68,6 @@ export function AppHeader() {
   }
 
   const handleSearch = debounce(({ target }) => {
-    console.log(target.value)
-
     const field = target.name
     let value = target.value
 
@@ -80,6 +87,7 @@ export function AppHeader() {
   useEffect(() => {
     if (filterBy.txt !== '') {
       dispatch({ type: SET_IS_LOADING, isLoading: true })
+      setCurrSearch(filterBy.txt)
     }
   }, [filterBy])
 
@@ -98,6 +106,8 @@ export function AppHeader() {
   function onSearchClick() {
     if (inputRef.current) {
       inputRef.current.focus() // Focus the input field
+      setIsActive(true)
+      console.log(isActive)
     }
     navigate('/search')
   }
@@ -158,15 +168,18 @@ export function AppHeader() {
           <button onClick={onLoginGuest} className='guest-login-button'>
             Guest?
           </button>
-          <NavLink to='login' className='login-link'>
+          <NavLink to='login'>
             <FaRegUserCircle className='user-logo' />
           </NavLink>
         </div>
       )}
       {user && (
-        <div className='user-info'>
-          <Link to={`user/${user._id}`}>{user.fullname}</Link>
-          <button onClick={onLogout}>logout</button>
+        <div className='user-container'>
+          <Link to={`user/${user._id}`} className='login-link'>
+            {' '}
+            <FaRegUserCircle className='user-logo' />
+          </Link>
+          {/* <button onClick={onLogout}>logout</button> */}
         </div>
       )}
     </header>

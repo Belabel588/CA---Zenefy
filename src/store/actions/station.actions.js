@@ -13,16 +13,15 @@ import {
   SET_CURR_IDX,
   SET_CURR_COLOR,
   SET_LIKED_STATION,
+  SET_CURR_SEARCH,
+  SET_IS_ACTIVE,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
 export async function loadStations() {
   const filterBy = store.getState().stationModule.filterBy
-  
 
   store.dispatch({ type: SET_IS_LOADING, isLoading: true })
-
-  
 
   try {
     const stations = await stationService.query(filterBy)
@@ -148,4 +147,11 @@ export async function setCurrColor(
 
 export function setIsLoading(isLoading) {
   store.dispatch({ type: SET_IS_LOADING, isLoading })
+}
+export function setCurrSearch(term) {
+  store.dispatch({ type: SET_CURR_SEARCH, currSearch: term })
+}
+
+export function setIsActive(stateToSet) {
+  store.dispatch({ type: SET_IS_ACTIVE, isActive: stateToSet })
 }

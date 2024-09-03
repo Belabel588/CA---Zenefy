@@ -65,6 +65,13 @@ export function SearchIndex() {
   const user = useSelector(
     (stateSelector) => stateSelector.userModule.loggedinUser
   )
+
+  const currSearch = useSelector(
+    (stateSelector) => stateSelector.stationModule.currSearch
+  )
+  const isActive = useSelector(
+    (stateSelector) => stateSelector.stationModule.isActive
+  )
   const [userStations, setUserStations] = useState([])
 
   const [likedItems, setLikedItems] = useState([])
@@ -126,17 +133,16 @@ export function SearchIndex() {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        const results = await apiService.getVideos(filterBy.txt)
+        console.log(currSearch)
+        const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
       } catch (error) {
         console.error('Failed to fetch search results:', error)
       }
     }
 
-    if (filterBy.txt) {
-      fetchSearchResults()
-    }
-  }, [filterBy])
+    fetchSearchResults()
+  }, [currSearch])
 
   useEffect(() => {
     if (searchResults.length > 0) {
@@ -182,12 +188,13 @@ export function SearchIndex() {
   async function likeSong(itemToEdit) {
     if (itemToEdit.url === '') return
     if (!user) return
-
+    console.log(itemToEdit)
     try {
       setIsLoading(true)
       const likedStation = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
+      console.log(likedStation)
       if (likedStation.items.find((item) => item.id === itemToEdit.id)) return
 
       likedStation.items.push(itemToEdit)
@@ -204,7 +211,6 @@ export function SearchIndex() {
         user.likedStationsIds.includes(station._id)
       )
 
-      debugger
       setUserStations([...userStationsToSet])
       showSuccessMsg('Song added')
     } catch (err) {
@@ -212,8 +218,6 @@ export function SearchIndex() {
       showErrorMsg(`Couldn't like song`)
     } finally {
       setIsLoading(false)
-      console.log(filterBy)
-      console.log(searchedStation)
     }
   }
 
@@ -288,7 +292,7 @@ export function SearchIndex() {
     setIsPlaying(true)
   }
 
-  return filterBy.txt === '' ? (
+  return currSearch === '' ? (
     <section className='search-section'>
       <h1>Browse all</h1>
       <ul className='search-list'>
@@ -469,6 +473,7 @@ export function SearchIndex() {
         addToPlaylist={addToPlaylist}
         setAddToPlaylist={setAddToPlaylist}
         setIsVisible={setIsVisible}
+        // setCreate={setCreate}
       />
     </>
   )

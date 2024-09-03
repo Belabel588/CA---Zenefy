@@ -13,6 +13,8 @@ export const SET_CURR_IDX = 'SET_CURR_IDX'
 export const SET_IS_PLAYING = 'SET_IS_PLAYING'
 export const SET_CURR_COLOR = 'SET_CURR_COLOR'
 export const SET_LIKED_STATION = 'SET_LIKED_STATION'
+export const SET_CURR_SEARCH = 'SET_CURR_SEARCH'
+export const SET_IS_ACTIVE = 'SET_IS_ACTIVE'
 
 const initialState = {
   stations: [],
@@ -24,6 +26,8 @@ const initialState = {
   isLoading: false,
   isPlaying: false,
   currColor: '#8e8be8',
+  currSearch: '',
+  isActive: false,
 }
 
 export function stationReducer(state = initialState, action = {}) {
@@ -78,6 +82,10 @@ export function stationReducer(state = initialState, action = {}) {
       return { ...state, currColor: action.currColor }
     case SET_LIKED_STATION:
       return { ...state, likedStation: action.likedStation }
+    case SET_CURR_SEARCH:
+      return { ...state, currSearch: action.currSearch }
+    case SET_IS_ACTIVE:
+      return { ...state, isActive: action.isActive }
 
     default:
       return state

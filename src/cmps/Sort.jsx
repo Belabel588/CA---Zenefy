@@ -14,8 +14,8 @@ export function Sort({ filtered, setFiltered }) {
 
   useEffect(() => {
     // Set the initial filtered stations list based on the stations in the store
-    setFilteredStations(stations)
-    setFiltered(stations)
+    // setFilteredStations(stations)
+    // setFiltered(stations)
   }, [stations])
 
   useEffect(() => {
