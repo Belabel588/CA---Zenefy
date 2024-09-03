@@ -106,7 +106,7 @@ export function StationDetails() {
     }
 
     setLikedStation()
-    
+
     setCoverColor()
     loadStation(stationId)
     setCurrColorPage(currColor)
@@ -116,12 +116,28 @@ export function StationDetails() {
 
   async function loadStation(stationId) {
     const stationToSet = await stationService.getById(stationId)
-    console.log(stationToSet)
-    const hex = await setCurrColor(stationToSet.cover)
-    console.log(hex)
-    headerRef.current.style.backgroundColor = hex
-    gradientRef.current.style.backgroundColor = hex
-    setStation(stationToSet)
+    let coverToSet
+    let hex
+    if (
+      stationToSet.items.length > 0 &&
+      stationToSet.cover ===
+        'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2'
+    ) {
+      coverToSet =
+        stationToSet.items[
+          utilService.getRandomIntInclusive(0, stationToSet.items.length - 1)
+        ].cover
+      hex = await setCurrColor(coverToSet)
+      headerRef.current.style.backgroundColor = hex
+      gradientRef.current.style.backgroundColor = hex
+      setStation({ ...stationToSet, cover: coverToSet })
+    } else {
+      hex = await setCurrColor(stationToSet.cover)
+
+      headerRef.current.style.backgroundColor = hex
+      gradientRef.current.style.backgroundColor = hex
+      setStation({ ...stationToSet })
+    }
   }
 
   async function onPlaySong(songId) {
@@ -129,7 +145,7 @@ export function StationDetails() {
     await setCurrStation(stationToSet._id)
     await setCurrItem(songId, { ...station }, true)
     const idxToSet = stationToSet.items.findIndex((item) => item.id === songId)
-    
+
     setCurrItemIdx(idxToSet)
     setIsPlaying(true)
   }
@@ -172,7 +188,7 @@ export function StationDetails() {
     if (station.isLiked) return
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
-    
+
     setIsVisible(true)
   }
 
@@ -231,7 +247,6 @@ export function StationDetails() {
           icon: <FaPlus />,
           onClick: () => {
             // onCreateNewStation()
-            
             // if (!addToPlaylist) {
             //   setAddToPlaylist(true)
             // } else {
@@ -253,7 +268,6 @@ export function StationDetails() {
           icon: <CiCircleMinus />,
           onClick: () => {
             // onCreateNewStation()
-            
             // if (!addToPlaylist) {
             //   setAddToPlaylist(true)
             // } else {
@@ -270,13 +284,12 @@ export function StationDetails() {
     const like = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
-    
+
     const items = like.items || []
     const itemsId = items.map((item) => {
       return item.id
     })
     setLikedItems(itemsId)
-    
   }
 
   async function likeSong(itemToEdit) {
@@ -316,12 +329,10 @@ export function StationDetails() {
   }
 
   function openSongOptions(event, item) {
-    
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
-    
+
     setIsVisible(true)
-    
   }
   const [addToPlaylist, setAddToPlaylist] = useState(false)
   const [create, setCreate] = useState(false)

@@ -46,7 +46,6 @@ export function EditOptions({
     (stateSelector) => stateSelector.stationModule.isLoading
   )
 
-
   async function onAddToStation(stationId) {
     try {
       setIsLoading(true)
@@ -63,6 +62,7 @@ export function EditOptions({
       console.log(err)
     } finally {
       setIsLoading(false)
+      setAddToPlaylist(false)
     }
   }
   async function onRemoveItem(stationId) {

@@ -41,7 +41,8 @@ svg{
         display: flex;
         flex-direction: column;
 
-        b{
+        a{
+            color: $white;
             font-size: 0.8em;
             font-family: 'GothamBook'; 
         }

@@ -2,6 +2,8 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import React, { useState, useEffect, useRef } from 'react'
 import ReactPlayer from 'react-player'
+import { Link, NavLink } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 import { stationService } from '../services/station.service.js'
 import { utilService } from '../services/util.service.js'
@@ -271,18 +273,15 @@ export function AppFooter() {
     )
     likedStation.items.push(itemToAdd)
 
-    
     try {
       const saved = await saveStation(likedStation)
-      
+
       const likedSongsIds = user.likedSongsIds
       likedSongsIds.push(itemToAdd.id)
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()
-    } catch (err) {
-      
-    }
+    } catch (err) {}
   }
 
   async function onRemoveItem(stationId) {
@@ -311,7 +310,9 @@ export function AppFooter() {
       <div className='song-details-container'>
         <img src={currItem.cover} className='play-bar-cover' alt='' />
         <div className='song-text-container'>
-          <b className='song-name'>{currItem.name}</b>
+          <Link to={`item/${currItem.id}`} className='song-name'>
+            {currItem.name}
+          </Link>
           <span className='song-artist'>{currItem.artist}</span>
         </div>
         <button

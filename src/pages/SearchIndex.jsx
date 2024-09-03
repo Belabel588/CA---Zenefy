@@ -31,7 +31,9 @@ import { FaPlus } from 'react-icons/fa'
 import { SET_IS_LOADING } from '../store/reducers/user.reducer.js'
 
 export function SearchIndex() {
-  const [defaultFilterBy, setFilterBy] = useState(stationService.getDefaultFilter())
+  const [defaultFilterBy, setFilterBy] = useState(
+    stationService.getDefaultFilter()
+  )
   const [searchResults, setSearchResults] = useState({
     items: [{}, {}, {}, {}],
   })
@@ -40,15 +42,29 @@ export function SearchIndex() {
     items: [{}, {}, {}, {}],
   })
 
-  const loading = useSelector((storeState) => storeState.stationModule.isLoading)
+  const loading = useSelector(
+    (storeState) => storeState.stationModule.isLoading
+  )
 
-  const stations = useSelector((storeState) => storeState.stationModule.stations)
-  const filterBy = useSelector((storeState) => storeState.stationModule.filterBy)
+  const stations = useSelector(
+    (storeState) => storeState.stationModule.stations
+  )
+  const filterBy = useSelector(
+    (storeState) => storeState.stationModule.filterBy
+  )
 
-  const isPlaying = useSelector((stateSelector) => stateSelector.stationModule.isPlaying)
-  const currItem = useSelector((stateSelector) => stateSelector.stationModule.currItem)
-  const currStation = useSelector((stateSelector) => stateSelector.stationModule.currStation)
-  const user = useSelector((stateSelector) => stateSelector.userModule.loggedinUser)
+  const isPlaying = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaying
+  )
+  const currItem = useSelector(
+    (stateSelector) => stateSelector.stationModule.currItem
+  )
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currStation
+  )
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
   const [userStations, setUserStations] = useState([])
 
   const [likedItems, setLikedItems] = useState([])
@@ -59,7 +75,7 @@ export function SearchIndex() {
   const navigate = useNavigate()
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
-  console.log('categoriesWithImages', categoriesWithImages);
+  console.log('categoriesWithImages', categoriesWithImages)
 
   const tagColors = [
     '#006450',
@@ -94,11 +110,8 @@ export function SearchIndex() {
   }
 
   const tagElements = categoriesWithImages.map((category, idx) => (
-    <Link to="#" key={idx}>
-      <li
-        className="tag"
-        style={{ backgroundColor: generateColor(idx) }}
-      >
+    <Link to='#' key={idx}>
+      <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
         <img src={category.image} />
         {category.category}
       </li>
@@ -109,8 +122,6 @@ export function SearchIndex() {
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilterBy })
     loadStations()
   }, [])
-
-
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -134,13 +145,18 @@ export function SearchIndex() {
   }, [searchResults])
 
   useEffect(() => {
-    const userStationsToSet = stations.filter((station) => user.likedStationsIds.includes(station._id))
+    const userStationsToSet = stations.filter((station) =>
+      user.likedStationsIds.includes(station._id)
+    )
     setUserStations(userStationsToSet)
   }, [searchedStation])
 
   async function handleSearchResults(searchResults) {
     try {
-      const refactored = await stationService.createStationFromSearch(searchResults, filterBy.txt)
+      const refactored = await stationService.createStationFromSearch(
+        searchResults,
+        filterBy.txt
+      )
       setRefactoredResults(refactored)
       const savedStation = await stationService.save(refactored)
       setSearchedStation(savedStation)
@@ -222,7 +238,7 @@ export function SearchIndex() {
     {
       text: 'Add to playlist',
       icon: <FaPlus />,
-      onClick: () => { },
+      onClick: () => {},
     },
   ]
 
@@ -270,9 +286,9 @@ export function SearchIndex() {
   }
 
   return filterBy.txt === '' ? (
-    <section className="search-section">
+    <section className='search-section'>
       <h1>Browse all</h1>
-      <ul className="search-list">
+      <ul className='search-list'>
         {stations
           .filter(
             (station, index, currentStations) =>
@@ -284,7 +300,7 @@ export function SearchIndex() {
           .map((uniqueStation, index) => (
             <Link
               to={`/genere/${uniqueStation._id}`}
-              className="full-link"
+              className='full-link'
               key={uniqueStation._id}
             >
               <li
@@ -292,7 +308,7 @@ export function SearchIndex() {
                   backgroundColor: generateColor(index),
                 }}
               >
-                <img src="../public/spotify-pics/music.png" alt="" />
+                <img src='../public/spotify-pics/music.png' alt='' />
                 {uniqueStation.stationType}
               </li>
             </Link>
@@ -304,8 +320,8 @@ export function SearchIndex() {
     <LoadingAnimation />
   ) : (
     <>
-      <div className="search-results">
-        <section className="info">
+      <div className='search-results'>
+        <section className='info'>
           <h1>Top result</h1>
           <div className='station-container'>
             <img src={searchResults[0]?.cover} alt={searchResults[0]?.artist} />
@@ -433,7 +449,7 @@ export function SearchIndex() {
                 </button>
                 <HiOutlineDotsHorizontal
                   className='options-button'
-                  onContextMenu={() => handleClick(event, item)}
+                  onClick={() => handleClick(event, item)}
                 />
               </div>
             ))}{' '}
@@ -460,27 +476,27 @@ export function SearchIndex() {
 function PlusIcon() {
   return (
     <svg
-      role="img"
-      aria-hidden="true"
-      viewBox="0 0 16 16"
-      xmlns="http://www.w3.org/2000/svg"
-      className="svg-icon plus"
+      role='img'
+      aria-hidden='true'
+      viewBox='0 0 16 16'
+      xmlns='http://www.w3.org/2000/svg'
+      className='svg-icon plus'
     >
-      <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"></path>
-      <path d="M11.75 8a.75.75 0 0 1-.75.75H8.75V11a.75.75 0 0 1-1.5 0V8.75H5a.75.75 0 0 1 0-1.5h2.25V5a.75.75 0 0 1 1.5 0v2.25H11a.75.75 0 0 1 .75.75z"></path>
+      <path d='M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z'></path>
+      <path d='M11.75 8a.75.75 0 0 1-.75.75H8.75V11a.75.75 0 0 1-1.5 0V8.75H5a.75.75 0 0 1 0-1.5h2.25V5a.75.75 0 0 1 1.5 0v2.25H11a.75.75 0 0 1 .75.75z'></path>
     </svg>
   )
 }
 function AddedIcon() {
   return (
     <svg
-      role="img"
-      aria-hidden="true"
-      viewBox="0 0 16 16"
-      xmlns="http://www.w3.org/2000/svg"
-      className="svg-icon added"
+      role='img'
+      aria-hidden='true'
+      viewBox='0 0 16 16'
+      xmlns='http://www.w3.org/2000/svg'
+      className='svg-icon added'
     >
-      <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm11.748-1.97a.75.75 0 0 0-1.06-1.06l-4.47 4.47-1.405-1.406a.75.75 0 1 0-1.061 1.06l2.466 2.467 5.53-5.53z"></path>
+      <path d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm11.748-1.97a.75.75 0 0 0-1.06-1.06l-4.47 4.47-1.405-1.406a.75.75 0 1 0-1.061 1.06l2.466 2.467 5.53-5.53z'></path>
     </svg>
   )
 }
