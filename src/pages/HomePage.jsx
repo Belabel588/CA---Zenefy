@@ -69,11 +69,11 @@ export function HomePage() {
   const [currPageColor, setCurrColorPage] = useState(currColor)
 
   const [allStations, setAllStations] = useState([])
+  const [filtered, setFiltered] = useState([])
 
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy })
     getAllStations()
-    
   }, [])
 
   useEffect(() => {
@@ -150,13 +150,12 @@ export function HomePage() {
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container' ref={gradientRefOne}></div>
-      <Sort />
-      <StationList gradientRefOne={gradientRefOne} />
+      <Sort filtered={filtered} setFiltered={setFiltered} />
+      <StationList gradientRefOne={gradientRefOne} stations={filtered} />
       {user && <h2 className='made-for'>Made for {user.fullname}</h2>}
       {user && <SuggestedStations stations={allStations} />}
       {user && <h2 className='made-for'>Jump back in</h2>}
       {user && <SuggestedStations stations={stations} />}
     </section>
-  );
+  )
 }
-      

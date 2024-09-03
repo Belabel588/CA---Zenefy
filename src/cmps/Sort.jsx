@@ -1,53 +1,48 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { utilService } from '../services/util.service.js';
-import { StationList } from './StationList.jsx'; // Import the StationList component
+import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { utilService } from '../services/util.service.js'
+import { StationList } from './StationList.jsx' // Import the StationList component
 
-export function Sort() {
-  const [checkedLabel, setCheckedLabel] = useState('all');
-  const [filteredStations, setFilteredStations] = useState([]); // State for the filtered list of stations
-  
+export function Sort({ filtered, setFiltered }) {
+  const [checkedLabel, setCheckedLabel] = useState('all')
+  const [filteredStations, setFilteredStations] = useState([]) // State for the filtered list of stations
+
   // Get the stations from the global store
-  const stations = useSelector((storeState) => storeState.stationModule.stations);
+  const stations = useSelector(
+    (storeState) => storeState.stationModule.stations
+  )
 
   useEffect(() => {
     // Set the initial filtered stations list based on the stations in the store
-    setFilteredStations(stations);
-  }, [stations]);
+    setFilteredStations(stations)
+    setFiltered(stations)
+  }, [stations])
 
   useEffect(() => {
-    
-
     // Filter stations based on the selected label
-    const filteredStations = filterStations(checkedLabel);
-
-    
+    const filteredStations = filterStations(checkedLabel)
 
     // Set the filtered stations list in the local state
-    setFilteredStations(filteredStations);
-  }, [checkedLabel]);
+    setFilteredStations(filteredStations)
+    setFiltered(filteredStations)
+    console.log(filtered)
+  }, [checkedLabel])
 
   function filterStations(label) {
-    
-
     if (label === 'all') {
-      
-      return stations; // Use the original stations from the store
+      return stations // Use the original stations from the store
     }
 
-    const filtered = stations.filter(station => station.stationType === label);
+    const filtered = stations.filter((station) => station.stationType === label)
 
-    
-
-    return filtered;
+    return filtered
   }
 
   function onSetCheckedLabel({ target }) {
-    
-    setCheckedLabel(target.id);
+    setCheckedLabel(target.id)
   }
 
-  const labels = [{ name: 'all' }, { name: 'music' }, { name: 'podcast' }];
+  const labels = [{ name: 'all' }, { name: 'music' }, { name: 'podcast' }]
 
   return (
     <div className='filter-container'>
@@ -66,7 +61,7 @@ export function Sort() {
       ))}
 
       {/* Render the StationList with filtered stations */}
-      <StationList stations={filteredStations} />
+      {/* <StationList stations={filteredStations} /> */}
     </div>
-  );
+  )
 }
