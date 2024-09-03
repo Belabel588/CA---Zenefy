@@ -500,7 +500,7 @@ export function StationDetails() {
                     {Date(item.addedAt).toLocaleString('he').slice(0, 13)}
                   </span>
                   <span className='time' key={utilService.makeId()}>
-                    {'3:33'}
+                    {item.duration}
                   </span>
                   <button
                     onClick={(event) => {

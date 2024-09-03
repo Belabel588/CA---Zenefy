@@ -117,7 +117,6 @@ function updateUser(updatedUser) {
   // Update the prefs of the logged-in user
 
   return storageService.put(STORAGE_KEY, updatedUser).then((user) => {
-
     // Update sessionStorage as well
     return _setLoggedinUser(user)
   })
@@ -134,10 +133,13 @@ function _createDemoUser() {
     likedStationsIds: [
       'likedSongs123',
       'yPlzCv',
+      'PD9pQr',
       'UDmm7S',
+      'PD7mNx',
       '0HP0UA',
       '0eNciX',
       '9F2K2W',
+      'PD8kLm',
     ],
     likedSongsIds: [
       'creator1',
@@ -145,6 +147,7 @@ function _createDemoUser() {
       'G2G3h3',
       'ZAZIRK',
       '9je28A',
+
       '3J9rjg',
       'CT9zn5',
       'aew9tr',

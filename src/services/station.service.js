@@ -273,6 +273,7 @@ function _createStations() {
           addedBy: 'user7',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '05:59',
         },
         {
           artist: 'Led Zeppelin',
@@ -285,6 +286,7 @@ function _createStations() {
           addedBy: 'user8',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '08:02',
         },
         {
           artist: 'The Beatles',
@@ -297,6 +299,7 @@ function _createStations() {
           addedBy: 'user9',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '08:09',
         },
         {
           artist: 'Tame Impala',
@@ -309,6 +312,7 @@ function _createStations() {
           addedBy: 'user1',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:16',
         },
         {
           artist: 'Taylor Swift',
@@ -321,6 +325,7 @@ function _createStations() {
           addedBy: 'user10',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:01',
         },
         {
           artist: 'Adele',
@@ -333,6 +338,7 @@ function _createStations() {
           addedBy: 'user11',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:48',
         },
         {
           artist: 'Bruno Mars',
@@ -345,6 +351,7 @@ function _createStations() {
           addedBy: 'user12',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:31',
         },
         {
           artist: 'Mac DeMarco',
@@ -357,8 +364,8 @@ function _createStations() {
           addedBy: 'user2',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:52',
         },
-
         {
           artist: 'Toro y Moi',
           id: 'JX6Dy3',
@@ -369,6 +376,7 @@ function _createStations() {
           addedBy: 'user3',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:25',
         },
       ],
       cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png', // Spotify's Liked Songs cover
@@ -396,6 +404,7 @@ function _createStations() {
           addedBy: 'user1',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:16',
         },
         {
           artist: 'Mac DeMarco',
@@ -408,6 +417,7 @@ function _createStations() {
           addedBy: 'user2',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:51',
         },
         {
           artist: 'Toro y Moi',
@@ -419,6 +429,7 @@ function _createStations() {
           addedBy: 'user3',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:43',
         },
       ],
       cover:
@@ -448,6 +459,7 @@ function _createStations() {
           addedBy: 'user7',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '05:55',
         },
         {
           artist: 'Led Zeppelin',
@@ -460,6 +472,7 @@ function _createStations() {
           addedBy: 'user8',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '08:02',
         },
         {
           artist: 'Daft Punk',
@@ -471,6 +484,7 @@ function _createStations() {
           addedBy: 'user4',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:08',
         },
         {
           artist: 'Calvin Harris',
@@ -483,6 +497,7 @@ function _createStations() {
           addedBy: 'user5',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:06',
         },
         {
           artist: 'Pharrell Williams',
@@ -495,6 +510,7 @@ function _createStations() {
           addedBy: 'user6',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:06',
         },
       ],
       cover: 'https://i.scdn.co/image/ab67616d0000b273fe433eeabff7193b5320962c',
@@ -523,6 +539,7 @@ function _createStations() {
           addedBy: 'user7',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '05:59',
         },
         {
           artist: 'Led Zeppelin',
@@ -535,6 +552,7 @@ function _createStations() {
           addedBy: 'user8',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '08:02',
         },
         {
           artist: 'The Beatles',
@@ -547,6 +565,7 @@ function _createStations() {
           addedBy: 'user9',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '08:09',
         },
       ],
       cover: 'https://i.scdn.co/image/ab67616d0000b273447f8b3ad12080b3fbe51f91',
@@ -575,6 +594,7 @@ function _createStations() {
           addedBy: 'user10',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:01',
         },
         {
           artist: 'Adele',
@@ -587,6 +607,7 @@ function _createStations() {
           addedBy: 'user11',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:53',
         },
         {
           artist: 'Bruno Mars',
@@ -599,6 +620,7 @@ function _createStations() {
           addedBy: 'user12',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:30',
         },
       ],
       cover:
@@ -628,6 +650,7 @@ function _createStations() {
           addedBy: 'user13',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:02',
         },
         {
           artist: 'Sade',
@@ -640,6 +663,7 @@ function _createStations() {
           addedBy: 'user14',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:17',
         },
         {
           artist: 'Jack Johnson',
@@ -652,6 +676,7 @@ function _createStations() {
           addedBy: 'user15',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:27',
         },
       ],
       cover:
@@ -675,40 +700,42 @@ function _createStations() {
           id: 'TRH001',
           name: 'The Next Frontier',
           album: 'TED Radio Hour',
-          url: 'https://www.npr.org/programs/ted-radio-hour/',
+          url: 'https://www.youtube.com/watch?v=2m2520TuUdk',
           cover:
-            'https://media.npr.org/assets/img/2020/11/13/ted-radio-hour_tile_npr-network-01_sq-b401b6fafbe93f876e02a8c61c225ec5f8fdd4a3.jpg',
+            'https://i.scdn.co/image/ab67656300005f1f26a110fa3a451bac613869f7',
           addedBy: 'user16',
           likedBy: [],
           addedAt: 1724685172591,
+          duration: '01:03:39',
         },
         {
           artist: 'Reply All',
           id: 'RA002',
           name: 'The Case of the Missing Hit',
           album: 'Reply All',
-          url: 'https://gimletmedia.com/shows/reply-all',
+          url: 'https://www.youtube.com/watch?v=PN6RP1_677k',
           cover:
-            'https://megaphone.imgix.net/podcasts/23d52a2a-1c5f-11ea-9a0e-b70170f2a827/image/uploads_2F1588357113366-jjsdfzx6x4m-c0339c10f9b113a5fcc93436e66e5ef4_2FReplyAll-ShowArt.jpg',
+            'https://i.scdn.co/image/ab6765630000ba8ab822a8edc98719cec11a2a25',
           addedBy: 'user17',
           likedBy: [],
           addedAt: 1724685172592,
+          duration: '53:27',
         },
         {
           artist: 'Lex Fridman',
           id: 'LF003',
           name: 'Elon Musk: AI, Autopilot, and the Future of Tesla',
           album: 'Lex Fridman Podcast',
-          url: 'https://lexfridman.com/podcast/',
+          url: 'https://www.youtube.com/watch?v=ycPr5-27vSI',
           cover:
-            'https://lexfridman.com/wordpress/wp-content/uploads/2022/01/thumb_ai_podcast_2022.png',
+            'https://i.scdn.co/image/ab67616d0000b2738f24ef949c660e4636003a65',
           addedBy: 'user18',
           likedBy: [],
           addedAt: 1724685172593,
+          duration: '02:37:02',
         },
       ],
-      cover:
-        'https://i.pinimg.com/originals/1c/54/f7/1c54f7b06d7723c21afc5035bf88a5ef.png',
+      cover: 'https://i.scdn.co/image/ab67656300005f1fb3611e02e220c0c9e333a6b5',
       tags: ['technology', 'innovation', 'science'],
       createdBy: {
         _id: 'creator6',
@@ -728,39 +755,42 @@ function _createStations() {
           id: 'SR001',
           name: 'The Alibi',
           album: 'Serial',
-          url: 'https://serialpodcast.org/',
+          url: 'https://www.youtube.com/watch?v=nMSxiHuDa00',
           cover:
             'https://serialpodcast.org/sites/all/modules/custom/serial/img/serial-social-logo.png',
           addedBy: 'user19',
           likedBy: [],
           addedAt: 1724685172595,
+          duration: '53:56',
         },
         {
           artist: 'My Favorite Murder',
           id: 'MFM002',
           name: 'The Golden State Killer',
           album: 'My Favorite Murder',
-          url: 'https://myfavoritemurder.com/',
+          url: 'https://www.youtube.com/watch?v=_x9ok3Ia5ow',
           cover:
             'https://content.production.cdn.art19.com/images/69/10/10/fb/691010fb-625e-4abe-993c-a57228b28dbe/91cb53ae0d5dbb379b9dffecf0a772593891d0d09bbe6d90ee746edbdb79e3ec75584f2ceb8260e9f675a90c05419b9b99842a76905b686f0f51c1a9d3e227ab.jpeg',
           addedBy: 'user20',
           likedBy: [],
           addedAt: 1724685172596,
+          duration: '43:46',
         },
         {
           artist: 'Crime Junkie',
           id: 'CJ003',
           name: 'MURDERED: The Watts Family',
           album: 'Crime Junkie',
-          url: 'https://crimejunkiepodcast.com/',
+          url: 'https://www.youtube.com/watch?v=y0yG5l_BtYs',
           cover:
             'https://content.production.cdn.art19.com/images/cc/e5/0a/08/cce50a08-d77d-490e-8c68-17725541b0ca/9dcebd4019d57b9551799479fa226e2a79026be3c2857ce6bbc8a36cf1a153a9638f9a5a08f40840ffa02ef628f9f4a29460461fe8923ff9508e20f8924e15b9.jpeg',
           addedBy: 'user21',
           likedBy: [],
           addedAt: 1724685172597,
+          duration: '01:57:19',
         },
       ],
-      cover: 'https://i.scdn.co/image/ab67706c0000bebb801c4d00f11a7f867d7abf3a',
+      cover: 'https://i.scdn.co/image/2cea1163a1e684575ccb931ff52d41231e34ef83',
       tags: ['true crime', 'mystery', 'investigation'],
       createdBy: {
         _id: 'creator7',
@@ -780,39 +810,42 @@ function _createStations() {
           id: 'CO001',
           name: 'Will Ferrell',
           album: 'Conan O Brien Needs A Friend',
-          url: 'https://www.earwolf.com/show/conan-obrien/',
+          url: 'https://www.youtube.com/watch?v=2m2520TuUdk',
           cover:
-            'https://content.production.cdn.art19.com/images/5d/4f/d2/19/5d4fd219-85cc-4f03-bf7a-bb4de4551b8d/8d9e6ebc4d65a9575fa626318e426fcf8be7f98ea0c1b7b103de2b32def46ded57537627ad114ee194cdb857931458c47dbe1c14db5282397e1bf7a3fdbf836d.png',
+            'https://i.scdn.co/image/ab6765630000ba8a2a22af6265f4d42521f8bca0',
           addedBy: 'user22',
           likedBy: [],
           addedAt: 1724685172599,
+          duration: '01:03:39',
         },
         {
           artist: 'Marc Maron',
           id: 'WTF002',
           name: 'Robin Williams',
           album: 'WTF with Marc Maron',
-          url: 'http://www.wtfpod.com/',
+          url: 'https://www.youtube.com/watch?v=ARAGwNrpB4A',
           cover:
-            'https://i.scdn.co/image/d3bc5a53ac4ed94b7b0bfb8b2cfb3c39a58cc864',
+            'https://i.scdn.co/image/ab67616d00001e029ed76d4f92e3cfcdf9d0b340',
           addedBy: 'user23',
           likedBy: [],
           addedAt: 1724685172600,
+          duration: '24:25',
         },
         {
           artist: 'Joe Rogan',
           id: 'JRE003',
           name: 'Dave Chappelle',
           album: 'The Joe Rogan Experience',
-          url: 'https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk',
+          url: 'https://www.youtube.com/watch?v=pvc_XDDrwgc',
           cover:
-            'https://i.scdn.co/image/ab6765630000ba8a1ddfa03938f377ab9f685ee2',
+            'https://i.scdn.co/image/ab67656300005f1f560cc0434c908ba3eb381e8e',
           addedBy: 'user24',
           likedBy: [],
           addedAt: 1724685172601,
+          duration: '55:48',
         },
       ],
-      cover: 'https://i.scdn.co/image/ab67706c0000bebb7ef04e9d791394fe8076e98b',
+      cover: 'https://i.scdn.co/image/ab67616d00001e02894242001ac29ba07ad6615d',
       tags: ['comedy', 'humor', 'talk show'],
       createdBy: {
         _id: 'creator8',
@@ -838,6 +871,7 @@ function _createStations() {
           addedBy: 'user16',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:03',
         },
         {
           artist: 'Drake',
@@ -850,6 +884,7 @@ function _createStations() {
           addedBy: 'user17',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '05:56',
         },
         {
           artist: 'J. Cole',
@@ -862,6 +897,7 @@ function _createStations() {
           addedBy: 'user18',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:15',
         },
       ],
       cover: 'https://i.scdn.co/image/ab67616d0000b273b74634bdd01a919a4fc55c47',
@@ -890,6 +926,7 @@ function _createStations() {
           addedBy: 'user19',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:25',
         },
         {
           artist: 'The Strokes',
@@ -902,6 +939,7 @@ function _createStations() {
           addedBy: 'user20',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:21',
         },
         {
           artist: 'Florence + The Machine',
@@ -914,6 +952,7 @@ function _createStations() {
           addedBy: 'user21',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:39',
         },
       ],
       cover: 'https://i.scdn.co/image/ab67616d0000b27302bca0044fec426aad27994e',
@@ -942,6 +981,7 @@ function _createStations() {
           addedBy: 'user22',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '09:06',
         },
         {
           artist: 'John Coltrane',
@@ -954,18 +994,20 @@ function _createStations() {
           addedBy: 'user23',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '04:46',
         },
         {
           artist: 'Nina Simone',
           id: 'NSim1',
           name: 'Feeling Good',
           album: 'I Put a Spell on You',
-          url: 'https://www.youtube.com/watch?v=D5Y11hwjMNs',
+          url: 'https://www.youtube.com/watch?v=oHRNrgDIJfo',
           cover:
             'https://static.qobuz.com/images/covers/ca/52/svr1g4hww52ca_600.jpg',
           addedBy: 'user24',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:02',
         },
       ],
       cover: 'https://i.scdn.co/image/ab67616d00001e024ca1ccb2b20f47b9eb5fc3bc',
@@ -994,6 +1036,7 @@ function _createStations() {
           addedBy: 'user25',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '05:21',
         },
         {
           artist: 'The Chemical Brothers',
@@ -1006,6 +1049,7 @@ function _createStations() {
           addedBy: 'user26',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:43',
         },
         {
           artist: 'Deadmau5',
@@ -1018,6 +1062,7 @@ function _createStations() {
           addedBy: 'user27',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '03:14',
         },
       ],
       cover: 'https://i.scdn.co/image/ab67616d00001e026a47a99d4cd598061c7520b0',
@@ -1046,6 +1091,7 @@ function _createStations() {
           addedBy: 'user28',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '01:05:38',
         },
         {
           artist: 'Wolfgang Amadeus Mozart',
@@ -1058,6 +1104,7 @@ function _createStations() {
           addedBy: 'user29',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '20:41',
         },
         {
           artist: 'Johann Sebastian Bach',
@@ -1070,6 +1117,7 @@ function _createStations() {
           addedBy: 'user30',
           likedBy: [],
           addedAt: 1724685172590,
+          duration: '11:42',
         },
       ],
       cover: 'https://i.scdn.co/image/ab67616d0000b273bd1b3e912d06b240bd8c5ca0',

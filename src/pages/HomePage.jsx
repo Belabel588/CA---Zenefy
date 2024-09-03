@@ -152,10 +152,10 @@ export function HomePage() {
       <div className='gradient-container' ref={gradientRefOne}></div>
       <Sort filtered={filtered} setFiltered={setFiltered} />
       <StationList gradientRefOne={gradientRefOne} stations={filtered} />
-      {user && <h2 className='made-for'>Made for {user.fullname}</h2>}
-      {user && <SuggestedStations stations={allStations} />}
+      {<h2 className='made-for'>Made for {user && user.fullname}</h2>}
+      <SuggestedStations stations={allStations} />
       {user && <h2 className='made-for'>Jump back in</h2>}
-      {user && <SuggestedStations stations={stations} />}
+      <SuggestedStations stations={stations} />
     </section>
   )
 }
