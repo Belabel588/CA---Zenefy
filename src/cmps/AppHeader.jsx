@@ -9,7 +9,6 @@ import { FaSpotify, FaRegUserCircle } from 'react-icons/fa'
 import { GoHome, GoHomeFill } from 'react-icons/go'
 import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
-import { RxCross2 } from 'react-icons/rx'
 import { IoClose } from 'react-icons/io5'
 
 import zenefyLogo from '/public/img/zenefy-logo.png'
@@ -23,41 +22,50 @@ import { setCurrSearch } from '../store/actions/station.actions.js'
 import { loadStations, setIsActive } from '../store/actions/station.actions.js'
 
 import { login, signup } from '../store/actions/user.actions.js'
+import { stationService } from '../services/station.service.js'
 
 export function AppHeader() {
-  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser);
   const filterBy = useSelector(
     (storeState) => storeState.stationModule.filterBy
-  )
+  );
   const currSearch = useSelector(
     (stateSelector) => stateSelector.stationModule.currSearch
-  )
+  );
   const isActive = useSelector(
     (stateSelector) => stateSelector.stationModule.isActive
-  )
+  );
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
 
-  const inputRef = useRef(null) // Step 1: Create a ref for the input field
-  const location = useLocation()
-  const [isHome, setIsHome] = useState()
+  const inputRef = useRef(null);
+  const [isHome, setIsHome] = useState(false);
 
-  const [userBy, setUserBy] = useState()
+  // Define the default filter
+  const defaultFilter = stationService.getDefaultFilter();
 
   useEffect(() => {
     if (location.pathname === '/') {
-      setIsHome(true)
-      setCurrSearch('')
+      setIsHome(true);
+      setCurrSearch('');
     } else {
-      setIsHome(false)
+      setIsHome(false);
     }
-    setIsActive(false)
-    // Step 2: Reset the input value on route change using the ref
+    setIsActive(false);
+
+    // Reset the input value on route change
     if (inputRef.current) {
-      // inputRef.current.value = '' // Clear the input value
+      inputRef.current.value = ''; // Clear the input value
     }
-  }, [location])
+
+    // Dispatch to reset the filterBy state with the default filter
+    dispatch({
+      type: SET_FILTER_BY,
+      filterBy: defaultFilter,
+    });
+  }, [location, dispatch]);
 
   function debounce(func, delay) {
     let timeout
@@ -80,10 +88,7 @@ export function AppHeader() {
         [field]: value,
       },
     })
-
-    // Reload the stations with the updated filter
-    // loadStations() stopped the filtering of the stations on the side.
-  }, 800) // Debounce with a 300ms delay
+  }, 800) // Debounce with an 800ms delay
 
   useEffect(() => {
     if (currSearch !== '') {
@@ -104,8 +109,10 @@ export function AppHeader() {
     }
   }
 
-  function onSearchClick() {
+  function onSearchClick({ target }) {
     if (inputRef.current) {
+      console.log(target.value);
+
       inputRef.current.focus() // Focus the input field
       setIsActive(true)
       console.log(isActive)
@@ -151,7 +158,7 @@ export function AppHeader() {
             name='txt'
             onChange={handleSearch} // Use the debounced handleSearch
             placeholder='What do you want to play?'
-            ref={inputRef} // Step 3: Bind the ref to the input field
+            ref={inputRef} // Bind the ref to the input field
           />
           {(filterBy.txt && (
             <IoClose
@@ -181,7 +188,6 @@ export function AppHeader() {
             {' '}
             <FaRegUserCircle className='user-logo' />
           </Link>
-          {/* <button onClick={onLogout}>logout</button> */}
         </div>
       )}
     </header>

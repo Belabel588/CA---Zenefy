@@ -14,6 +14,7 @@ import {
   setIsPlaying,
   saveStation,
   setIsLoading,
+  setCurrSearch,
 } from '../store/actions/station.actions.js'
 import { updateUser } from '../store/actions/user.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
