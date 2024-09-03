@@ -155,6 +155,8 @@ export function SearchIndex() {
       user.likedStationsIds.includes(station._id)
     )
     setUserStations(userStationsToSet)
+    const likedStation = userStationsToSet.find((station) => station.isLiked)
+    setLikedStation(likedStation)
   }, [searchedStation])
 
   async function handleSearchResults(searchResults) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { utilService } from '../services/util.service.js'
 import { StationList } from './StationList.jsx' // Import the StationList component
+import { loadStations } from '../store/actions/station.actions.js'
 
 export function Sort({ filtered, setFiltered }) {
   const [checkedLabel, setCheckedLabel] = useState('all')
@@ -14,12 +15,13 @@ export function Sort({ filtered, setFiltered }) {
 
   useEffect(() => {
     // Set the initial filtered stations list based on the stations in the store
-    // setFilteredStations(stations)
-    // setFiltered(stations)
+    setFilteredStations(stations)
+    setFiltered(stations)
   }, [stations])
 
   useEffect(() => {
     // Filter stations based on the selected label
+
     const filteredStations = filterStations(checkedLabel)
 
     // Set the filtered stations list in the local state
@@ -30,6 +32,7 @@ export function Sort({ filtered, setFiltered }) {
 
   function filterStations(label) {
     if (label === 'all') {
+      loadStations()
       return stations // Use the original stations from the store
     }
 
