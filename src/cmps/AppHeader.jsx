@@ -70,7 +70,8 @@ export function AppHeader() {
   const handleSearch = debounce(({ target }) => {
     const field = target.name
     let value = target.value
-
+    console.log(value);
+    setCurrSearch(value)
     // Dispatch action to update the filter in the Redux store
     dispatch({
       type: SET_FILTER_BY,
@@ -85,11 +86,11 @@ export function AppHeader() {
   }, 800) // Debounce with a 300ms delay
 
   useEffect(() => {
-    if (filterBy.txt !== '') {
+    if (currSearch !== '') {
       dispatch({ type: SET_IS_LOADING, isLoading: true })
       setCurrSearch(filterBy.txt)
     }
-  }, [filterBy])
+  }, [currSearch])
 
   async function onLogout() {
     try {
@@ -108,6 +109,7 @@ export function AppHeader() {
       inputRef.current.focus() // Focus the input field
       setIsActive(true)
       console.log(isActive)
+      setCurrSearch('')
     }
     navigate('/search')
   }

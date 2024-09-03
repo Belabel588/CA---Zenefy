@@ -294,8 +294,10 @@ export function SearchIndex() {
     setIsPlaying(true)
   }
   
+  console.log(currSearch);
+  
 
-  return currSearch === '' ? (
+  return currSearch == '' ? (
     <section className='search-section'>
       <h1>Browse all</h1>
       <ul className='search-list'>
