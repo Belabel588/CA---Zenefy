@@ -72,6 +72,7 @@ async function createList(search) {
       album: spotifyInfo[i].album,
       cover: spotifyInfo[i].coverArt,
       id: utilService.makeId(),
+      lyrics: spotifyInfo[i].lyrics,
     }
   }
 
@@ -93,37 +94,51 @@ function createVideo(video) {
 async function getSpotify(search) {
   const token = await getAccessToken()
   const db = `${search}Spotify`
-  // const albumId = '1aYkTzRzHNSs0c1d9Cbo4Y' // Replace with actual album ID
-  // const artistId = '1dfeR4HaWDbWqFHLkxMwi7' // Replace with actual artist ID
-  // const search = 'Imagine' // Replace with actual search query
-
-  // const album = await getAlbum(albumId, token);
-
-  // const artist = await getArtist(artistId, token);
   const res = await query(db)
 
   if (res && res.length > 0) {
     return res
   }
 
-  var tracks = await searchTracks(search, token)
+  let tracks = await searchTracks(search, token)
   const regex = new RegExp(search, 'i')
 
-  tracks.filter(
+  tracks = tracks.filter(
     (track) =>
       regex.test(track.name) ||
-      regex.test(track.artist) ||
-      regex.test(track.album)
+      regex.test(track.artists.map((artist) => artist.name).join(', ')) ||
+      regex.test(track.album.name)
   )
-  const tracksToSave = tracks.map((track) => ({
-    name: track.name,
-    artist: track.artists.map((artist) => artist.name).join(', '),
-    album: track.album.name,
-    coverArt: track.album.images[0]?.url,
-  }))
+
+  const tracksToSave = await Promise.all(
+    tracks.map(async (track) => {
+      const lyrics = await getLyrics(
+        track.name,
+        track.artists.map((artist) => artist.name).join(', ')
+      )
+
+      return {
+        name: track.name,
+        artist: track.artists.map((artist) => artist.name).join(', '),
+        album: track.album.name,
+        coverArt: track.album.images[0]?.url,
+        lyrics: lyrics || 'Lyrics not found',
+        stationType: track.type === 'track' ? 'music' : 'podcast',
+      }
+    })
+  )
 
   // save(db, tracksToSave)
   return tracksToSave
+}
+
+async function getLyrics(trackName, artistName) {
+  // Replace with actual API call logic
+  const response = await fetch(
+    `https://api.lyrics.ovh/v1/${artistName}/${trackName}`
+  )
+  const data = await response.json()
+  return data.lyrics
 }
 
 async function query(search) {

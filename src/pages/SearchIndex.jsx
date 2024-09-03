@@ -377,10 +377,6 @@ export function SearchIndex() {
                 key={item.id}
                 className='song-item'
                 onDoubleClick={() => onPlaySearchedSong(item.id)}
-                // onMouseLeave={() => {
-                //   if (!isHover.current) setIsVisible(false)
-                // }}
-                // style={{ position: 'relative' }}
               >
                 <div className='img-container'>
                   {(isPlaying && currItem.id === item.id && (

@@ -45,6 +45,7 @@ export function ItemDetails() {
         const station = await stationService.getItemsStation(item.id)
         setItemsStation(station)
         setItem(itemToSet)
+
         const color = await setCurrColor(itemToSet.cover)
         headerRef.current.style.backgroundColor = color
         gradientRef.current.style.backgroundColor = color
