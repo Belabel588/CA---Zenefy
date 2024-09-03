@@ -112,14 +112,12 @@ function getEmptyCredentials() {
 
 // Function to update user preferences in local storage
 function updateUser(updatedUser) {
-  console.log(updatedUser)
   const loggedinUser = getLoggedinUser()
   if (!loggedinUser) return Promise.reject('User not logged in')
   // Update the prefs of the logged-in user
-  console.log(updatedUser)
 
   return storageService.put(STORAGE_KEY, updatedUser).then((user) => {
-    console.log(user)
+
     // Update sessionStorage as well
     return _setLoggedinUser(user)
   })

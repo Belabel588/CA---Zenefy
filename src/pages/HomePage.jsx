@@ -73,7 +73,7 @@ export function HomePage() {
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy })
     getAllStations()
-    console.log(allStations)
+    
   }, [])
 
   useEffect(() => {
@@ -150,16 +150,13 @@ export function HomePage() {
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container' ref={gradientRefOne}></div>
-      {/* <div className='gradient-container-2' ref={gradientRefTwo}></div> */}
       <Sort />
-      <StationList
-        gradientRefOne={gradientRefOne}
-        gradientRefTwo={gradientRefTwo}
-      />
+      <StationList gradientRefOne={gradientRefOne} />
       {user && <h2 className='made-for'>Made for {user.fullname}</h2>}
       {user && <SuggestedStations stations={allStations} />}
       {user && <h2 className='made-for'>Jump back in</h2>}
       {user && <SuggestedStations stations={stations} />}
     </section>
-  )
+  );
 }
+      

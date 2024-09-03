@@ -44,12 +44,12 @@ export function StationEditModal({
   function handleChange({ target }) {
     const field = target.name
     let value = target.value
-    console.log(field)
-    console.log(value)
+  
+  
 
     switch (target.name) {
       case 'cover':
-        console.log(target.src)
+        
 
         break
       default:

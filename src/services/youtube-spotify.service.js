@@ -98,10 +98,8 @@ async function getSpotify(search) {
   // const search = 'Imagine' // Replace with actual search query
 
   // const album = await getAlbum(albumId, token);
-  // console.log('Album:', album);
 
   // const artist = await getArtist(artistId, token);
-  // console.log('Artist:', artist);
   const res = await query(db)
 
   if (res && res.length > 0) {

@@ -6,7 +6,7 @@ export function AboutUs() {
     const [count, setCount] = useState(100)
 
     function onTellMeMore() {
-        console.log('Telling you more')
+        
     }
     return (
         <section>

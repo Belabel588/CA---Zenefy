@@ -21,14 +21,15 @@ export const stationService = {
   getStationData,
   createStationFromSearch,
   likeSong,
+  getCategoriesWithImages,
 }
 window.cs = stationService
 
 async function query(filterBy = { txt: '', stationType: '' }) {
-  // console.log('FILTER BY INSIDE SERVICE QUERY IS:', filterBy)
+  
 
   var stations = await storageService.query(STORAGE_KEY)
-  // console.log('STATION BEFORE QUERY : ', stations);
+  
 
   const { txt, stationType } = filterBy
 
@@ -49,7 +50,7 @@ async function query(filterBy = { txt: '', stationType: '' }) {
   //     speed,
   //     owner,
   //   }))
-  console.log(stations)
+  
   return stations
 }
 
@@ -88,7 +89,7 @@ async function save(station) {
       //   id: loggedInUser._id,
       //   username: loggedInUser.username,
       // })
-      console.log(station)
+      
       stationToSave = {
         _id: station._id,
         title: station.title,
@@ -161,7 +162,7 @@ async function getItem(itemId) {
 
 async function getItemsStation(itemId) {
   var stations = await storageService.query(STORAGE_KEY)
-  console.log(stations)
+  
   let stationToReturn
   stations.map((station) => {
     // if (stationToReturn) return
@@ -199,7 +200,7 @@ async function getStationData(stationId) {
 }
 async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
-  console.log(keyWord)
+  
   // if()
   const station = {
     keyWord,
@@ -240,7 +241,7 @@ async function likeSong(itemToAdd) {
     const likedStation = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
-    console.log(likedStation)
+    
     likedStation.items.push(itemToAdd)
     await saveStation(likedStation)
     const likedSongsIds = user.likedSongsIds
@@ -1085,3 +1086,63 @@ function _createStations() {
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(demoStations))
 }
+
+
+// Function to get categories with their corresponding images
+function getCategoriesWithImages() {
+  const categories = [
+    "Podcasts",
+    "Made for you",
+    "New releases",
+    "Pop",
+    "Hip-Hop",
+    "Rock",
+    "Latin",
+    "Educational",
+    "Documentary",
+    "Comedy",
+    "Dance Electric",
+    "Mood",
+    "Indie",
+    "Workout",
+    "Discover",
+    "Country",
+    "R&B",
+    "K-pop",
+    "Chill",
+    "Sleep",
+    "Party",
+    "At home",
+    "Love",
+    "Metal",
+    "Jazz",
+    "Trending",
+    "Anime",
+    "Gaming",
+    "Folk & Acoustic",
+    "Focus",
+    "Kids & Family",
+    "Classical",
+    "Instrumental",
+    "Punk",
+    "Ambient",
+    "Blues",
+    "Afro",
+    "Funk & Disco",
+    "Summer",
+    "EQUAL"
+  ];
+  
+  // Assuming the images are located in a folder named 'assets/images' in your project
+  const categoryImages = categories.map(category => 
+    `../../../public/spotify-pics/${category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}.png`
+  );
+
+  // Return an array of objects combining category names and their images
+  return categories.map((category, index) => ({
+    category,
+    image: categoryImages[index],
+  }));
+}
+
+export default getCategoriesWithImages;
