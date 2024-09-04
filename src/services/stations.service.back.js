@@ -1,98 +1,222 @@
-import { utilService as stationUtilService } from './util.service.js'
-import { httpService as stationHttpService } from './http.service.js'
+import { httpService } from './http.service.js'
+import { utilService } from './util.service.js'
+import { userService } from './user.service.js'
 
-const BASE_URL = 'station/'
+const STORAGE_KEY = 'station'
 
 export const stationService = {
-    query,
-    getCategoryById,
-    save,
-    remove,
-    getEmptyStation,
-    getDefaultFilter,
-    getFilterFromSearchParams,
-    getCategoryStats
+  query,
+  getById,
+  save,
+  remove,
+  addStationMsg,
+  getItem,
+  getItemsStation,
+  getStationData,
+  createStationFromSearch,
+  likeSong,
+  getCategoriesWithImages,
 }
 
-function query(filterBy = {}) {
-    console.log('filterBy in station.service:', filterBy);
-    return stationHttpService.get(BASE_URL, filterBy); // Adjusted to station context
+async function query(filterBy = { txt: '', price: 0 }) {
+  return httpService.get(STORAGE_KEY, filterBy)
 }
 
-function getCategoryById(stationId) {
-    console.log(stationId);
-    return stationHttpService.get(BASE_URL + stationId)
-        .then(station => setNextPrevStationId(station));
+function getById(stationId) {
+  return httpService.get(`${STORAGE_KEY}/${stationId}`)
 }
 
-function remove(stationId) {
-    return stationHttpService.delete(BASE_URL + stationId);
+async function remove(stationId) {
+  return httpService.delete(`${STORAGE_KEY}/${stationId}`)
+}
+async function save(station) {
+  var savedStation
+  if (station._id) {
+    savedStation = await httpService.put(
+      `${STORAGE_KEY}/${station._id}`,
+      station
+    )
+  } else {
+    savedStation = await httpService.post(STORAGE_KEY, station)
+  }
+  return savedStation
 }
 
-function save(station) {
-    if (station._id) {
-        return stationHttpService.put(BASE_URL + station._id, station);
-    } else {
-        return stationHttpService.post(BASE_URL, station);
-    }
+async function addStationMsg(stationId, txt) {
+  const savedMsg = await httpService.post(`${STORAGE_KEY}/${stationId}/msg`, {
+    txt,
+  })
+  return savedMsg
 }
 
-function getEmptyStation() {
-    const tags = ['Funk', 'Happy', 'Jazz', 'Rock', 'Pop', 'Classical'];
-    const shuffledTags = stationUtilService.shuffleArray(tags);
-    const selectedTags = shuffledTags.slice(0, 2);
+async function getItem(itemId) {
+  try {
+    var stations = await query()
+    let item
+    stations.map((station) => {
+      if (item) return
+      item = station.items.find((item) => item.id === itemId)
+    })
 
+    return item
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function getItemsStation(itemId) {
+  var stations = await query()
+
+  let stationToReturn
+  stations.map((station) => {
+    if (stationToReturn) return
+    station.items.map((item) => {
+      if (item.id === itemId) {
+        stationToReturn = station
+      }
+    })
+  })
+  return stationToReturn
+}
+
+async function getStationData(stationId) {
+  const stations = await query()
+  const foundStation = stations.find((station) => station._id === stationId)
+
+  if (!foundStation) {
     return {
-        name: 'Station-' + (Date.now() % 1000),
-        tags: selectedTags,
-        createdBy: {
-            _id: '', // To be filled with the user's id
-            fullname: '',
-            imgUrl: ''
-        },
-        likedByUsers: [],
-        songs: [],
-        msgs: [],
-        createdAt: Date.now()
-    };
-}
-
-function getDefaultFilter() {
-    return { txt: '', tag: '', maxDuration: 0 };
-}
-
-function getCategoryStats() {
-    return stationHttpService.get(BASE_URL)
-        .then(stations => {
-            const tagMap = stations.reduce((acc, station) => {
-                station.tags.forEach(tag => {
-                    if (!acc[tag]) acc[tag] = 0;
-                    acc[tag]++;
-                });
-                return acc;
-            }, {});
-
-            return Object.keys(tagMap).map(tag => ({
-                title: tag,
-                value: tagMap[tag]
-            }));
-        });
-}
-
-function getFilterFromSearchParams(searchParams) {
-    const defaultFilter = getDefaultFilter();
-    const filterBy = {};
-    for (const field in defaultFilter) {
-        filterBy[field] = searchParams.get(field) || '';
+      stationsWithSameType: [],
+      combinedTags: [],
     }
-    return filterBy;
+  }
+
+  const stationsWithSameType = stations.filter(
+    (station) => station.stationType === foundStation.stationType
+  )
+  const combinedTags = stationsWithSameType
+    .map((station) => station.tags)
+    .flat()
+
+  return {
+    stationsWithSameType,
+    combinedTags,
+  }
 }
 
-function setNextPrevStationId(station) {
-    return query().then(stations => {
-        const idx = stations.findIndex(currStation => currStation._id === station._id);
-        station.nextStationId = stations[(idx + 1) % stations.length]._id;
-        station.prevStationId = stations[(idx - 1 + stations.length) % stations.length]._id;
-        return station;
-    });
+async function createStationFromSearch(searchResults, keyWord) {
+  // Create a new station object
+  const user = userService.getLoggedinUser()
+
+  const station = {
+    keyWord,
+    isSearched: true,
+    stationType: searchResults.stationType || 'music', // Assuming the station type is always 'music'
+    title: searchResults[0]?.artist || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
+    items: searchResults.map((result) => ({
+      artist: result.artist,
+      id: result.id, // Generate a unique ID for each item
+      name: result.name,
+      album: result.album,
+      url: result.url,
+      cover: result.cover,
+      addedBy: 'user1', // Assuming a default user, replace with actual user ID if available
+      likedBy: [], // Empty likedBy array
+      addedAt: Date.now(), // Current timestamp
+      lyrics: result.lyrics,
+      duration: result.duration || '00:00',
+    })),
+    cover: searchResults[0]?.cover || 'default_cover_url', // Use the first song's cover as the station cover, fallback to a default URL
+    tags: [], // Empty tags array
+    createdBy: {
+      fullname: searchResults[0]?.artist || 'Unknown Artist', // Use the artist's name
+      imgUrl: searchResults[0]?.cover || 'default_artist_image_url', // Use the artist's cover as their image, fallback to a default URL
+    },
+    likedByUsers: [], // Empty likedByUsers array
+    addedAt: Date.now(), // Current timestamp
+  }
+
+  return station
+}
+
+async function likeSong(itemToAdd) {
+  if (itemToAdd.url === '') return
+  if (!user) return
+
+  try {
+    const user = await userService.getLoggedinUser()
+    const stations = await query()
+    const likedStation = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
+
+    likedStation.items.push(itemToAdd)
+    await saveStation(likedStation)
+    const likedSongsIds = user.likedSongsIds
+    likedSongsIds.push(itemToAdd.id)
+    const userToSave = { ...user, likedSongsIds }
+    await updateUser(userToSave)
+    setLikedStation()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function getCategoriesWithImages() {
+  const categories = [
+    'Podcasts',
+    'Made for you',
+    'New releases',
+    'Pop',
+    'Hip-Hop',
+    'Rock',
+    'Latin',
+    'Educational',
+    'Documentary',
+    'Comedy',
+    'Dance Electric',
+    'Mood',
+    'Indie',
+    'Workout',
+    'Discover',
+    'Country',
+    'R&B',
+    'K-pop',
+    'Chill',
+    'Sleep',
+    'Party',
+    'At home',
+    'Love',
+    'Metal',
+    'Jazz',
+    'Trending',
+    'Anime',
+    'Gaming',
+    'Folk & Acoustic',
+    'Focus',
+    'Kids & Family',
+    'Classical',
+    'Instrumental',
+    'Punk',
+    'Ambient',
+    'Blues',
+    'Afro',
+    'Funk & Disco',
+    'Summer',
+    'EQUAL',
+  ]
+
+  // Assuming the images are located in a folder named 'assets/images' in your project
+  const categoryImages = categories.map(
+    (category) =>
+      `../../../public/spotify-pics/${category
+        .toLowerCase()
+        .replace(/ & /g, '-')
+        .replace(/ /g, '-')}.png`
+  )
+
+  // Return an array of objects combining category names and their images
+  return categories.map((category, index) => ({
+    category,
+    image: categoryImages[index],
+  }))
 }

@@ -18,7 +18,6 @@ export function signup(credentials) {
 }
 
 export function updateUser(user) {
-  console.log(user)
   return userService.updateUser(user).then((updatedUser) => {
     store.dispatch({ type: UPDATE_USER, updatedUser })
     return updatedUser // Ensure this returns the user

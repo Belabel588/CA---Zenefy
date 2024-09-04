@@ -51,8 +51,8 @@ async function signup({ username, password, fullname }) {
     username,
     password,
     fullname,
-    likedStationsIds: [likedUserId], // Represents stations the user has liked
-    likedSongsIds: [], // Represents songs the user has liked
+    likedStationsIds: [likedUserId],
+    likedSongsIds: [],
     createdAt: Date.now(),
     updatedAt: Date.now(),
   }
