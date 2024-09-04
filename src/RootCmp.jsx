@@ -13,20 +13,24 @@ import { ItemDetails } from './pages/ItemDetails.jsx'
 import { UserDetails } from '../src/pages/UserDetails.jsx'
 import { LoginSignup } from '../src/pages/LoginSignup.jsx'
 import { SideBar } from './cmps/SideBar.jsx'
+import { SideStation } from './cmps/SideStation.jsx'
 import { StationEditModal } from './cmps/StationEditModal.jsx'
 import { OptionsModal } from './cmps/OptionsModal.jsx'
-
+import { useState } from 'react'
 import { UserMsg } from './cmps/UserMsg.jsx'
 import { LoadingAnimation } from './cmps/LoadingAnimation.jsx'
 
 export function RootCmp() {
+// const []
   return (
-    <section className='app main-layout'>
+    <section className='app main-layout '>
       <AppHeader />
       <SideBar />
       <UserMsg />
       <LoadingAnimation />
       <LoginSignup />
+
+
 
       <div className='main-content'>
         <main>
@@ -41,6 +45,7 @@ export function RootCmp() {
             <Route path='/user/:userId' element={<UserDetails />} />
             {/* <Route path='/login' element={<LoginSignup />} /> */}
           </Routes>
+          <SideStation />
           {/* <StationEditModal /> */}
         </main>
       </div>
