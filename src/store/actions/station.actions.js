@@ -40,6 +40,7 @@ export async function loadStations() {
       }
 
       store.dispatch({ type: SET_STATIONS, stations: userStations })
+      console.log(userStations)
     }
   } catch (err) {
     console.error('Error loading stations:', err)

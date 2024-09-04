@@ -8,6 +8,7 @@ export const utilService = {
   shuffleArray,
   capitalizeFirstLetter,
   formatSongTime,
+  generateObjectId,
 }
 
 function makeId(length = 6) {
@@ -125,3 +126,16 @@ function formatSongTime(seconds) {
     remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds
   return `${minutes}:${formattedSeconds}`
 }
+
+function generateObjectId() {
+  return (
+    Math.floor(Date.now() / 1000).toString(16) +
+    'xxxxxxxxxxxxxxxx'
+      .replace(/[x]/g, function () {
+        return ((Math.random() * 16) | 0).toString(16)
+      })
+      .toLowerCase()
+  )
+}
+
+const newId = generateObjectId()

@@ -1,52 +1,61 @@
-import { storageService } from './async-storage.service.js'
+import { httpService } from './http.service.js'
 import { utilService } from './util.service.js'
 import { stationService } from './station.service.js'
 
+const STORAGE_KEY_LOGGEDIN_USER = 'loggedinUser'
+
 export const userService = {
-  getLoggedinUser,
   login,
   logout,
   signup,
+  getUsers,
   getById,
+  remove,
+  update,
+  getLoggedinUser,
+  saveLoggedinUser,
   query,
   getEmptyCredentials,
   updateUser,
   guestLogin,
 }
 
-const STORAGE_KEY_LOGGEDIN = 'loggedinUser'
-const STORAGE_KEY = 'zenefyUserDB'
-
-if (!localStorage.getItem(STORAGE_KEY)) {
-  _createDemoUser()
+function getUsers() {
+  return httpService.get(`user`)
 }
 
-function query() {
-  return storageService.query(STORAGE_KEY)
+async function getById(userId) {
+  console.log(userId)
+  const user = await httpService.get(`user/${userId}`)
+  return user
 }
 
-function getById(userId) {
-  return storageService.get(STORAGE_KEY, userId)
+function remove(userId) {
+  return httpService.delete(`user/${userId}`)
 }
 
-function login({ username, password }) {
-  return storageService.query(STORAGE_KEY).then((users) => {
-    let user
-    if (username === 'Guest') {
-      user = users.find((user) => user.username === 'Guest')
-    } else {
-      user = users.find(
-        (user) => user.username === username && user.password === password
-      )
-    }
-    if (user) return _setLoggedinUser(user)
-    else return Promise.reject('Invalid login')
-  })
+async function update({ _id, score }) {
+  const user = await httpService.put(`user/${_id}`, { _id, score })
+
+  // When admin updates other user's details, do not update loggedinUser
+  const loggedinUser = getLoggedinUser() // Might not work because its defined in the main service???
+  if (loggedinUser._id === user._id) saveLoggedinUser(user)
+
+  return user
 }
 
-async function signup({ username, password, fullname }) {
-  const likedUserId = utilService.makeId()
+async function login(userCred) {
+  const user = await httpService.post('auth/login', userCred)
+  if (user) return saveLoggedinUser(user)
+}
 
+async function signup(userCred) {
+  if (!userCred.imgUrl)
+    userCred.imgUrl =
+      'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png'
+
+  const likedUserId = utilService.generateObjectId()
+  const { username, password, fullname } = userCred
   const user = {
     username,
     password,
@@ -57,8 +66,7 @@ async function signup({ username, password, fullname }) {
     updatedAt: Date.now(),
   }
 
-  const savedUser = await storageService.post(STORAGE_KEY, user)
-  _setLoggedinUser(savedUser)
+  const savedUser = await httpService.post('auth/signup', user)
 
   const userLikedStation = {
     _id: likedUserId,
@@ -66,7 +74,7 @@ async function signup({ username, password, fullname }) {
     stationType: 'music',
     title: 'Liked Songs',
     items: [],
-    cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png', // Spotify's Liked Songs cover
+    cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png',
     tags: [],
     createdBy: {
       _id: savedUser._id,
@@ -77,29 +85,33 @@ async function signup({ username, password, fullname }) {
     addedAt: Date.now(),
   }
 
-  await storageService.post('stationDB', userLikedStation)
-  return _setLoggedinUser(savedUser)
+  await httpService.post('station', userLikedStation)
+
+  return saveLoggedinUser(savedUser)
 }
 
-function logout() {
-  sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN)
-  return Promise.resolve()
+async function logout() {
+  sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN_USER)
+  return await httpService.post('auth/logout')
 }
 
 function getLoggedinUser() {
-  return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN))
+  return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN_USER))
 }
 
-function _setLoggedinUser(user) {
+function saveLoggedinUser(user) {
   const userToSave = {
     _id: user._id,
     fullname: user.fullname,
     likedStationsIds: user.likedStationsIds,
     likedSongsIds: user.likedSongsIds,
-    // prefs: user.prefs,
   }
-  sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
+  sessionStorage.setItem(STORAGE_KEY_LOGGEDIN_USER, JSON.stringify(userToSave))
   return userToSave
+}
+
+function query() {
+  return httpService.get(STORAGE_KEY)
 }
 
 function getEmptyCredentials() {
@@ -110,58 +122,23 @@ function getEmptyCredentials() {
   }
 }
 
-// Function to update user preferences in local storage
-function updateUser(updatedUser) {
+async function updateUser(updatedUser) {
   const loggedinUser = getLoggedinUser()
   if (!loggedinUser) return Promise.reject('User not logged in')
-  // Update the prefs of the logged-in user
 
-  return storageService.put(STORAGE_KEY, updatedUser).then((user) => {
-    // Update sessionStorage as well
-    return _setLoggedinUser(user)
-  })
-}
+  const savedUser = await httpService.put(
+    `user/${updatedUser._id}`,
+    updatedUser
+  )
 
-/// USER DEMO
-
-function _createDemoUser() {
-  const demoUser = {
-    _id: 'guest',
-    fullname: 'Guest',
-    username: 'Guest',
-
-    likedStationsIds: [
-      'likedSongs123',
-      'yPlzCv',
-      'PD9pQr',
-      'UDmm7S',
-      'PD7mNx',
-      '0HP0UA',
-      '0eNciX',
-      '9F2K2W',
-      'PD8kLm',
-    ],
-    likedSongsIds: [
-      'creator1',
-      'JX6Dy3',
-      'G2G3h3',
-      'ZAZIRK',
-      '9je28A',
-
-      '3J9rjg',
-      'CT9zn5',
-      'aew9tr',
-      'HJuxQX',
-      'zoaP5d',
-    ],
-  }
-  return storageService.post(STORAGE_KEY, demoUser)
+  return saveLoggedinUser(savedUser)
 }
 
 async function guestLogin() {
   try {
-    const guest = await getById('guest')
-
+    // 35675e68f4b5af7b995d9205 = mongo guest id
+    const guest = await getById('35675e68f4b5af7b995d9205')
+    console.log(guest)
     return guest
   } catch (err) {
     console.log(err)
