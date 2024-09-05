@@ -12,6 +12,8 @@ import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 import { IoClose } from 'react-icons/io5'
 
+import { UserOptions } from './UserOptions.jsx'
+
 import zenefyLogo from '/public/img/zenefy-logo.png'
 
 import {
@@ -127,8 +129,36 @@ export function AppHeader() {
     }
   }
 
+  const options = [
+    {
+      text: 'Profile',
+      onClick: () => {
+        navigate(`user/${user._id}`)
+        setIsShown(false)
+      },
+    },
+    {
+      text: 'Log out',
+      onClick: () => {
+        onLogout()
+        setIsShown(false)
+      },
+    },
+  ]
+  const isHover = useRef(false)
+  const [isShown, setIsShown] = useState(false)
+
+  function handleClickOutside() {
+    console.log('works')
+    if (!isHover.current) {
+      setIsShown(false)
+    }
+  }
+
+  document.addEventListener('mousedown', handleClickOutside)
   return (
     <header className='app-header full'>
+      {isShown && <UserOptions options={options} isHover={isHover} />}
       <nav>
         <div
           onClick={async () => {
@@ -186,12 +216,16 @@ export function AppHeader() {
         </div>
       )}
       {user && (
-        <div className='user-container'>
-          <Link to={`user/${user._id}`} className='login-link'>
+        <div
+          className='user-container'
+          onMouseUp={() => {
+            setIsShown(true)
+          }}
+        >
+          <div className='login-link'>
             {' '}
             <FaRegUserCircle className='user-logo' />
-          </Link>
-          {/* <button onClick={onLogout}>logout</button> */}
+          </div>
         </div>
       )}
     </header>
