@@ -18,7 +18,7 @@ import { PlayingAnimation } from './PlayingAnimation.jsx'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
-export function SuggestedStations({ stations }) {
+export function SuggestedStations({ stations, color }) {
   const navigate = useNavigate()
   const isHover = useRef(false)
   const currStation = useSelector(
@@ -26,9 +26,6 @@ export function SuggestedStations({ stations }) {
   )
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
-  )
-  const currColor = useSelector(
-    (stateSelector) => stateSelector.stationModule.currColor
   )
 
   const user = useSelector(
@@ -40,19 +37,19 @@ export function SuggestedStations({ stations }) {
     setCurrItem(0, currStation)
     setIsPlaying(true)
   }
+
+  // Use default color if none is provided
+  const backgroundColor = color || '#191414' // Default color
+console.log('BACKGROUND COLOR IN SUGGESTED IS : ' , backgroundColor);
+
+  // Determine class names dynamically
+  const containerClass = color
+    ? 'suggested-stations-container gradient'
+    : 'suggested-stations-container'
+
   let counter = 0
   return (
-    <div className='suggested-stations-container'>
-      {/* {stations.map((station) => {
-        return (
-          <div className='station-container' key={station._id}>
-            <div className='cover-container'>
-              <img src={station.cover} alt='' />
-              <Link to={`station/${station._id}`}>{station.title}</Link>
-            </div>
-          </div>
-        )
-      })} */}
+    <div className={containerClass} style={{ backgroundColor }}>
       {stations.map((station) => {
         if (counter >= 8) return
         counter++
@@ -66,10 +63,10 @@ export function SuggestedStations({ stations }) {
               if (isHover.current) return
               navigate(`/station/${station._id}`)
             }}
+          // Apply the background color here
           >
             <div className='cover-container'>
               <div className='playlist-cover-overlay'></div>
-              {/* <Waves cover={station.cover} title={station.title} /> */}
               <img className='station-cover' src={station.cover} alt='' />
               <span className='title'>{station.title}</span>
               {isPlaying && currStation._id === station._id ? (
@@ -118,7 +115,7 @@ export function SuggestedStations({ stations }) {
                   (accu, currItem) => `${accu} ${currItem.artist},`,
                   artists
                 )
-                .slice(0, 150) + '...'}
+                .slice(0, 20) + '...'}
             </span>
           </div>
         )

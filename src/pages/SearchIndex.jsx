@@ -85,6 +85,7 @@ export function SearchIndex() {
   const categoriesWithImages = stationService.getCategoriesWithImages()
   // console.log('categoriesWithImages', categoriesWithImages)
 
+
   const tagColors = [
     '#006450',
     '#007cc0',
@@ -117,14 +118,26 @@ export function SearchIndex() {
     return tagColors[index % tagColors.length]
   }
 
-  const tagElements = categoriesWithImages.map((category, idx) => (
-    <Link to='#' key={idx}>
-      <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
-        <img src={category.image} />
-        {category.category}
-      </li>
-    </Link>
-  ))
+  const tagElements = categoriesWithImages.map((category, idx) => {
+    const backgroundColor = generateColor(idx);
+
+    return (
+      <Link
+        to={{
+          pathname: `/genere/${category.category}`,
+        }}
+        state={{ backgroundColor: backgroundColor }} // Use `state` here
+        key={idx}
+      >
+        <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
+          <img src={category.image} />
+          {category.category}
+        </li>
+      </Link>
+
+    );
+  });
+
 
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilterBy })
@@ -294,38 +307,15 @@ export function SearchIndex() {
     setCurrItem(0, currStation)
     setIsPlaying(true)
   }
-  
+
   console.log(currSearch);
-  
+
+  console.log(stations);
 
   return currSearch == '' ? (
     <section className='search-section'>
       <h1>Browse all</h1>
       <ul className='search-list'>
-        {stations
-          .filter(
-            (station, index, currentStations) =>
-              currentStations.findIndex(
-                (currentStation) =>
-                  currentStation.stationType === station.stationType
-              ) === index
-          )
-          .map((uniqueStation, index) => (
-            <Link
-              to={`/genere/${uniqueStation._id}`}
-              className='full-link'
-              key={uniqueStation._id}
-            >
-              <li
-                style={{
-                  backgroundColor: generateColor(index),
-                }}
-              >
-                <img src='../public/spotify-pics/music.png' alt='' />
-                {uniqueStation.stationType}
-              </li>
-            </Link>
-          ))}
         {tagElements}
       </ul>
     </section>

@@ -34,7 +34,7 @@ export function RootCmp() {
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<AboutUs />} />
             <Route path='/search' element={<SearchIndex />} />
-            <Route path='/genere/:stationId' element={<SearchDynamicCmp />} />
+            <Route path='/genere/:category' element={<SearchDynamicCmp />} />
 
             <Route path='/station/:stationId' element={<StationDetails />} />
             <Route path='/item/:itemId' element={<ItemDetails />} />

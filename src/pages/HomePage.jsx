@@ -153,7 +153,7 @@ export function HomePage() {
       <Sort filtered={filtered} setFiltered={setFiltered} />
       <StationList gradientRefOne={gradientRefOne} stations={filtered} />
       {<h2 className='made-for'>Made for {user && user.fullname}</h2>}
-      <SuggestedStations stations={allStations} />
+      <SuggestedStations stations={allStations} color={'#4a0e8b00'} />
       {user && <h2 className='made-for'>Jump back in</h2>}
       <SuggestedStations stations={stations} />
     </section>

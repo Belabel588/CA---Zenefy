@@ -2,16 +2,15 @@ import { stationService } from '../services/station.service'
 import { loadStations } from '../store/actions/station.actions'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom' // Import useLocation
 import { SET_FILTER_BY } from '../store/reducers/station.reducer'
 import { StationList } from './StationList'
+import { SuggestedStations } from './SuggestedStations'
 
 export function SearchDynamicCmp() {
-  const params = useParams()
+  const { category } = useParams()
   const dispatch = useDispatch()
-
-  const [stationDataObj, setStationDataObj] = useState(null)
-  const [error, setError] = useState(null)
+  const location = useLocation() // Using useLocation to access passed state
 
   const filterBy = useSelector(
     (storeState) => storeState.stationModule.filterBy
@@ -19,65 +18,24 @@ export function SearchDynamicCmp() {
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
-  const generateColor = (index, total) => {
-    const hue = (index / total) * 360
-    return `hsl(${hue}, 70%, 50%)`
-  }
+console.log(stations);
+
+  console.log(location.state.backgroundColor);
+
+
+  // Access the backgroundColor passed via state
+  const backgroundColor = location.state.backgroundColor || '#ffffff' // Default to white if no color is passed
 
   useEffect(() => {
-    async function getData() {
-      try {
-        const data = await stationService.getStationData(params.stationId)
-        setStationDataObj(data)
-
-        if (data.stationsWithSameType && data.stationsWithSameType.length > 0) {
-          const stationType = data.stationsWithSameType[0].stationType
-          dispatch({
-            type: SET_FILTER_BY,
-            filterBy: { ...filterBy, stationType },
-          })
-        }
-
-        console.log('Fetched data:', data)
-      } catch (err) {
-        console.error('Failed to fetch data', err)
-        setError('Failed to fetch data')
-      }
-    }
-
-    getData()
-  }, [params.stationId, dispatch])
-
-  useEffect(() => {
-    if (filterBy) {
-      console.log('FILTERBY INSIDE OF DYNM CMP BEFORE LOAD STATIONS', filterBy)
-      loadStations()
-    }
-  }, [filterBy, dispatch])
-
-  if (error) return <h1>{error}</h1>
-
-  console.log('STATIONS TO RENDER ARE::', stations)
+    console.log('Background color received:', backgroundColor)
+    // You can use the backgroundColor here if needed
+  }, [backgroundColor])
 
   return (
-    <div className='main-search-container'>
-      <StationList />
-
-      {stationDataObj?.combinedTags && (
-        <div className='search-tags'>
-          {stationDataObj.combinedTags.map((tag, idx) => (
-            <div
-              key={idx}
-              className='tag'
-              style={{
-                backgroundColor: generateColor(idx, stations.length),
-              }}
-            >
-              <span>{tag}</span>
-            </div>
-          ))}
-        </div>
-      )}
+    <div className='main-search-container' > {/* Applying the color */}
+      <section className='header-section' style={{ backgroundColor }}><h1 >{category}</h1></section>
+      <SuggestedStations stations={stations} color={backgroundColor}/>
+      {/* <StationList style={{ backgroundColor }} /> */}
     </div>
   )
 }

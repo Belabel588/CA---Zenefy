@@ -26,9 +26,7 @@ import { FaCirclePlay } from 'react-icons/fa6'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
-// import playingAnimation from '../../public/img/playing.gif'
-
-export function StationList({ stations: propStations }) {
+export function StationList({ stations: propStations, style }) {
   const navigate = useNavigate();
 
   // Fallback to stations from Redux store if not provided as a prop
@@ -37,6 +35,9 @@ export function StationList({ stations: propStations }) {
   );
 
   const stations = propStations || reduxStations;
+
+  console.log('stations inside station list are' , stations);
+  
 
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
@@ -54,7 +55,7 @@ export function StationList({ stations: propStations }) {
   }
 
   return (
-    <div className='stations-container'>
+    <div className='stations-container' style={style || {}}>
       {stations.map((station, index) => {
         if (index >= 8) return null; // Limit to 8 stations
         return (
@@ -62,11 +63,11 @@ export function StationList({ stations: propStations }) {
             className='station-container'
             key={station._id}
             onClick={() => {
-              if (isHover.current) return
-              navigate(`/station/${station._id}`)
+              if (isHover.current) return;
+              navigate(`/station/${station._id}`);
             }}
             onMouseEnter={() => {
-              setCurrColor(station.cover)
+              setCurrColor(station.cover);
             }}
           >
             <img className='station-cover' src={station.cover} alt='' />
