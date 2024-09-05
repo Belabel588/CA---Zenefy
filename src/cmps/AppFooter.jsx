@@ -50,6 +50,7 @@ export function AppFooter() {
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
   )
+  console.log(currItem)
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying

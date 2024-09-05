@@ -529,19 +529,6 @@ function _createStations() {
       title: 'Rock Classics',
       items: [
         {
-          artist: 'Queen',
-          id: 'zoaP5d',
-          name: 'Bohemian Rhapsody',
-          album: 'A Night at the Opera',
-          url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
-          cover:
-            'https://i1.sndcdn.com/artworks-000116795481-6fmihq-t500x500.jpg',
-          addedBy: 'user7',
-          likedBy: [],
-          addedAt: 1724685172590,
-          duration: '05:59',
-        },
-        {
           artist: 'Led Zeppelin',
           id: 'HJuxQX',
           name: 'Stairway to Heaven',
@@ -553,6 +540,19 @@ function _createStations() {
           likedBy: [],
           addedAt: 1724685172590,
           duration: '08:02',
+        },
+        {
+          artist: 'Queen',
+          id: 'zoaP5d',
+          name: 'Bohemian Rhapsody',
+          album: 'A Night at the Opera',
+          url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
+          cover:
+            'https://i1.sndcdn.com/artworks-000116795481-6fmihq-t500x500.jpg',
+          addedBy: 'user7',
+          likedBy: [],
+          addedAt: 1724685172590,
+          duration: '05:59',
         },
         {
           artist: 'The Beatles',

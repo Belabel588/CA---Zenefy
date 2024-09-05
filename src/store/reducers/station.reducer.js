@@ -19,9 +19,9 @@ export const SET_IS_ACTIVE = 'SET_IS_ACTIVE'
 const initialState = {
   stations: [],
   likedStation: {},
-  currStation: stationService.getEmptyStation(),
+  currStation: stationService.getDefaultCurrStation(),
   currItemIdx: 0,
-  currItem: { name: '', artist: '', cover: '', url: '', id: '' },
+  currItem: stationService.getDefaultCurrItem(),
   filterBy: stationService.getDefaultFilter(),
   isLoading: false,
   isPlaying: false,
