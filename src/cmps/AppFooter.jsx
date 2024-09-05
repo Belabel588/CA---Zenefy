@@ -30,8 +30,6 @@ import { BiSkipPrevious } from 'react-icons/bi'
 import { BiRepeat } from 'react-icons/bi'
 import { TiArrowShuffle } from 'react-icons/ti'
 
-import sample from '../../public/Pokémon Theme.mp3'
-
 export function AppFooter() {
   const [currentTime, setCurrentTime] = useState(0)
 
@@ -50,7 +48,6 @@ export function AppFooter() {
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
   )
-  console.log(currItem)
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -123,22 +120,19 @@ export function AppFooter() {
 
   async function setLikedStation(savedStation) {
     let like
-    console.log(user)
 
     if (!savedStation) {
-      console.log(stations)
       like = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
     } else {
       like = savedStation
     }
-    console.log(like)
+
     likedStationToSet(like)
 
     const likedItems = like.items
 
-    console.log(likedItems)
     const itemsId = likedItems.map((item) => {
       return item.id
     })

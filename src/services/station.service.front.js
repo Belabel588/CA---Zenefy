@@ -199,7 +199,7 @@ async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
   const user = userService.getLoggedinUser()
   // if()
-  console.log(searchResults)
+
   const station = {
     keyWord,
     isSearched: true,

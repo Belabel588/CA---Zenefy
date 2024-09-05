@@ -40,7 +40,7 @@ export async function loadStations() {
       }
 
       store.dispatch({ type: SET_STATIONS, stations: userStations })
-      console.log(userStations)
+      // console.log(userStations)
     }
   } catch (err) {
     console.error('Error loading stations:', err)
@@ -60,7 +60,6 @@ export async function removeStation(stationId) {
 
 export async function saveStation(station) {
   try {
-    console.log(station)
     const savedStation = await stationService.save(station)
     const type = station._id ? UPDATE_STATION : ADD_STATION
 
@@ -138,7 +137,6 @@ export async function setCurrColor(
     img.src = cover
     color = await fac.getColorAsync(img)
     const hex = color.hex
-    console.log(hex)
 
     store.dispatch({ type: SET_CURR_COLOR, currColor: hex })
     return hex

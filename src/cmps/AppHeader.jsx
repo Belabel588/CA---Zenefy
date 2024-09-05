@@ -109,7 +109,6 @@ export function AppHeader() {
     if (inputRef.current) {
       inputRef.current.focus() // Focus the input field
       setIsActive(true)
-      console.log(isActive)
     }
     navigate('/search')
   }
@@ -149,7 +148,6 @@ export function AppHeader() {
   const [isShown, setIsShown] = useState(false)
 
   function handleClickOutside() {
-    console.log('works')
     if (!isHover.current) {
       setIsShown(false)
     }

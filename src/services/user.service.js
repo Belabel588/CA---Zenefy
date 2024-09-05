@@ -25,7 +25,6 @@ function getUsers() {
 }
 
 async function getById(userId) {
-  console.log(userId)
   const user = await httpService.get(`user/${userId}`)
   return user
 }
@@ -138,7 +137,6 @@ async function guestLogin() {
   try {
     // 35675e68f4b5af7b995d9205 = mongo guest id
     const guest = await getById('35675e68f4b5af7b995d9205')
-    console.log(guest)
     return guest
   } catch (err) {
     console.log(err)

@@ -30,7 +30,6 @@ async function query(filterBy = { txt: '' }) {
 }
 
 async function getById(stationId) {
-  console.log(stationId)
   return await httpService.get(`${STORAGE_KEY}/${stationId}`)
 }
 
@@ -165,7 +164,6 @@ async function getStationData(stationId) {
 async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
   const user = userService.getLoggedinUser()
-  console.log(keyWord)
 
   const station = {
     keyWord,

@@ -56,7 +56,7 @@ export function EditOptions({
       if (station.items.find((item) => item.id === itemToEdit.id)) return
       station.items.push(itemToEdit)
       const savedStation = await saveStation(station)
-      console.log(savedStation)
+
       setStation({ ...savedStation })
 
       showSuccessMsg('Song added')
@@ -78,7 +78,7 @@ export function EditOptions({
       )
       station.items.splice(idxToRemove, 1)
       const savedStation = await saveStation(station)
-      console.log(savedStation)
+
       setStation({ ...savedStation })
 
       showSuccessMsg('Song removed')
