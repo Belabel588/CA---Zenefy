@@ -36,6 +36,7 @@ export function EditOptions({
   removeFromPlaylist,
   setRemoveFromPlaylist,
   optionsState,
+  setStation,
 }) {
   let id = 0
 
@@ -54,8 +55,9 @@ export function EditOptions({
       const station = await stationService.getById(stationId)
       if (station.items.find((item) => item.id === itemToEdit.id)) return
       station.items.push(itemToEdit)
-      await saveStation(station)
-      // await loadStations()
+      const savedStation = await saveStation(station)
+      console.log(savedStation)
+      setStation({ ...savedStation })
 
       showSuccessMsg('Song added')
     } catch (err) {
@@ -75,8 +77,9 @@ export function EditOptions({
         (item) => item.id === itemToEdit.id
       )
       station.items.splice(idxToRemove, 1)
-      await saveStation(station)
-      // await loadStations()
+      const savedStation = await saveStation(station)
+      console.log(savedStation)
+      setStation({ ...savedStation })
 
       showSuccessMsg('Song removed')
     } catch (err) {

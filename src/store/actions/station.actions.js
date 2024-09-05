@@ -60,6 +60,7 @@ export async function removeStation(stationId) {
 
 export async function saveStation(station) {
   try {
+    console.log(station)
     const savedStation = await stationService.save(station)
     const type = station._id ? UPDATE_STATION : ADD_STATION
 

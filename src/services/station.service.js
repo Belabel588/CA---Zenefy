@@ -33,7 +33,22 @@ async function getById(stationId) {
 }
 
 async function remove(stationId) {
-  return await httpService.delete(`${STORAGE_KEY}/${stationId}`)
+  try {
+    const res = await httpService.delete(`${STORAGE_KEY}/${stationId}`)
+    const loggedinUser = userService.getLoggedinUser()
+    const idxToRemove = loggedinUser.likedStationsIds.findIndex(
+      (id) => id === stationId
+    )
+
+    loggedinUser.likedStationsIds.splice(idxToRemove, 1)
+    const likedStationsIds = loggedinUser.likedStationsIds
+
+    const userToUpdate = { ...loggedinUser, likedStationsIds }
+    userService.saveLoggedinUser(userToUpdate)
+    return res
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 async function save(station) {
@@ -59,6 +74,7 @@ async function save(station) {
     const updatedUser = { ...loggedinUser, likedStationsIds: userLikedStations }
     await updateUser(updatedUser)
   }
+
   return savedStation
 }
 function getEmptyStation() {

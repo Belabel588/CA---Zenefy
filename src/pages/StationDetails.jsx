@@ -313,7 +313,8 @@ export function StationDetails() {
     }
 
     try {
-      await saveStation(likedStation)
+      const saved = await saveStation(likedStation)
+
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()
@@ -367,6 +368,7 @@ export function StationDetails() {
           optionsState={optionsState}
           handleClickOutside={handleClickOutside}
           itemToEdit={itemToEdit}
+          setStation={setStation}
         />
 
         <header className='station-header' ref={headerRef}>

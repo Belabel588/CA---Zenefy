@@ -99,7 +99,7 @@ export function AppFooter() {
       const durationToSet = playerRef.current.getDuration()
       setDuration(durationToSet)
     }, 1000)
-  }, [currStation, currIdx])
+  }, [currStation, currIdx, stations])
 
   useEffect(() => {
     playerRef.current.seekTo(0)
@@ -281,7 +281,9 @@ export function AppFooter() {
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   async function onRemoveItem(stationId) {
