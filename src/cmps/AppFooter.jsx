@@ -99,7 +99,11 @@ export function AppFooter() {
       const durationToSet = playerRef.current.getDuration()
       setDuration(durationToSet)
     }, 1000)
-  }, [currStation, currIdx, stations])
+  }, [currStation, currIdx])
+
+  useEffect(() => {
+    setLikedStation()
+  }, [stations])
 
   useEffect(() => {
     playerRef.current.seekTo(0)
@@ -118,17 +122,23 @@ export function AppFooter() {
 
   async function setLikedStation(savedStation) {
     let like
+    console.log(user)
+
     if (!savedStation) {
+      console.log(stations)
       like = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
     } else {
       like = savedStation
     }
+    console.log(like)
     likedStationToSet(like)
 
-    const items = like.items
-    const itemsId = items.map((item) => {
+    const likedItems = like.items
+
+    console.log(likedItems)
+    const itemsId = likedItems.map((item) => {
       return item.id
     })
 
@@ -297,7 +307,7 @@ export function AppFooter() {
       )
       station.items.splice(idxToRemove, 1)
       const savedStation = await saveStation(station)
-      // await loadStations()
+      await loadStations()
       setLikedStation(savedStation)
       showSuccessMsg('Song removed')
     } catch (err) {

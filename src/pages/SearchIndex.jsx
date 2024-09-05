@@ -154,6 +154,7 @@ export function SearchIndex() {
     const userStationsToSet = stations.filter((station) =>
       user.likedStationsIds.includes(station._id)
     )
+
     setUserStations(userStationsToSet)
     const likedStation = userStationsToSet.find((station) => station.isLiked)
     setLikedStation(likedStation)
@@ -167,6 +168,7 @@ export function SearchIndex() {
       )
       setRefactoredResults(refactored)
       const savedStation = await stationService.save(refactored)
+
       setSearchedStation(savedStation)
       dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
@@ -184,6 +186,7 @@ export function SearchIndex() {
   async function setLikedStation(likedStation) {
     const likedItems = likedStation?.items
     const itemsId = likedItems.map((item) => item.id)
+    console.log(itemsId)
     setLikedItems(itemsId)
   }
 

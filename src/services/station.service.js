@@ -61,18 +61,25 @@ async function save(station) {
   } else {
     delete station._id
 
-    const loggedinUser = userService.getLoggedinUser()
-    station.title = `My Playlist #${loggedinUser.likedStationsIds.length + 1}`
-    station.stationType = 'music'
+    if (!station.isSearched) {
+      const loggedinUser = userService.getLoggedinUser()
+      station.title = `My Playlist #${loggedinUser.likedStationsIds.length + 1}`
+      station.stationType = 'music'
 
-    savedStation = await httpService.post(STORAGE_KEY, station)
+      savedStation = await httpService.post(STORAGE_KEY, station)
 
-    const userLikedStations = loggedinUser.likedStationsIds
+      const userLikedStations = loggedinUser.likedStationsIds
 
-    userLikedStations.push(savedStation._id)
+      userLikedStations.push(savedStation._id)
 
-    const updatedUser = { ...loggedinUser, likedStationsIds: userLikedStations }
-    await updateUser(updatedUser)
+      const updatedUser = {
+        ...loggedinUser,
+        likedStationsIds: userLikedStations,
+      }
+      await updateUser(updatedUser)
+    } else {
+      savedStation = await httpService.post(STORAGE_KEY, station)
+    }
   }
 
   return savedStation
@@ -156,12 +163,13 @@ async function getStationData(stationId) {
 async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
   const user = userService.getLoggedinUser()
+  console.log(keyWord)
 
   const station = {
     keyWord,
     isSearched: true,
     stationType: searchResults.stationType || 'music', // Assuming the station type is always 'music'
-    title: searchResults[0]?.artist || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
+    title: utilService.capitalizeFirstLetters(keyWord) || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
     items: searchResults.map((result) => ({
       artist: result.artist,
       id: result.id, // Generate a unique ID for each item

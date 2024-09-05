@@ -130,18 +130,30 @@ export function AppHeader() {
   return (
     <header className='app-header full'>
       <nav>
-        <NavLink to='/'>
+        <div
+          onClick={async () => {
+            await loadStations()
+            navigate('/')
+          }}
+        >
           <div className='logo-container'>
             <img src={zenefyLogo} alt='' />
           </div>
-        </NavLink>
+        </div>
       </nav>
       <div className='home-search-container'>
-        <NavLink to='/' className='home-button-container'>
+        <div
+          to='/'
+          className='home-button-container'
+          onClick={async () => {
+            await loadStations()
+            navigate('/')
+          }}
+        >
           {(isHome && <GoHomeFill className='home-button active' />) || (
             <GoHome className='home-button' />
           )}
-        </NavLink>
+        </div>
         <div className='search-container' onClick={onSearchClick}>
           <IoSearchOutline className='icon search' />
           <input

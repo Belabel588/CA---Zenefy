@@ -112,7 +112,9 @@ export function StationDetails() {
     setCurrColorPage(currColor)
   }, [stationId])
 
-  useEffect(() => {}, [stations])
+  useEffect(() => {
+    loadStation(stationId)
+  }, [stations])
 
   async function loadStation(stationId) {
     const stationToSet = await stationService.getById(stationId)
@@ -323,9 +325,9 @@ export function StationDetails() {
     }
   }
 
-  function onSelectStation(stationId) {
-    setCurrStation(stationId)
-    setCurrItem(0, currStation)
+  async function onSelectStation(stationId) {
+    await setCurrStation(stationId)
+    await setCurrItem(0, currStation)
     setIsPlaying(true)
   }
 
