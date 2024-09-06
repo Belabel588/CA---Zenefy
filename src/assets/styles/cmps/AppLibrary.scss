@@ -3,11 +3,12 @@
   flex-direction: column;
   // align-items: center;
   // justify-content: space-between;
-
+  
   background-color:$dark-mode-background;
   width:98%;
   // height:7.625rem;
-    height:fit-content;
+  height:fit-content;
+  // height: calc(100vh - 60px);
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
   
@@ -21,12 +22,14 @@
 
   .library-title{
     display: flex;
-    flex-direction: row;
+    align-items: center;
+    justify-items: center;
     gap:0.5rem;
+    padding: 0.5em 0.5em 0.5em 0.5em;
 
     .library-icon{
-        width: 2rem;
-        height: 2rem;
+        width: 1.3em;
+        height: 1.3em;
   
         color:$grey-light;
   
@@ -34,6 +37,8 @@
   
     .library-text{
       color:$grey-light;
+      margin: 0px;
+      font-size: 0.9em;
     }
   }
 
@@ -42,7 +47,7 @@
     width: 1rem;
     height: 1rem;
     // margin-right: 0.5rem;
-    margin-bottom: 0.8rem;
+    // margin-bottom: 0.8rem;
 
 
     color:$grey-light;

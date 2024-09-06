@@ -1,6 +1,6 @@
 import { FaPlus } from 'react-icons/fa6'
 import { useState, useEffect, useRef } from 'react'
-import { useSelector , useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
@@ -15,13 +15,16 @@ import {
 
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
+import { Sort } from './Sort.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
 export function AppLibrary() {
   const dispatch = useDispatch()
-  const [defaultFilter, setFilterBy] = useState(stationService.getDefaultFilter())
+  const [defaultFilter, setFilterBy] = useState(
+    stationService.getDefaultFilter()
+  )
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
@@ -35,14 +38,14 @@ export function AppLibrary() {
 
   const navigate = useNavigate()
 
-  // const [stationsToSet, setStationToSet] = useState([
-  //   stationService.getEmptyStation(),
-  // ])
+  const [filtered, setFiltered] = useState([])
+
+  useEffect(() => {}, [])
 
   useEffect(() => {
     //   loadStations()
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
-    
+
     //   setStationToSet(stations)
   }, [stations])
 
@@ -95,9 +98,9 @@ export function AppLibrary() {
           <FaPlus className='plus-icon' onClick={onCreateNewStation} />
         </button>
       </div>
-
+      <Sort setFiltered={setFiltered} />
       <div className='library-stations-container'>
-        {stations.map((station) => {
+        {filtered.map((station) => {
           return (
             <div
               className='station-container'
@@ -112,7 +115,6 @@ export function AppLibrary() {
                   <div
                     className='pause-button-container'
                     onMouseEnter={() => {
-                      
                       isHover.current = true
                     }}
                     onMouseLeave={() => {
