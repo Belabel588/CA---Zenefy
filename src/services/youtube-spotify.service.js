@@ -96,7 +96,6 @@ async function createList(search, videosWithDuration) {
 // Spotify
 
 function createVideo(video) {
-  console.log(video)
   const youtubeVideo = {
     url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
     title: video.snippet.title,

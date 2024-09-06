@@ -92,6 +92,8 @@
     position: relative;
     background-color: $background-black;
     // background-color: black;
+        height: calc(67vh);
+        overflow: auto;
     .gradient{
       background: linear-gradient(180deg,  rgba(25, 20, 20, 0.151),rgba(25, 20, 20, 0.741) ,rgb(25, 20, 20));
       background: linear-gradient(

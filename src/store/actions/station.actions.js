@@ -40,6 +40,7 @@ export async function loadStations() {
       }
 
       store.dispatch({ type: SET_STATIONS, stations: userStations })
+      // console.log(userStations)
     }
   } catch (err) {
     console.error('Error loading stations:', err)
@@ -136,7 +137,6 @@ export async function setCurrColor(
     img.src = cover
     color = await fac.getColorAsync(img)
     const hex = color.hex
-    console.log(hex)
 
     store.dispatch({ type: SET_CURR_COLOR, currColor: hex })
     return hex

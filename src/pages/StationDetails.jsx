@@ -112,7 +112,9 @@ export function StationDetails() {
     setCurrColorPage(currColor)
   }, [stationId])
 
-  useEffect(() => {}, [stations])
+  useEffect(() => {
+    loadStation(stationId)
+  }, [stations])
 
   async function loadStation(stationId) {
     const stationToSet = await stationService.getById(stationId)
@@ -313,7 +315,8 @@ export function StationDetails() {
     }
 
     try {
-      await saveStation(likedStation)
+      const saved = await saveStation(likedStation)
+
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()
@@ -322,9 +325,9 @@ export function StationDetails() {
     }
   }
 
-  function onSelectStation(stationId) {
-    setCurrStation(stationId)
-    setCurrItem(0, currStation)
+  async function onSelectStation(stationId) {
+    await setCurrStation(stationId)
+    await setCurrItem(0, currStation)
     setIsPlaying(true)
   }
 
@@ -367,6 +370,7 @@ export function StationDetails() {
           optionsState={optionsState}
           handleClickOutside={handleClickOutside}
           itemToEdit={itemToEdit}
+          setStation={setStation}
         />
 
         <header className='station-header' ref={headerRef}>

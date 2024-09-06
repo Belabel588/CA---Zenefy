@@ -6,7 +6,6 @@
 
 // Basics
 @import "basics/helpers";
-@import "basics/layout";
 @import "basics/base";
 @import "basics/links";
 @import "basics/forms";
@@ -32,7 +31,7 @@
 @import "cmps/UserMsg";
 @import "cmps/SearchDynamicCmp.scss";
 
-@import "cmps/CarFilter.scss";
+
 @import "cmps/ReviewEdit.scss";
 @import "cmps/ReviewList.scss";
 @import "cmps/ReviewPreview.scss";
@@ -42,8 +41,7 @@
 @import "cmps/LoadingAnimation.scss";
 @import "cmps/OptionsModal.scss";
 @import "cmps/SuggestedStations.scss";
-// @import "cmps/CarList";
-// @import "cmps/CarPreview";
+
 
 
 @import "cmps/PlayBar.scss";
@@ -54,3 +52,7 @@
 @import "pages/StationDetails.scss";
 @import "pages/ItemDetails.scss";
 @import "pages/LoginSignup.scss";
+@import "cmps/UserOptions.scss";
+
+
+@import "basics/layout";

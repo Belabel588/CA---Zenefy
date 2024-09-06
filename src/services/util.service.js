@@ -8,6 +8,8 @@ export const utilService = {
   shuffleArray,
   capitalizeFirstLetter,
   formatSongTime,
+  generateObjectId,
+  capitalizeFirstLetters,
 }
 
 function makeId(length = 6) {
@@ -124,4 +126,24 @@ function formatSongTime(seconds) {
   const formattedSeconds =
     remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds
   return `${minutes}:${formattedSeconds}`
+}
+
+function generateObjectId() {
+  return (
+    Math.floor(Date.now() / 1000).toString(16) +
+    'xxxxxxxxxxxxxxxx'
+      .replace(/[x]/g, function () {
+        return ((Math.random() * 16) | 0).toString(16)
+      })
+      .toLowerCase()
+  )
+}
+
+const newId = generateObjectId()
+
+function capitalizeFirstLetters(str) {
+  return str
+    .split(' ') // Split the string into an array of words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+    .join(' ') // Join the words back into a string
 }

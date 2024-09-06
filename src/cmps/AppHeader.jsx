@@ -12,6 +12,8 @@ import { PiBrowsersThin } from 'react-icons/pi'
 import { RxCross2 } from 'react-icons/rx'
 import { IoClose } from 'react-icons/io5'
 
+import { UserOptions } from './UserOptions.jsx'
+
 import zenefyLogo from '/public/img/zenefy-logo.png'
 
 import {
@@ -107,7 +109,6 @@ export function AppHeader() {
     if (inputRef.current) {
       inputRef.current.focus() // Focus the input field
       setIsActive(true)
-      console.log(isActive)
     }
     navigate('/search')
   }
@@ -127,21 +128,60 @@ export function AppHeader() {
     }
   }
 
+  const options = [
+    {
+      text: 'Profile',
+      onClick: () => {
+        navigate(`user/${user._id}`)
+        setIsShown(false)
+      },
+    },
+    {
+      text: 'Log out',
+      onClick: () => {
+        onLogout()
+        setIsShown(false)
+      },
+    },
+  ]
+  const isHover = useRef(false)
+  const [isShown, setIsShown] = useState(false)
+
+  function handleClickOutside() {
+    if (!isHover.current) {
+      setIsShown(false)
+    }
+  }
+
+  document.addEventListener('mousedown', handleClickOutside)
   return (
     <header className='app-header full'>
+      {isShown && <UserOptions options={options} isHover={isHover} />}
       <nav>
-        <NavLink to='/'>
+        <div
+          onClick={async () => {
+            await loadStations()
+            navigate('/')
+          }}
+        >
           <div className='logo-container'>
             <img src={zenefyLogo} alt='' />
           </div>
-        </NavLink>
+        </div>
       </nav>
       <div className='home-search-container'>
-        <NavLink to='/' className='home-button-container'>
+        <div
+          to='/'
+          className='home-button-container'
+          onClick={async () => {
+            await loadStations()
+            navigate('/')
+          }}
+        >
           {(isHome && <GoHomeFill className='home-button active' />) || (
             <GoHome className='home-button' />
           )}
-        </NavLink>
+        </div>
         <div className='search-container' onClick={onSearchClick}>
           <IoSearchOutline className='icon search' />
           <input
@@ -174,12 +214,16 @@ export function AppHeader() {
         </div>
       )}
       {user && (
-        <div className='user-container'>
-          <Link to={`user/${user._id}`} className='login-link'>
+        <div
+          className='user-container'
+          onMouseUp={() => {
+            setIsShown(true)
+          }}
+        >
+          <div className='login-link'>
             {' '}
             <FaRegUserCircle className='user-logo' />
-          </Link>
-          {/* <button onClick={onLogout}>logout</button> */}
+          </div>
         </div>
       )}
     </header>

@@ -38,7 +38,7 @@ export function SearchDynamicCmp() {
           })
         }
 
-        console.log('Fetched data:', data)
+        // console.log('Fetched data:', data)
       } catch (err) {
         console.error('Failed to fetch data', err)
         setError('Failed to fetch data')
@@ -50,14 +50,14 @@ export function SearchDynamicCmp() {
 
   useEffect(() => {
     if (filterBy) {
-      console.log('FILTERBY INSIDE OF DYNM CMP BEFORE LOAD STATIONS', filterBy)
+      // console.log('FILTERBY INSIDE OF DYNM CMP BEFORE LOAD STATIONS', filterBy)
       loadStations()
     }
   }, [filterBy, dispatch])
 
   if (error) return <h1>{error}</h1>
 
-  console.log('STATIONS TO RENDER ARE::', stations)
+  // console.log('STATIONS TO RENDER ARE::', stations)
 
   return (
     <div className='main-search-container'>

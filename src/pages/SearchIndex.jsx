@@ -133,7 +133,7 @@ export function SearchIndex() {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        console.log(currSearch)
+        // console.log(currSearch)
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
       } catch (error) {
@@ -154,6 +154,7 @@ export function SearchIndex() {
     const userStationsToSet = stations.filter((station) =>
       user.likedStationsIds.includes(station._id)
     )
+
     setUserStations(userStationsToSet)
     const likedStation = userStationsToSet.find((station) => station.isLiked)
     setLikedStation(likedStation)
@@ -167,6 +168,7 @@ export function SearchIndex() {
       )
       setRefactoredResults(refactored)
       const savedStation = await stationService.save(refactored)
+
       setSearchedStation(savedStation)
       dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
@@ -184,19 +186,20 @@ export function SearchIndex() {
   async function setLikedStation(likedStation) {
     const likedItems = likedStation?.items
     const itemsId = likedItems.map((item) => item.id)
+    // console.log(itemsId)
     setLikedItems(itemsId)
   }
 
   async function likeSong(itemToEdit) {
     if (itemToEdit.url === '') return
     if (!user) return
-    console.log(itemToEdit)
+    // console.log(itemToEdit)
     try {
       setIsLoading(true)
       const likedStation = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
-      console.log(likedStation)
+      // console.log(likedStation)
       if (likedStation.items.find((item) => item.id === itemToEdit.id)) return
 
       likedStation.items.push(itemToEdit)
@@ -393,7 +396,6 @@ export function SearchIndex() {
                     <div
                       className='pause-button-container'
                       onMouseEnter={() => {
-                        console.log(isHover.current)
                         isHover.current = true
                       }}
                       onMouseLeave={() => {
