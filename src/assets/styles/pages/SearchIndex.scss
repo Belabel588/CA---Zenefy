@@ -1,4 +1,5 @@
 .search-section {
+  margin-top: 2em;
   display: flex;
   flex-direction: column;
   padding: 2rem;
@@ -13,10 +14,13 @@
   /* White text on a dark background */
 
   .search-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+    // display: grid;
+    // grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+    display: flex;
+    flex-wrap: wrap;
     /* Responsive grid */
-    grid-gap: 1rem;
+    // grid-gap: 1rem;
+    gap: 1em;
     list-style: none;
     padding: 0;
     width: 100%;
@@ -24,12 +28,33 @@
     /* Limit the maximum width */
     justify-items: stretch;
     /* Stretch the items to fill the grid cells */
+    a{
+      flex-grow: 1;
+      flex-basis: calc(20% - 1em); // Basis for each item (before growing)
+      min-width: 220px;
+      min-height: 120px;
+      max-width: 300px;
+      max-height: 150px;
+      height: calc(15vw);
+      
+      @media (max-width:1060px) {
+        min-width: 200px;
+
+
+        
+      }
+      @media (max-width:770px) {
+        // flex-grow: 0;
+        width: 180px;
+      }
+    }
 
     li {
-      min-height: 7rem;
+      // min-height: 6rem;
       /* Set the minimum height */
-      max-height: 9rem;
+      // max-height: 9rem;
       /* Set the maximum height */
+      height: 100%;
       width: 100%;
       /* Ensure the li elements take up the full width of their grid cells */
       border-radius: 8px;
@@ -46,13 +71,15 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       /* Subtle shadow for depth */
 
-      height: calc(10vw);
+      
 
       &:hover {
         transform: scale(1.05);
         background-color: #333333;
         /* Slightly lighter on hover */
       }
+
+
     }
 
     a {
@@ -61,6 +88,11 @@
     }
 
   }
+}
+
+.search-page-container{
+  height: calc(100vh - 170px);
+
 }
 
 .search-results {

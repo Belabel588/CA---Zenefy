@@ -150,8 +150,8 @@ export function HomePage() {
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container' ref={gradientRefOne}></div>
-      <Sort filtered={filtered} setFiltered={setFiltered} />
-      <StationList gradientRefOne={gradientRefOne} stations={filtered} />
+      <Sort setFiltered={setFiltered} />
+      <StationList gradientRefOne={gradientRefOne} filtered={filtered} />
       {<h2 className='made-for'>Made for {user && user.fullname}</h2>}
       <SuggestedStations stations={allStations} />
       {user && <h2 className='made-for'>Jump back in</h2>}

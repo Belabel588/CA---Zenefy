@@ -117,7 +117,7 @@
                 align-items: center;
                 justify-items: center;
                 gap: 0.6em;
-                transition: 0.2s;
+                transition: 0.1s;
                 // border: 2.5px solid transparent;
 
 
@@ -164,11 +164,23 @@
                 }
                 .browse{
 
+                }
+                .explore{
+                    fill: $white;
                     &:hover{
-
+    
                         transform: scale(1.05);
                     }
+
+                    &::before{
+                        content: '';
+                        position: relative;
+                        height: 20px;
+                        width: 1px;
+                        background-color: $grey-light;
+                    }
                 }
+          
             }
         }
 

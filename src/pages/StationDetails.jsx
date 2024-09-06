@@ -456,7 +456,15 @@ export function StationDetails() {
                       {currItem.id === item.id ? (
                         <PlayingAnimation />
                       ) : (
-                        <span className='item-idx'>{++counter}</span>
+                        <span
+                          className={
+                            counter === 0 || (counter + 1) % 10 === 0
+                              ? 'item-idx custom-font'
+                              : 'item-idx'
+                          }
+                        >
+                          {++counter}
+                        </span>
                       )}
                     </div>
                     <div className='play-pause-container'>
@@ -522,7 +530,14 @@ export function StationDetails() {
                       <AddedIcon className={'added'} />
                     )) || <PlusIcon className={'to-add'} />}
                   </button>
-                  <HiOutlineDotsHorizontal />
+                  <HiOutlineDotsHorizontal
+                    className='dots'
+                    onClick={() => {
+                      setItemToEdit(item)
+                      optionsState.current = 'song'
+                      openSongOptions(event, item)
+                    }}
+                  />
                 </div>
               )
             })}

@@ -113,7 +113,7 @@ export function AppLibrary() {
           <FaPlus className='plus-icon' onClick={onCreateNewStation} />
         </button>
       </div>
-      <Sort setFiltered={setFiltered} />
+      <Sort setFiltered={setFiltered} isNav={true} />
       <div className='playlist-input-container'>
         <IoSearch
           className='icon search'
