@@ -28,35 +28,35 @@ import { BiPause } from 'react-icons/bi'
 
 // import playingAnimation from '../../public/img/playing.gif'
 
-export function StationList({ stations: propStations }) {
-  const navigate = useNavigate();
+export function StationList({ stations: propStations, filtered }) {
+  const navigate = useNavigate()
 
   // Fallback to stations from Redux store if not provided as a prop
   const reduxStations = useSelector(
     (storeState) => storeState.stationModule.stations
-  );
+  )
 
-  const stations = propStations || reduxStations;
+  const stations = propStations || reduxStations
 
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
-  );
+  )
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
-  );
+  )
 
-  const isHover = useRef(false);
+  const isHover = useRef(false)
 
   function onSelectStation(stationId) {
-    setCurrStation(stationId);
-    setCurrItem(0, currStation);
-    setIsPlaying(true);
+    setCurrStation(stationId)
+    setCurrItem(0, currStation)
+    setIsPlaying(true)
   }
 
   return (
     <div className='stations-container'>
-      {stations.map((station, index) => {
-        if (index >= 8) return null; // Limit to 8 stations
+      {filtered.map((station, index) => {
+        if (index >= 8) return null // Limit to 8 stations
         return (
           <div
             className='station-container'
@@ -77,10 +77,10 @@ export function StationList({ stations: propStations }) {
                 <BiPause
                   className='pause-button'
                   onMouseEnter={() => {
-                    isHover.current = true;
+                    isHover.current = true
                   }}
                   onMouseLeave={() => {
-                    isHover.current = false;
+                    isHover.current = false
                   }}
                   onClick={() => setIsPlaying(false)}
                 />
@@ -92,28 +92,28 @@ export function StationList({ stations: propStations }) {
               <div
                 className='play-button-container'
                 onClick={() => {
-                  if (station.items.length === 0) return;
+                  if (station.items.length === 0) return
                   if (currStation._id === station._id) {
-                    setIsPlaying(true);
-                    return;
+                    setIsPlaying(true)
+                    return
                   }
-                  onSelectStation(station._id);
+                  onSelectStation(station._id)
                 }}
               >
                 <BiPlay
                   className='play-button'
                   onMouseEnter={() => {
-                    isHover.current = true;
+                    isHover.current = true
                   }}
                   onMouseLeave={() => {
-                    isHover.current = false;
+                    isHover.current = false
                   }}
                 />
               </div>
             )}
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }
