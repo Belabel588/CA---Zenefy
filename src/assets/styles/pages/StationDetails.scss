@@ -5,6 +5,8 @@
     // background-color: #2e1a47; 
     // container-type: inline-size;
     // background-color: #1ed760;
+    height: calc(100vh - 170px);
+
   }
   
   .station-header{
@@ -92,7 +94,7 @@
     position: relative;
     background-color: $background-black;
     // background-color: black;
-        height: calc(67vh);
+        height: calc(100% - 18vw);
         overflow: auto;
     .gradient{
       background: linear-gradient(180deg,  rgba(25, 20, 20, 0.151),rgba(25, 20, 20, 0.741) ,rgb(25, 20, 20));
@@ -198,7 +200,7 @@
     justify-items: center;
     gap: 0.5em;
 
-    margin: 0px 2em 0px 2em;
+    margin: 0px 1.5em 0px 1.5em;
     .info-container{
       grid-column: 1/-1;
       display: grid;
@@ -276,7 +278,7 @@
         }
 
         .idx-play-container{
-          width: 2em;
+          // width: 2em;
           display: flex;
           align-items: center;
           justify-items: center;
@@ -285,20 +287,45 @@
 
         }
         .item-idx-container{
+          justify-self: center;
           // font-size: 1.3em;
-          font-size: 1.8em;
+          font-size: 1em;
           color: #999; /* Light gray color for the index */
 
           // margin-right: 25px;
-          display: flex;
+          // display: flex;
           // align-items: center;
 
-          width: 40px;
+          // width: 40px;
+          width: fit-content;
 
           .playing-animation{
 
-            width: 40px;
+            // width: 40px;
           }
+          svg{
+            width: 10px;
+          }
+        }
+
+        .custom-font {
+          font-family: 'GothamLight', sans-serif;
+          position: relative;
+          display: inline-block;
+        }
+      
+        .custom-font::after {
+          content: '';
+          position: absolute;
+          bottom: 6px;
+          left: -1px;
+          width: 0.5em; /* Adjust as needed */
+          height: 1px; /* Adjust as needed */
+          background: $grey-light; /* Match font color */
+        }
+      
+        .custom-font span {
+          font-family: 'Gotham', sans-serif;
         }
 
         .play-pause-container{
@@ -312,8 +339,8 @@
 
 
             color: $white;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
 
             border: none;
 
@@ -328,6 +355,9 @@
  &:hover{
         .like-button{
           opacity: 1;
+        }
+        .dots{
+          display: block;
         }
       }
 
@@ -357,6 +387,11 @@
         }
 
 
+      }
+
+      .dots{
+        display: none;
+        cursor: pointer;
       }
 
       .song-title-container{

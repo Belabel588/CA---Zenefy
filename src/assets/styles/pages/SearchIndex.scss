@@ -90,6 +90,11 @@
   }
 }
 
+.search-page-container{
+  height: calc(100vh - 170px);
+
+}
+
 .search-results {
   display: grid;
   grid-template-columns: 1fr 2fr;

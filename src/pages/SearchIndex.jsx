@@ -331,7 +331,7 @@ export function SearchIndex() {
   ) : loading ? (
     <LoadingAnimation />
   ) : (
-    <>
+    <div className='search-page-container'>
       <div className='search-results'>
         <section className='info'>
           <h1>Top result</h1>
@@ -479,7 +479,7 @@ export function SearchIndex() {
         setIsVisible={setIsVisible}
         // setCreate={setCreate}
       />
-    </>
+    </div>
   )
 }
 
