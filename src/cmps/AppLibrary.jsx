@@ -1,6 +1,6 @@
 import { FaPlus } from 'react-icons/fa6'
 import { useState, useEffect, useRef } from 'react'
-import { useSelector , useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
@@ -11,17 +11,23 @@ import {
   setCurrStation,
   setCurrItem,
   saveStation,
+  setFilter,
 } from '../store/actions/station.actions.js'
 
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
+import { Sort } from './Sort.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
+import { IoSearch } from 'react-icons/io5'
+import { IoCloseOutline } from 'react-icons/io5'
 
 export function AppLibrary() {
   const dispatch = useDispatch()
-  const [defaultFilter, setFilterBy] = useState(stationService.getDefaultFilter())
+  const [defaultFilter, setFilterBy] = useState(
+    stationService.getDefaultFilter()
+  )
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
@@ -35,14 +41,19 @@ export function AppLibrary() {
 
   const navigate = useNavigate()
 
-  // const [stationsToSet, setStationToSet] = useState([
-  //   stationService.getEmptyStation(),
-  // ])
+  const [filtered, setFiltered] = useState([])
+  const [filterByToSet, setFilterByToSet] = useState(
+    stationService.getDefaultFilter()
+  )
+
+  const inputRef = useRef()
+
+  useEffect(() => {}, [filterByToSet])
 
   useEffect(() => {
     //   loadStations()
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
-    
+
     //   setStationToSet(stations)
   }, [stations])
 
@@ -67,6 +78,13 @@ export function AppLibrary() {
     setCurrStation(stationId)
     setCurrItem(0, currStation)
     setIsPlaying(true)
+  }
+
+  function handleChange({ target }) {
+    let field = target.name
+    let value = target.value
+
+    setFilterByToSet({ ...filterByToSet, txt: value })
   }
 
   return (
@@ -95,9 +113,35 @@ export function AppLibrary() {
           <FaPlus className='plus-icon' onClick={onCreateNewStation} />
         </button>
       </div>
+      <Sort setFiltered={setFiltered} />
+      <div className='playlist-input-container'>
+        <IoSearch
+          className='icon search'
+          onClick={() => {
+            inputRef.current.focus()
+          }}
+        />
 
+        <input
+          type='text'
+          name='txt'
+          id=''
+          ref={inputRef}
+          placeholder='Search in your library'
+          value={filterByToSet.txt}
+          onChange={handleChange}
+        />
+        {filterByToSet.txt && (
+          <IoCloseOutline
+            className='icon clear'
+            onClick={() => {
+              setFilterByToSet({ ...filterByToSet, txt: '' })
+            }}
+          />
+        )}
+      </div>
       <div className='library-stations-container'>
-        {stations.map((station) => {
+        {filtered.map((station) => {
           return (
             <div
               className='station-container'
@@ -112,7 +156,6 @@ export function AppLibrary() {
                   <div
                     className='pause-button-container'
                     onMouseEnter={() => {
-                      
                       isHover.current = true
                     }}
                     onMouseLeave={() => {
