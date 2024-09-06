@@ -4,6 +4,9 @@
   padding: 2rem;
   background-color: $dark-mode-background;
   border-radius: 8px;
+  height: calc(100vh - 170px);
+  overflow-y: auto;
+
 
   /* Dark background for a Spotify-like look */
   color: #ffffff;
@@ -42,6 +45,8 @@
       transition: transform 0.3s ease, background-color 0.3s ease;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       /* Subtle shadow for depth */
+
+      height: calc(10vw);
 
       &:hover {
         transform: scale(1.05);
