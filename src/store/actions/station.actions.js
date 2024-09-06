@@ -15,6 +15,7 @@ import {
   SET_LIKED_STATION,
   SET_CURR_SEARCH,
   SET_IS_ACTIVE,
+  SET_FILTER_BY,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -154,4 +155,8 @@ export function setCurrSearch(term) {
 
 export function setIsActive(stateToSet) {
   store.dispatch({ type: SET_IS_ACTIVE, isActive: stateToSet })
+}
+
+export function setFilter(filterBy = { txt: '', stationType: '' }) {
+  store.dispatch({ type: SET_FILTER_BY, filterBy })
 }

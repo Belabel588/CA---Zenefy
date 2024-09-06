@@ -11,6 +11,7 @@ import {
   setCurrStation,
   setCurrItem,
   saveStation,
+  setFilter,
 } from '../store/actions/station.actions.js'
 
 import { StationEditModal } from './StationEditModal.jsx'
@@ -19,6 +20,8 @@ import { Sort } from './Sort.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
+import { IoSearch } from 'react-icons/io5'
+import { IoCloseOutline } from 'react-icons/io5'
 
 export function AppLibrary() {
   const dispatch = useDispatch()
@@ -39,8 +42,13 @@ export function AppLibrary() {
   const navigate = useNavigate()
 
   const [filtered, setFiltered] = useState([])
+  const [filterByToSet, setFilterByToSet] = useState(
+    stationService.getDefaultFilter()
+  )
 
-  useEffect(() => {}, [])
+  const inputRef = useRef()
+
+  useEffect(() => {}, [filterByToSet])
 
   useEffect(() => {
     //   loadStations()
@@ -72,6 +80,13 @@ export function AppLibrary() {
     setIsPlaying(true)
   }
 
+  function handleChange({ target }) {
+    let field = target.name
+    let value = target.value
+
+    setFilterByToSet({ ...filterByToSet, txt: value })
+  }
+
   return (
     <div className='library-container'>
       <div className='library-header'>
@@ -99,6 +114,32 @@ export function AppLibrary() {
         </button>
       </div>
       <Sort setFiltered={setFiltered} />
+      <div className='playlist-input-container'>
+        <IoSearch
+          className='icon search'
+          onClick={() => {
+            inputRef.current.focus()
+          }}
+        />
+
+        <input
+          type='text'
+          name='txt'
+          id=''
+          ref={inputRef}
+          placeholder='Search in your library'
+          value={filterByToSet.txt}
+          onChange={handleChange}
+        />
+        {filterByToSet.txt && (
+          <IoCloseOutline
+            className='icon clear'
+            onClick={() => {
+              setFilterByToSet({ ...filterByToSet, txt: '' })
+            }}
+          />
+        )}
+      </div>
       <div className='library-stations-container'>
         {filtered.map((station) => {
           return (

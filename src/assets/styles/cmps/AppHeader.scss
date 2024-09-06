@@ -9,7 +9,8 @@
 
     background-color: $clr4;
     margin: 0px 0px 0px 1.6rem;
-    height: 65px;
+
+    height: 75px;
     background-color:black;
     
     .app-logo{
@@ -219,6 +220,7 @@
 }
 
 .user-container{
+    // margin-inline-end: 0.5em;
     cursor: pointer;
     display: flex;
     align-items: center;
