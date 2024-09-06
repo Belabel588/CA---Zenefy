@@ -31,11 +31,22 @@
     a{
       flex-grow: 1;
       flex-basis: calc(20% - 1em); // Basis for each item (before growing)
-      min-width: 200px;
+      min-width: 220px;
       min-height: 120px;
       max-width: 300px;
       max-height: 150px;
       height: calc(15vw);
+      
+      @media (max-width:1060px) {
+        min-width: 200px;
+
+
+        
+      }
+      @media (max-width:770px) {
+        // flex-grow: 0;
+        width: 180px;
+      }
     }
 
     li {

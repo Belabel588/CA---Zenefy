@@ -44,6 +44,7 @@ export function AppHeader() {
   const inputRef = useRef(null) // Step 1: Create a ref for the input field
   const location = useLocation()
   const [isHome, setIsHome] = useState()
+  const [isFocus, setIsFocus] = useState(false)
 
   const [userBy, setUserBy] = useState()
 
@@ -55,6 +56,13 @@ export function AppHeader() {
       setIsHome(false)
     }
     setIsActive(false)
+
+    if (location.pathname === '/search') {
+      setIsFocus(true)
+    } else {
+      setIsFocus(false)
+    }
+
     // Step 2: Reset the input value on route change using the ref
     if (inputRef.current) {
       // inputRef.current.value = '' // Clear the input value
@@ -108,6 +116,7 @@ export function AppHeader() {
   function onSearchClick() {
     if (inputRef.current) {
       inputRef.current.focus() // Focus the input field
+      setIsFocus(true)
       setIsActive(true)
     }
     navigate('/search')
@@ -197,7 +206,7 @@ export function AppHeader() {
                 inputRef.current.value = ''
               }}
             />
-          )) || <PiBrowsersThin className='icon browse' />}
+          )) || <ExploreIcon isFocus={isFocus} />}
         </div>
       </div>
 
@@ -228,4 +237,34 @@ export function AppHeader() {
       )}
     </header>
   )
+}
+
+function ExploreIcon({ isFocus }) {
+  console.log(isFocus)
+  if (isFocus) {
+    return (
+      <svg
+        data-encore-id='icon'
+        role='img'
+        aria-hidden='true'
+        viewBox='0 0 24 24'
+        className='explore active'
+      >
+        <path d='M4 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v4H4V2zM1.513 9.37A1 1 0 0 1 2.291 9H21.71a1 1 0 0 1 .978 1.208l-2.17 10.208A2 2 0 0 1 18.562 22H5.438a2 2 0 0 1-1.956-1.584l-2.17-10.208a1 1 0 0 1 .201-.837zM12 17.834c1.933 0 3.5-1.044 3.5-2.333 0-1.289-1.567-2.333-3.5-2.333S8.5 14.21 8.5 15.5c0 1.289 1.567 2.333 3.5 2.333z'></path>
+      </svg>
+    )
+  } else {
+    return (
+      <svg
+        data-encore-id='icon'
+        role='img'
+        aria-hidden='true'
+        viewBox='0 0 24 24'
+        className='explore'
+      >
+        <path d='M15 15.5c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z'></path>
+        <path d='M1.513 9.37A1 1 0 0 1 2.291 9h19.418a1 1 0 0 1 .979 1.208l-2.339 11a1 1 0 0 1-.978.792H4.63a1 1 0 0 1-.978-.792l-2.339-11a1 1 0 0 1 .201-.837zM3.525 11l1.913 9h13.123l1.913-9H3.525zM4 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v4h-2V3H6v3H4V2z'></path>
+      </svg>
+    )
+  }
 }
