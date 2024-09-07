@@ -27,11 +27,16 @@
   .app {
     &.main-layout {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns:1fr;
       min-height:100vh;
       max-width: 100vw;
       
   
+      .main-content{
+        grid-column: 1 / -1;
+        // margin: 1rem 0;
+      }
+
       header {
         grid-column: 1 / -1;
       }
