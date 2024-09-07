@@ -333,6 +333,30 @@ export function AppFooter() {
         >
           {(likedItems.includes(currItem.id) && <AddedIcon />) || <PlusIcon />}
         </button>
+        <div
+          className='mobile-play-button'
+          onClick={() => {
+            if (isPlaying) {
+              setIsPlaying(false)
+              return
+            }
+            if (currentTime === duration) setCurrentTime(0)
+            setIsPlaying(true)
+            const durationToSet = playerRef.current.getDuration()
+
+            setDuration(durationToSet)
+          }}
+        >
+          {(isPlaying && (
+            // <button>
+            <BiPause />
+            // </button>
+          )) || (
+            // <button>
+            <BiPlay />
+            // </button>
+          )}
+        </div>
       </div>
 
       <div className='control-container'>

@@ -1,13 +1,11 @@
-
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { GoHome, GoHomeFill } from 'react-icons/go'
 import { IoSearchOutline } from 'react-icons/io5'
 // import { PiBrowsersThin } from 'react-icons/pi'
 
-
 export function AppFooterMobile() {
-
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (location.pathname === '/') {
@@ -21,10 +19,8 @@ export function AppFooterMobile() {
     }
   }, [location])
 
-
   const [isHome, setIsHome] = useState()
   const inputRef = useRef(null)
-
 
   function onSearchClick() {
     if (inputRef.current) {
@@ -34,7 +30,7 @@ export function AppFooterMobile() {
   }
 
   return (
-    <div className="app-mobile-footer">
+    <div className='app-mobile-footer'>
       <NavLink to='/' className='home-button-container'>
         {(isHome && <GoHomeFill className='home-button active' />) || (
           <GoHome className='home-button' />
