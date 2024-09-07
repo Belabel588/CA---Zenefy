@@ -1,0 +1,97 @@
+.artist-details-container{
+
+    // display: grid;
+    // grid-template-columns: 1fr 1fr;
+    // align-items: end;
+    display: flex;
+    flex-direction: column;
+
+    width:100%;
+    min-height: 150px;
+
+    padding-bottom: 1em;
+
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    container-type: inline-size;
+    height: calc(100vh - 170px);
+
+
+
+    .artist-header{
+
+        grid-column: 1/-1;
+        position: relative;
+        display: flex;
+        align-items: end;
+        min-height: 420px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+
+    }
+    .artist-cover{
+        position: absolute;
+        z-index: -1;
+        min-height: 420px;
+      min-width: 120px;
+
+      border-radius: 5px;
+      height: calc(12vw);
+      width: 12vw;
+
+
+    //   max-width: 200px;
+      max-height: 200px;
+
+      object-fit: cover;
+
+        width: 4000px;
+
+
+      // background-color: $green;
+    }
+    .title-container{
+ 
+      margin: 1em 0.5em 0.5em 1em;
+
+      display: flex;
+      flex-direction: column;
+      font-family: 'GothamBlackBold';
+      font-size: 2em;
+      
+   
+
+
+      *{
+
+        margin: 0px;
+      }
+      span{
+        font-family: 'GothamLight';
+        
+        
+        font-size: 0.4em;
+      }
+      
+      
+      .artist-title{
+          font-size: calc(10vw);
+
+          @media (min-width:1200px) {
+            font-size: 3em;
+            line-height: 1em;
+          }
+          justify-self: end;
+          height: fit-content;
+          line-height: 1.25em;
+        }
+
+        .artist-followers{
+
+        }
+        
+    }
+    
+            .buttons-container{
+                grid-column: 1/-1;
+            }
+}
