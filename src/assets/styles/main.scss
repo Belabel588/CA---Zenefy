@@ -1,3 +1,5 @@
+
+
 // Setup
 @import "setup/variables";
 @import "setup/functions";
@@ -42,6 +44,10 @@
 @import "cmps/OptionsModal.scss";
 @import "cmps/SuggestedStations.scss";
 
+@import "cmps/AppHeaderMobile.scss";
+@import "cmps/AppFooterMobile.scss";
+// @import "cmps/CarList";
+// @import "cmps/CarPreview";
 
 
 @import "cmps/PlayBar.scss";
@@ -56,3 +62,13 @@
 
 
 @import "basics/layout";
+
+
+@import "mq.scss";
+
+
+
+
+
+
+
