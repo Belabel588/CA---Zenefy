@@ -85,11 +85,12 @@
 	top: 50%;
     transform: translate(-50%, -50%); // Center the animation horizontally and vertically
 	min-height: 500px;
-border-radius: 8px;
+	border-radius: 8px;
 	// top: calc(50% - 80px);
 	background-color: $grey-dark;
 	// gap: 1em;
 	align-items: center;
+	width: 400px;
 	img{
 		width: 100px;
 		padding: 1em;

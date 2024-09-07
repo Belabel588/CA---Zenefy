@@ -298,7 +298,14 @@ export function ItemDetails() {
                 <AddedIcon className={'option-button added-button'} />
               )) || <PlusIcon className='option-button plus-button' />}
             </div>
-            <BsThreeDots className='option-button more-button' />
+            <BsThreeDots
+              className='option-button more-button'
+              onClick={() => {
+                setItemToEdit(item)
+                optionsState.current = 'song'
+                openSongOptions(event, item)
+              }}
+            />
           </div>
         </div>
         <div className='item-info-container'>

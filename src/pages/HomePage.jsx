@@ -24,6 +24,7 @@ import { apiService } from '../services/youtube-spotify.service.js'
 
 import { Sort } from '../cmps/Sort.jsx'
 import { SuggestedStations } from '../cmps/SuggestedStations.jsx'
+import { Footer } from '../cmps/Footer.jsx'
 
 import { GoContainer } from 'react-icons/go'
 import { FaCirclePlay } from 'react-icons/fa6'
@@ -156,6 +157,7 @@ export function HomePage() {
       <SuggestedStations stations={allStations} />
       {user && <h2 className='made-for'>Jump back in</h2>}
       <SuggestedStations stations={stations} />
+      <Footer />
     </section>
   )
 }

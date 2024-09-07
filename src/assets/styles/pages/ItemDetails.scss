@@ -131,6 +131,9 @@
           
         }
         .like-button-container{
+          display: flex;
+          align-items: center;
+          justify-items: center;
            .svg-icon{
             width: 20px;
           cursor: pointer;
