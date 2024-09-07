@@ -331,15 +331,16 @@ export function ItemDetails() {
             <b>Lyrics</b>
             <p>{item.lyrics || `Lyrics not available`}</p>
           </div>
-          <div className='artist-container'>
+          <div
+            className='artist-container'
+            onClick={() => {
+              if (!artist) return
+              navigate(`/artist/${artist.id}`)
+            }}
+            style={(!artist && { cursor: 'default' }) || {}}
+          >
             <img src={item.cover} alt={item.artist} />
-            <div
-              className='title-container'
-              onClick={() => {
-                if (!artist) return
-                navigate(`/artist/${artist.id}`)
-              }}
-            >
+            <div className='title-container'>
               <b>Artist</b>
               <b>{item.artist}</b>
             </div>
