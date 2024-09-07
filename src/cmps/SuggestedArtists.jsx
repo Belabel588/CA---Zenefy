@@ -23,13 +23,15 @@ export function SuggestedArtists({ artists }) {
           >
             {artist.images.length > 0 &&
               (<img src={artist.images[0].url} alt='' /> || (
-                <img
-                  src={
-                    'https://i.scdn.co/image/ab6761610000e5eb55d39ab9c21d506aa52f7021'
-                  }
-                  alt=''
-                />
-              ))}
+                  <img src={artist.images[0].url} alt='' />
+                ) || (
+                  <img
+                    src={
+                      'https://i.scdn.co/image/ab6761610000e5eb55d39ab9c21d506aa52f7021'
+                    }
+                    alt=''
+                  />
+                ))}
             <b>{artist.name}</b>
             <span>{utilService.capitalizeFirstLetter(artist.type)}</span>
           </div>

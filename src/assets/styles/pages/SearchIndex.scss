@@ -480,6 +480,18 @@
 
     }
   }
+
+  .suggested-stations-container{
+
+    .station-container{
+      // width: 150px;
+      // overflow-x: hidden;
+ 
+      .artists{
+        // width: 10vw;
+      }
+    }
+  }
   .suggested-artist-stations{
   grid-column: 1/-1;
   display: flex;
