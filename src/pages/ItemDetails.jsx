@@ -69,7 +69,7 @@ export function ItemDetails() {
         setIsLoading(true)
         setLikedStation()
         const itemToSet = await stationService.getItem(itemId)
-        const station = await stationService.getItemsStation(item.id)
+        const station = await stationService.getItemsStation(itemId)
 
         setItemsStation(station)
         setItem(itemToSet)
@@ -292,6 +292,7 @@ export function ItemDetails() {
                       JSON.stringify(currStation) !==
                       JSON.stringify(itemsStation)
                     ) {
+                      console.log(itemsStation)
                       await setCurrStation(itemsStation._id)
                       await setCurrItem(item.id, itemsStation)
                     }
