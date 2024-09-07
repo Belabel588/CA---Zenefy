@@ -19,6 +19,7 @@ import {
 import { loadStations } from '../store/actions/station.actions.js'
 
 import { login, signup } from '../store/actions/user.actions.js'
+import { Sort } from './Sort.jsx'
 
 export function AppHeader() {
   const user = useSelector((storeState) => storeState.userModule.loggedinUser)
@@ -155,8 +156,14 @@ export function AppHeader() {
       )}
       {user && (
         <div className='user-info'>
-          <Link to={`user/${user._id}`}>{user.fullname}</Link>
-          <button onClick={onLogout}>logout</button>
+          <div>
+            <Sort className="app-header-sort" />
+          </div>
+          <div>
+
+            <Link to={`user/${user._id}`}>{user.fullname}</Link>
+            <button onClick={onLogout}>logout</button>
+          </div>
         </div>
       )}
     </header>

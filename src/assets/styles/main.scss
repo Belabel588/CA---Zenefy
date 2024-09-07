@@ -1,3 +1,5 @@
+
+
 // Setup
 @import "setup/variables";
 @import "setup/functions";
@@ -41,6 +43,8 @@
 @import "cmps/PlayingAnimation.scss";
 @import "cmps/LoadingAnimation.scss";
 @import "cmps/OptionsModal.scss";
+@import "cmps/AppHeaderMobile.scss";
+@import "cmps/AppFooterMobile.scss";
 // @import "cmps/CarList";
 // @import "cmps/CarPreview";
 
@@ -53,3 +57,13 @@
 @import "pages/StationDetails.scss";
 @import "pages/ItemDetails.scss";
 @import "pages/LoginSignup.scss";
+
+
+@import "mq.scss";
+
+
+
+
+
+
+

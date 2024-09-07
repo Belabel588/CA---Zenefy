@@ -18,10 +18,13 @@ import { OptionsModal } from './cmps/OptionsModal.jsx'
 
 import { UserMsg } from './cmps/UserMsg.jsx'
 import { LoadingAnimation } from './cmps/LoadingAnimation.jsx'
+import { AppHeaderMobile } from './cmps/AppHeaderMobile.jsx'
+import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
 
 export function RootCmp() {
   return (
     <section className='app main-layout'>
+      {/* <AppHeaderMobile /> */}
       <AppHeader />
       <SideBar />
       <UserMsg />
@@ -45,6 +48,7 @@ export function RootCmp() {
         </main>
       </div>
 
+      <AppFooterMobile />
       <AppFooter className='app-footer' />
     </section>
   )
