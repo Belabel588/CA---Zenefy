@@ -4,6 +4,7 @@ import { utilService } from './util.service.js'
 
 export const apiService = {
   getVideos,
+  getArtistByName,
 }
 
 const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
@@ -311,4 +312,21 @@ async function searchTracks(query, token) {
   } catch (error) {
     console.error('Error searching for tracks:', error)
   }
+}
+
+async function getArtistByName(artistName) {
+  const accessToken = await getAccessToken() // Replace with your Spotify API access token
+  const response = await fetch(
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+      artistName
+    )}&type=artist`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
+
+  const data = await response.json()
+  return data.artists.items // Returns the array of artists
 }

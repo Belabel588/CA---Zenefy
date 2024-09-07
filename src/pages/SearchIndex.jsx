@@ -29,6 +29,13 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import { FaPlus } from 'react-icons/fa'
 
 import { SET_IS_LOADING } from '../store/reducers/user.reducer.js'
+import { SuggestedStations } from '../cmps/SuggestedStations.jsx'
+import { SuggestedArtists } from '../cmps/SuggestedArtists.jsx'
+
+import {
+  setCurrArtist,
+  setCurrArtists,
+} from '../store/actions/artist.actions.js'
 
 export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
@@ -82,7 +89,6 @@ export function SearchIndex() {
   const navigate = useNavigate()
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
-  // console.log('categoriesWithImages', categoriesWithImages)
 
   const tagColors = [
     '#006450',
@@ -125,6 +131,8 @@ export function SearchIndex() {
     </Link>
   ))
 
+  const [artists, setArtists] = useState([])
+
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilterBy })
     loadStations()
@@ -136,6 +144,9 @@ export function SearchIndex() {
         // console.log(currSearch)
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
+        const artists = await apiService.getArtistByName(currSearch)
+        setCurrArtists(artists)
+        setArtists(artists)
       } catch (error) {
         console.error('Failed to fetch search results:', error)
       }
@@ -465,6 +476,14 @@ export function SearchIndex() {
             ))}{' '}
           </div>
         </section>
+        <div className='suggested-artist-stations'>
+          <b>Featuring</b>
+          <SuggestedStations stations={stations} />
+        </div>
+        <div className='artists-container'>
+          <b>Artists</b>
+          <SuggestedArtists artists={artists} />
+        </div>
       </div>
       <EditOptions
         options={options}

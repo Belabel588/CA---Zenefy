@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
+import { apiService } from '../services/youtube-spotify.service.js'
 import {
   setCurrStation,
   setCurrItem,
@@ -24,9 +25,14 @@ import { IoListSharp } from 'react-icons/io5'
 import { BiPlay, BiPause } from 'react-icons/bi'
 import { FaPlus } from 'react-icons/fa6'
 import { CiCircleMinus } from 'react-icons/ci'
+import {
+  setCurrArtist,
+  setCurrArtists,
+} from '../store/actions/artist.actions.js'
 
 export function ItemDetails() {
   const { itemId } = useParams()
+  const navigate = useNavigate()
   const [item, setItem] = useState({
     cover: '',
     name: '',
@@ -52,6 +58,11 @@ export function ItemDetails() {
     (stateSelector) => stateSelector.userModule.loggedinUser
   )
 
+  const currArtists = useSelector(
+    (stateSelector) => stateSelector.artistModule.currArtists
+  )
+  const [artist, setArtist] = useState()
+
   useEffect(() => {
     async function fetchItem() {
       try {
@@ -59,11 +70,18 @@ export function ItemDetails() {
         setLikedStation()
         const itemToSet = await stationService.getItem(itemId)
         const station = await stationService.getItemsStation(item.id)
+
         setItemsStation(station)
         setItem(itemToSet)
-        // console.log(station)
 
+        const artists = await apiService.getArtistByName(itemToSet.artist)
+        setCurrArtists(artists)
+        const regex = new RegExp(itemToSet.artist, 'i')
+        const artistToSet = artists.find((artist) => regex.test(artist.name))
+        setArtist(artistToSet)
+        setCurrArtist(artistToSet)
         const color = await setCurrColor(itemToSet.cover)
+
         headerRef.current.style.backgroundColor = color
         gradientRef.current.style.backgroundColor = color
       } catch (err) {
@@ -74,7 +92,7 @@ export function ItemDetails() {
     }
 
     fetchItem()
-  }, [itemId, currColor])
+  }, [itemId])
 
   async function onCreateNewStation() {
     const emptyStation = stationService.getEmptyStation()
@@ -298,7 +316,14 @@ export function ItemDetails() {
                 <AddedIcon className={'option-button added-button'} />
               )) || <PlusIcon className='option-button plus-button' />}
             </div>
-            <BsThreeDots className='option-button more-button' />
+            <BsThreeDots
+              className='option-button more-button'
+              onClick={() => {
+                setItemToEdit(item)
+                optionsState.current = 'song'
+                openSongOptions(event, item)
+              }}
+            />
           </div>
         </div>
         <div className='item-info-container'>
@@ -306,7 +331,14 @@ export function ItemDetails() {
             <b>Lyrics</b>
             <p>{item.lyrics || `Lyrics not available`}</p>
           </div>
-          <div className='artist-container'>
+          <div
+            className='artist-container'
+            onClick={() => {
+              if (!artist) return
+              navigate(`/artist/${artist.id}`)
+            }}
+            style={(!artist && { cursor: 'default' }) || {}}
+          >
             <img src={item.cover} alt={item.artist} />
             <div className='title-container'>
               <b>Artist</b>

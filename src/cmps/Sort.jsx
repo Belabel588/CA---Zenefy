@@ -55,7 +55,7 @@ export function Sort({ filtered, setFiltered, isNav }) {
           <input
             type='checkbox'
             id={isNav ? `${label.name} nav` : `${label.name} hom`}
-            onClick={onSetCheckedLabel}
+            onChange={onSetCheckedLabel}
             checked={checkedLabel === label.name}
           />
           <label
