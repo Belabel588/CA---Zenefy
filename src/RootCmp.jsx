@@ -15,13 +15,17 @@ import { LoginSignup } from '../src/pages/LoginSignup.jsx'
 import { SideBar } from './cmps/SideBar.jsx'
 import { StationEditModal } from './cmps/StationEditModal.jsx'
 import { OptionsModal } from './cmps/OptionsModal.jsx'
+import { ArtistDetails } from './pages/ArtistDetails.jsx'
 
 import { UserMsg } from './cmps/UserMsg.jsx'
 import { LoadingAnimation } from './cmps/LoadingAnimation.jsx'
+import { AppHeaderMobile } from './cmps/AppHeaderMobile.jsx'
+import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
 
 export function RootCmp() {
   return (
     <section className='app main-layout'>
+      {/* <AppHeaderMobile /> */}
       <AppHeader />
       <SideBar />
       <UserMsg />
@@ -40,11 +44,13 @@ export function RootCmp() {
             <Route path='/item/:itemId' element={<ItemDetails />} />
             <Route path='/user/:userId' element={<UserDetails />} />
             {/* <Route path='/login' element={<LoginSignup />} /> */}
+            <Route path='/artist/:artistId' element={<ArtistDetails />} />
           </Routes>
           {/* <StationEditModal /> */}
         </main>
       </div>
 
+      <AppFooterMobile />
       <AppFooter className='app-footer' />
     </section>
   )

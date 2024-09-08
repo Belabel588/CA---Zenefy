@@ -4,6 +4,8 @@ import { utilService } from './util.service.js'
 
 export const apiService = {
   getVideos,
+  getArtistByName,
+  searchStations,
 }
 
 const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
@@ -96,12 +98,10 @@ async function createList(search, videosWithDuration) {
 // Spotify
 
 function createVideo(video) {
-  console.log(video)
   const youtubeVideo = {
     url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
     title: video.snippet.title,
   }
-  console.log(youtubeVideo)
 
   return youtubeVideo
 }
@@ -312,4 +312,73 @@ async function searchTracks(query, token) {
   } catch (error) {
     console.error('Error searching for tracks:', error)
   }
+}
+
+async function getArtistByName(artistName) {
+  const accessToken = await getAccessToken() // Replace with your Spotify API access token
+  const response = await fetch(
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+      artistName
+    )}&type=artist`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
+
+  const data = await response.json()
+  return data.artists.items // Returns the array of artists
+}
+
+async function searchStations(search) {
+  const listDB = `${search}List`
+
+  const listRes = await storageService.query(listDB)
+
+  if (listRes[0] && listRes[0].length > 0) {
+    return listRes[0]
+  }
+
+  const accessToken = await getAccessToken() // Replace with your Spotify API access token
+  const response = await fetch(
+    `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+      search
+    )}&type=playlist`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
+
+  const data = await response.json()
+
+  const url = data.playlists.items[0].tracks.href
+
+  const items = await searchItems(url)
+
+  let counter = 5
+
+  const list = []
+
+  for (var i = 0; i < counter; i++) {
+    const videos = await getVideos(items[i].track.name)
+    list[i] = videos[0]
+  }
+  save(listDB, list)
+
+  return list
+}
+
+async function searchItems(url) {
+  const accessToken = await getAccessToken() // Replace with your Spotify API access token
+  const response = await fetch(`${url}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  const data = await response.json()
+
+  return data.items
 }

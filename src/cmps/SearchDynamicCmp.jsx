@@ -21,63 +21,39 @@ export function SearchDynamicCmp() {
   const stations = useSelector((storeState) => storeState.stationModule.stations)
 
   useEffect(() => {
-    setIsLoading(true)
-    const randomArtists = stationService.getRandomArtists(3)
-    setArtists(randomArtists)
-    
-    const fetchSearchResults = async () => {
+    async function getData() {
       try {
-        const promises = randomArtists.map(artist => apiService.getVideos(artist, category))
-        const results = await Promise.all(promises)
-        setSearchResults(results)
-      } catch (error) {
-        console.error('Failed to fetch search results:', error)
+        const data = await stationService.getStationData(params.stationId)
+        setStationDataObj(data)
+
+        if (data.stationsWithSameType && data.stationsWithSameType.length > 0) {
+          const stationType = data.stationsWithSameType[0].stationType
+          dispatch({
+            type: SET_FILTER_BY,
+            filterBy: { ...filterBy, stationType },
+          })
+        }
+
+        // console.log('Fetched data:', data)
+      } catch (err) {
+        console.error('Failed to fetch data', err)
+        setError('Failed to fetch data')
       }
     }
-    fetchSearchResults()
-  }, [category])
-  
 
+    getData()
+  }, [params.stationId, dispatch])
 
   useEffect(() => {
-    const processSearchResults = async () => {
-      if (searchResults.length > 0) {
-        let savedResults = []
-        for (let idx = 0; idx < artists.length; idx++) {
-          const artist = artists[idx]
-          const artistResults = searchResults[idx]
-          const savedStation = await handleSearchResults(artistResults, artist)
-          savedResults.push(savedStation)
-        }
-        setRefactoredResults(savedResults)
-        setIsLoading(false)
-      }
+    if (filterBy) {
+      // console.log('FILTERBY INSIDE OF DYNM CMP BEFORE LOAD STATIONS', filterBy)
+      loadStations()
     }
-  
-    processSearchResults()
-  }, [searchResults])
-  
-  async function handleSearchResults(artistResults, artist) {
-    try {
-      const refactored = await stationService.createStationFromSearch(artistResults, artist)
-      console.log('refactored', refactored)
-  
-      const savedStation = await stationService.save(refactored)
-      console.log('savedStation', savedStation)
-  
-      return savedStation
-    } catch (error) {
-      console.error('Error refactoring search results:', error)
-      return null
-    }
-  }
-  
+  }, [filterBy, dispatch])
 
-  const backgroundColor = location.state?.backgroundColor || '#ffffff'
+  if (error) return <h1>{error}</h1>
 
-  console.log('refactoredResults', refactoredResults)
-
-
+  // console.log('STATIONS TO RENDER ARE::', stations)
 
   return (
     <div className='main-search-container'>

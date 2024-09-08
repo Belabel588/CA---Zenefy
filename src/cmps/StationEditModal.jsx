@@ -44,13 +44,9 @@ export function StationEditModal({
   function handleChange({ target }) {
     const field = target.name
     let value = target.value
-  
-  
 
     switch (target.name) {
       case 'cover':
-        
-
         break
       default:
         break
@@ -62,7 +58,7 @@ export function StationEditModal({
   async function uploadFile(ev) {
     try {
       const res = await uploadService.uploadImg(ev)
-      
+
       const coverSrc = res.url
       setCoverSrc(coverSrc)
     } catch (err) {

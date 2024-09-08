@@ -20,6 +20,7 @@ import { updateUser } from '../store/actions/user.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
+import { utilService } from '../services/util.service.js'
 
 import { EditOptions } from '../cmps/EditOptions.jsx'
 import { PlayingAnimation } from '../cmps/PlayingAnimation.jsx'
@@ -30,6 +31,13 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import { FaPlus } from 'react-icons/fa'
 
 import { SET_IS_LOADING } from '../store/reducers/user.reducer.js'
+import { SuggestedStations } from '../cmps/SuggestedStations.jsx'
+import { SuggestedArtists } from '../cmps/SuggestedArtists.jsx'
+
+import {
+  setCurrArtist,
+  setCurrArtists,
+} from '../store/actions/artist.actions.js'
 
 export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
@@ -83,8 +91,7 @@ export function SearchIndex() {
   const navigate = useNavigate()
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
-  
-
+  const [randomStations, setRandomStations] = useState([])
 
   const tagColors = [
     '#006450',
@@ -118,26 +125,16 @@ export function SearchIndex() {
     return tagColors[index % tagColors.length]
   }
 
-  const tagElements = categoriesWithImages.map((category, idx) => {
-    const backgroundColor = generateColor(idx);
+  const tagElements = categoriesWithImages.map((category, idx) => (
+    <Link to='#' key={idx}>
+      <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
+        <img src={category.image} />
+        {category.category}
+      </li>
+    </Link>
+  ))
 
-    return (
-      <Link
-        to={{
-          pathname: `/genere/${category.category}`,
-        }}
-        state={{ backgroundColor: backgroundColor }} // Use `state` here
-        key={idx}
-      >
-        <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
-          <img src={category.image} />
-          {category.category}
-        </li>
-      </Link>
-
-    );
-  });
-
+  const [artists, setArtists] = useState([])
 
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy: defaultFilterBy })
@@ -147,11 +144,17 @@ export function SearchIndex() {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        
+        // console.log(currSearch)
+        setIsLoading(true)
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
+        const artists = await apiService.getArtistByName(currSearch)
+        setCurrArtists(artists)
+        setArtists(artists)
       } catch (error) {
         console.error('Failed to fetch search results:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -159,15 +162,51 @@ export function SearchIndex() {
   }, [currSearch])
 
   useEffect(() => {
-    if (searchResults.length > 0) {
-      handleSearchResults(searchResults)
+    const fetchStations = async () => {
+      if (searchResults.length > 0) {
+        handleSearchResults(searchResults)
+      }
+
+      try {
+        const stations = await stationService.query({ stationType: 'music' })
+        const filtered = stations.filter(
+          (station) => !station.isLiked || station.isLiked === undefined
+        )
+
+        const numStationsToReturn = 6
+        const idxsToExclude = []
+
+        const stationsToReturn = filtered.reduce((accu, station, index) => {
+          if (accu.length >= numStationsToReturn) return accu
+
+          let randomIdx
+          do {
+            randomIdx = utilService.getRandomIntInclusive(
+              0,
+              filtered.length - 1
+            )
+          } while (idxsToExclude.includes(randomIdx))
+
+          idxsToExclude.push(randomIdx)
+          accu.push(filtered[randomIdx])
+
+          return accu
+        }, [])
+
+        setRandomStations(stationsToReturn)
+      } catch (error) {
+        console.error('Error fetching stations:', error)
+      }
     }
+
+    fetchStations()
   }, [searchResults])
 
   useEffect(() => {
     const userStationsToSet = stations.filter((station) =>
       user.likedStationsIds.includes(station._id)
     )
+
     setUserStations(userStationsToSet)
     const likedStation = userStationsToSet.find((station) => station.isLiked)
     setLikedStation(likedStation)
@@ -181,8 +220,7 @@ export function SearchIndex() {
       )
       setRefactoredResults(refactored)
       const savedStation = await stationService.save(refactored)
-      
-      
+
       setSearchedStation(savedStation)
       dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
@@ -200,19 +238,20 @@ export function SearchIndex() {
   async function setLikedStation(likedStation) {
     const likedItems = likedStation?.items
     const itemsId = likedItems.map((item) => item.id)
+    // console.log(itemsId)
     setLikedItems(itemsId)
   }
 
   async function likeSong(itemToEdit) {
     if (itemToEdit.url === '') return
     if (!user) return
-    
+    // console.log(itemToEdit)
     try {
       setIsLoading(true)
       const likedStation = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
-      
+      // console.log(likedStation)
       if (likedStation.items.find((item) => item.id === itemToEdit.id)) return
 
       likedStation.items.push(itemToEdit)
@@ -263,7 +302,7 @@ export function SearchIndex() {
     {
       text: 'Add to playlist',
       icon: <FaPlus />,
-      onClick: () => { },
+      onClick: () => {},
     },
   ]
 
@@ -310,11 +349,7 @@ export function SearchIndex() {
     setIsPlaying(true)
   }
 
-  
-
-  console.log(stations);
-
-  return currSearch == '' ? (
+  return currSearch === '' ? (
     <section className='search-section'>
       <h1>Browse all</h1>
       <ul className='search-list'>
@@ -324,7 +359,7 @@ export function SearchIndex() {
   ) : loading ? (
     <LoadingAnimation />
   ) : (
-    <>
+    <div className='search-page-container'>
       <div className='search-results'>
         <section className='info'>
           <h1>Top result</h1>
@@ -343,7 +378,7 @@ export function SearchIndex() {
                     isHover.current = false
                   }}
                   onClick={() => setIsPlaying(false)}
-                // style={{ position: 'absolute', bottom: '5px', opacity: '1' }}
+                  // style={{ position: 'absolute', bottom: '5px', opacity: '1' }}
                 />
                 <div className='animation-container'>
                   <PlayingAnimation />
@@ -388,7 +423,6 @@ export function SearchIndex() {
                     <div
                       className='pause-button-container'
                       onMouseEnter={() => {
-                        
                         isHover.current = true
                       }}
                       onMouseLeave={() => {
@@ -401,29 +435,29 @@ export function SearchIndex() {
                       />
                     </div>
                   )) || (
-                      <div
-                        className='play-button-container'
-                        onMouseEnter={() => {
-                          isHover.current = true
-                        }}
-                        onMouseLeave={() => {
-                          isHover.current = false
-                        }}
-                      >
-                        <BiPlay
-                          className='play-button'
-                          onClick={() => {
-                            if (currItem.id === item.id) {
-                              setIsPlaying(true)
-                              return
-                            }
-                            onSelectStation(searchedStation._id)
+                    <div
+                      className='play-button-container'
+                      onMouseEnter={() => {
+                        isHover.current = true
+                      }}
+                      onMouseLeave={() => {
+                        isHover.current = false
+                      }}
+                    >
+                      <BiPlay
+                        className='play-button'
+                        onClick={() => {
+                          if (currItem.id === item.id) {
+                            setIsPlaying(true)
+                            return
+                          }
+                          onSelectStation(searchedStation._id)
 
-                            onPlaySearchedSong(item.id)
-                          }}
-                        />
-                      </div>
-                    )}
+                          onPlaySearchedSong(item.id)
+                        }}
+                      />
+                    </div>
+                  )}
                   <img src={item.cover} alt='' />
                 </div>
                 <div className='song-details'>
@@ -458,6 +492,14 @@ export function SearchIndex() {
             ))}{' '}
           </div>
         </section>
+        <div className='suggested-artist-stations'>
+          <b>Featuring</b>
+          <SuggestedStations stations={randomStations} />
+        </div>
+        <div className='artists-container'>
+          <b>Artists</b>
+          <SuggestedArtists artists={artists} />
+        </div>
       </div>
       <EditOptions
         options={options}
@@ -471,9 +513,9 @@ export function SearchIndex() {
         addToPlaylist={addToPlaylist}
         setAddToPlaylist={setAddToPlaylist}
         setIsVisible={setIsVisible}
-      // setCreate={setCreate}
+        // setCreate={setCreate}
       />
-    </>
+    </div>
   )
 }
 

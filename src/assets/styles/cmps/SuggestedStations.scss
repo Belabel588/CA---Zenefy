@@ -7,60 +7,57 @@
 .suggested-stations-container {
     margin-bottom: 2.5em;
     display: flex;
-    width: 100%;
-    overflow-x: auto;
-    background: linear-gradient(0deg, #191414 20%, 80%, #4a0e8b00 100%);
-    gap: 0.5rem;
-
-    .station-container:nth-child(1) {
-        margin-inline-start: 3rem;
-    }
-
-    .station-container {
+    flex-wrap: wrap;
+    gap: 1em;
+    max-width: 100%;
+    height: 265px;
+    overflow: hidden;
+    
+    .station-container{
         cursor: pointer;
         padding: 0.5em;
+        border-radius: 8px;
         transition: 0.2s;
-        width: fit-content;
-        margin-top: 7rem;
+        width: 11vw;
 
+        height: 265px;
 
-        &:hover {
-
-            background-color: rgba(255, 255, 255, 0.141);
-
-            .playlist-cover-overlay {
+   
+   &:hover{
+       
+       background-color: rgba(255, 255, 255, 0.141);  
+       .playlist-cover-overlay{
 
                 background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
             }
 
             .cover-container {
 
-                .title {
-                    opacity: 1;
-                }
-            }
-        }
-
-        .cover-container {
-            position: relative;
-            display: flex;
+           .title{
+            opacity: 1;
+           }
+       }
+    }
+    .cover-container{
+        position: relative;
+        display: flex;
+        border-radius: 8px;
+        width: 10vw;
+        height: calc(10vw);
+        img{
+            width: 10vw;
+            height: calc(10vw);
             border-radius: 8px;
-            width: 11vw;
-
-            img {
-                width: 11vw;
-                border-radius: 8px;
-            }
-
-            .playlist-cover-overlay {
-                border-radius: 8px;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-
-            }
+        }
+        .playlist-cover-overlay {
+            border-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+         
+          }
 
             .title {
                 position: absolute;
@@ -255,16 +252,19 @@
             }
 
 
-        }
+    } 
+    // width:  12vw;
+    height: 265px;
+    overflow: hidden;  
+    
+    .artists{
+        text-wrap: wrap;
+        font-size: 0.7em;
+        color: $grey-light;
+        
 
-        .artists {
-            font-size: 0.7em;
-            color: $grey-light;
-            width: 12vw;
 
-            overflow-x: hidden;
-            //  text-wrap: nowrap;
-        }
     }
+}
 
 }

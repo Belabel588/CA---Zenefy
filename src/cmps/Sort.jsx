@@ -4,7 +4,7 @@ import { utilService } from '../services/util.service.js'
 import { StationList } from './StationList.jsx' // Import the StationList component
 import { loadStations } from '../store/actions/station.actions.js'
 
-export function Sort({ filtered, setFiltered }) {
+export function Sort({ filtered, setFiltered, isNav }) {
   const [checkedLabel, setCheckedLabel] = useState('all')
   const [filteredStations, setFilteredStations] = useState([]) // State for the filtered list of stations
 
@@ -23,11 +23,11 @@ export function Sort({ filtered, setFiltered }) {
     // Filter stations based on the selected label
 
     const filteredStations = filterStations(checkedLabel)
-
+    console.log(filteredStations)
     // Set the filtered stations list in the local state
-    setFilteredStations(filteredStations)
+    // setFilteredStations(filteredStations)
     setFiltered(filteredStations)
-    
+    // console.log(filtered)
   }, [checkedLabel])
 
   function filterStations(label) {
@@ -42,7 +42,8 @@ export function Sort({ filtered, setFiltered }) {
   }
 
   function onSetCheckedLabel({ target }) {
-    setCheckedLabel(target.id)
+    console.log(target.id.slice(0, target.id.length - 4))
+    setCheckedLabel(target.id.slice(0, target.id.length - 4))
   }
 
   const labels = [{ name: 'all' }, { name: 'music' }, { name: 'podcast' }]
@@ -50,14 +51,17 @@ export function Sort({ filtered, setFiltered }) {
   return (
     <div className='filter-container'>
       {labels.map((label) => (
-        <div className='label-container' key={label.name}>
+        <div className='label-container' key={utilService.makeId()}>
           <input
             type='checkbox'
-            id={label.name}
+            id={isNav ? `${label.name} nav` : `${label.name} hom`}
             onChange={onSetCheckedLabel}
             checked={checkedLabel === label.name}
           />
-          <label className='sort-label' htmlFor={label.name}>
+          <label
+            className='sort-label'
+            htmlFor={isNav ? `${label.name} nav` : `${label.name} hom`}
+          >
             {utilService.capitalizeFirstLetter(label.name)}
           </label>
         </div>

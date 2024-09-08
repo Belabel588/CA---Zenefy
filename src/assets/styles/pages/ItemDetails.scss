@@ -4,7 +4,8 @@
     // background-color: #2e1a47; 
     // background: linear-gradient(180deg, #7300ff, #191414);
 
-    
+    height: calc(100vh - 170px);
+
 }
 
 .item-header{
@@ -85,8 +86,9 @@
   .user-interface-container{
     // background: linear-gradient(180deg,  #7300ff08 ,#191414);
     padding-top: 0.5em;
-    height: calc(100vh - 410px);
-    overflow: auto;
+    // height: calc(100vh - 475px);
+    // overflow: auto;
+    // height: calc(100% - 18vw);
 
   }
 
@@ -129,6 +131,9 @@
           
         }
         .like-button-container{
+          display: flex;
+          align-items: center;
+          justify-items: center;
            .svg-icon{
             width: 20px;
           cursor: pointer;
@@ -205,6 +210,7 @@
         border-radius: 5px;
         padding: 0.5em;
         width: 80%;
+        cursor: pointer;
         .title-container{
             display: flex;
             flex-direction: column;

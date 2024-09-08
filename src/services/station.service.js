@@ -22,7 +22,8 @@ export const stationService = {
   createStationFromSearch,
   likeSong,
   getCategoriesWithImages,
-  getRandomArtists,
+  getDefaultCurrItem,
+  getDefaultCurrStation,
 }
 window.cs = stationService
 
@@ -170,7 +171,7 @@ async function getItemsStation(itemId) {
 
   let stationToReturn
   stations.map((station) => {
-    // if (stationToReturn) return
+    // if (stationToReturn) return stationToReturn
     station.items.map((item) => {
       if (item.id === itemId) {
         stationToReturn = station
@@ -207,7 +208,7 @@ async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
   const user = userService.getLoggedinUser()
   // if()
-  
+
   const station = {
     keyWord,
     isSearched: true,
@@ -537,19 +538,6 @@ function _createStations() {
       title: 'Rock Classics',
       items: [
         {
-          artist: 'Queen',
-          id: 'zoaP5d',
-          name: 'Bohemian Rhapsody',
-          album: 'A Night at the Opera',
-          url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
-          cover:
-            'https://i1.sndcdn.com/artworks-000116795481-6fmihq-t500x500.jpg',
-          addedBy: 'user7',
-          likedBy: [],
-          addedAt: 1724685172590,
-          duration: '05:59',
-        },
-        {
           artist: 'Led Zeppelin',
           id: 'HJuxQX',
           name: 'Stairway to Heaven',
@@ -561,6 +549,19 @@ function _createStations() {
           likedBy: [],
           addedAt: 1724685172590,
           duration: '08:02',
+        },
+        {
+          artist: 'Queen',
+          id: 'zoaP5d',
+          name: 'Bohemian Rhapsody',
+          album: 'A Night at the Opera',
+          url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
+          cover:
+            'https://i1.sndcdn.com/artworks-000116795481-6fmihq-t500x500.jpg',
+          addedBy: 'user7',
+          likedBy: [],
+          addedAt: 1724685172590,
+          duration: '05:59',
         },
         {
           artist: 'The Beatles',
@@ -1205,39 +1206,77 @@ function getCategoriesWithImages() {
   }))
 }
 
+export default getCategoriesWithImages
 
-function getRandomArtists(num) {
-  const artists = [
-    'Beyonce',
-    'Drake',
-    'Adele',
-    'Ed Sheeran',
-    'Taylor Swift',
-    'The Weeknd',
-    'NCS',
-    'Rihanna',
-    'Billie Eilish',
-    'Ariana Grande',
-    'Bruno Mars',
-    'Post Malone',
-    'Justin Bieber',
-    'Kendrick Lamar',
-    'Lady Gaga',
-  ];
-
-  if (num > artists.length) {
-    return 'The number exceeds the total number of available artists.';
+function getDefaultCurrItem() {
+  return {
+    artist: 'Led Zeppelin',
+    id: 'HJuxQX',
+    name: 'Stairway to Heaven',
+    album: 'Led Zeppelin IV',
+    url: 'https://www.youtube.com/watch?v=QkF3oxziUI4',
+    cover: 'https://i1.sndcdn.com/artworks-000123427250-vyogac-t500x500.jpg',
+    addedBy: 'user8',
+    likedBy: [],
+    addedAt: 1724685172590,
+    duration: '08:02',
   }
-
-  const randomArtists = [];
-  const availableArtists = [...artists]; // Create a copy of the array to avoid repetition
-
-  for (let i = 0; i < num; i++) {
-    const randomIndex = Math.floor(Math.random() * availableArtists.length);
-    randomArtists.push(availableArtists[randomIndex]);
-    availableArtists.splice(randomIndex, 1); // Remove the selected artist to avoid duplicates
-  }
-
-  return randomArtists;
 }
 
+function getDefaultCurrStation() {
+  return {
+    _id: 'eea466d1b245718f75a18403',
+    stationType: 'music',
+    title: 'Rock Classics',
+    items: [
+      {
+        artist: 'Queen',
+        id: 'zoaP5d',
+        name: 'Bohemian Rhapsody',
+        album: 'A Night at the Opera',
+        url: 'https://www.youtube.com/watch?v=fJ9rUzIMcZQ',
+        cover:
+          'https://i1.sndcdn.com/artworks-000116795481-6fmihq-t500x500.jpg',
+        addedBy: 'user7',
+        likedBy: [],
+        addedAt: 1724685172590,
+        duration: '05:59',
+      },
+      {
+        artist: 'Led Zeppelin',
+        id: 'HJuxQX',
+        name: 'Stairway to Heaven',
+        album: 'Led Zeppelin IV',
+        url: 'https://www.youtube.com/watch?v=QkF3oxziUI4',
+        cover:
+          'https://i1.sndcdn.com/artworks-000123427250-vyogac-t500x500.jpg',
+        addedBy: 'user8',
+        likedBy: [],
+        addedAt: 1724685172590,
+        duration: '08:02',
+      },
+      {
+        artist: 'The Beatles',
+        id: 'aew9tr',
+        name: 'Hey Jude',
+        album: 'The Beatles Again',
+        url: 'https://www.youtube.com/watch?v=A_MjCqQoLLA',
+        cover:
+          'https://upload.wikimedia.org/wikipedia/en/0/0a/Heyjudealbum.jpg',
+        addedBy: 'user9',
+        likedBy: [],
+        addedAt: 1724685172590,
+        duration: '08:09',
+      },
+    ],
+    cover: 'https://i.scdn.co/image/ab67616d0000b273447f8b3ad12080b3fbe51f91',
+    tags: ['rock', 'classics', 'legendary'],
+    createdBy: {
+      _id: 'creator3',
+      fullname: 'Charlie Davis',
+      imgUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
+    },
+    likedByUsers: [],
+    addedAt: 1724685172590,
+  }
+}

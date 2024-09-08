@@ -30,8 +30,6 @@ import { BiSkipPrevious } from 'react-icons/bi'
 import { BiRepeat } from 'react-icons/bi'
 import { TiArrowShuffle } from 'react-icons/ti'
 
-import sample from '../../public/Pokémon Theme.mp3'
-
 export function AppFooter() {
   const [currentTime, setCurrentTime] = useState(0)
 
@@ -102,6 +100,10 @@ export function AppFooter() {
   }, [currStation, currIdx])
 
   useEffect(() => {
+    setLikedStation()
+  }, [stations])
+
+  useEffect(() => {
     playerRef.current.seekTo(0)
   }, [currItem])
 
@@ -118,6 +120,7 @@ export function AppFooter() {
 
   async function setLikedStation(savedStation) {
     let like
+
     if (!savedStation) {
       like = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
@@ -125,10 +128,12 @@ export function AppFooter() {
     } else {
       like = savedStation
     }
+
     likedStationToSet(like)
 
-    const items = like.items
-    const itemsId = items.map((item) => {
+    const likedItems = like.items
+
+    const itemsId = likedItems.map((item) => {
       return item.id
     })
 
@@ -281,7 +286,9 @@ export function AppFooter() {
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   async function onRemoveItem(stationId) {
@@ -295,7 +302,7 @@ export function AppFooter() {
       )
       station.items.splice(idxToRemove, 1)
       const savedStation = await saveStation(station)
-      // await loadStations()
+      await loadStations()
       setLikedStation(savedStation)
       showSuccessMsg('Song removed')
     } catch (err) {
@@ -326,6 +333,30 @@ export function AppFooter() {
         >
           {(likedItems.includes(currItem.id) && <AddedIcon />) || <PlusIcon />}
         </button>
+        <div
+          className='mobile-play-button'
+          onClick={() => {
+            if (isPlaying) {
+              setIsPlaying(false)
+              return
+            }
+            if (currentTime === duration) setCurrentTime(0)
+            setIsPlaying(true)
+            const durationToSet = playerRef.current.getDuration()
+
+            setDuration(durationToSet)
+          }}
+        >
+          {(isPlaying && (
+            // <button>
+            <BiPause />
+            // </button>
+          )) || (
+            // <button>
+            <BiPlay />
+            // </button>
+          )}
+        </div>
       </div>
 
       <div className='control-container'>

@@ -43,6 +43,11 @@
         
 
       }
+      &:hover{
+        .plus{
+          fill: $white;
+        }
+  }
     }
 
     &.add-to-playlist{
@@ -62,7 +67,7 @@
     border-radius: 10px;
     position: absolute;
     // display: none;
-    z-index: 3;
+    z-index: 50;
 
     &:hover{
       display: block;
@@ -90,7 +95,14 @@
 
   }
 
+  
+  .plus{
+    fill: $grey-light;
+    width: 20px;
+  }
+
   .remove{
+    z-index: 50;
     .station-container{
       display: flex;
       justify-content: space-around;

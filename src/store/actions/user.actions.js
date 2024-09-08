@@ -4,7 +4,6 @@ import { store } from '../store.js'
 
 export function login(credentials) {
   return userService.login(credentials).then((loggedInUser) => {
-    console.log(loggedInUser)
     store.dispatch({ type: SET_LOGGED_USER, loggedinUser: loggedInUser })
     return loggedInUser // Ensure this returns the user
   })
@@ -18,7 +17,6 @@ export function signup(credentials) {
 }
 
 export function updateUser(user) {
-  console.log(user)
   return userService.updateUser(user).then((updatedUser) => {
     store.dispatch({ type: UPDATE_USER, updatedUser })
     return updatedUser // Ensure this returns the user

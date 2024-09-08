@@ -1,103 +1,144 @@
 import { httpService } from './http.service.js'
+import { utilService } from './util.service.js'
+import { stationService } from './station.service.js'
 
-const BASE_URL = 'auth/'
-const STORAGE_KEY_LOGGEDIN = 'loggedinUser'
+const STORAGE_KEY_LOGGEDIN_USER = 'loggedinUser'
 
 export const userService = {
-    login,
-    logout,
-    signup,
-    getById,
-    getLoggedinUser,
-    updateLikedSongs,
-    getEmptyCredentials
+  login,
+  logout,
+  signup,
+  getUsers,
+  getById,
+  remove,
+  update,
+  getLoggedinUser,
+  saveLoggedinUser,
+  query,
+  getEmptyCredentials,
+  updateUser,
+  guestLogin,
 }
 
-async function login({ username, password }) {
-    try {
-        const user = await httpService.post(`${BASE_URL}login`, { username, password })
-        if (user) return _setLoggedinUser(user)
-        else throw new Error('Invalid login')
-    } catch (err) {
-        return Promise.reject(err.message)
-    }
-}
-
-async function signup({ username, password, fullname }) {
-    const user = { 
-        username, 
-        password, 
-        fullname, 
-        likedStations: [], // Represents stations the user has liked
-        likedSongIds: [],  // Represents songs the user has liked
-        isAdmin: false
-    }
-    try {
-        const newUser = await httpService.post(`${BASE_URL}signup`, user)
-        if (newUser) return _setLoggedinUser(newUser)
-        else throw new Error('Invalid signup')
-    } catch (err) {
-        return Promise.reject(err.message)
-    }
-}
-
-async function logout() {
-    try {
-        await httpService.post(`${BASE_URL}logout`)
-        sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN)
-    } catch (err) {
-        return Promise.reject('Logout failed')
-    }
-}
-
-async function updateLikedSongs(songId, action) {
-    const loggedinUser = getLoggedinUser()
-    if (!loggedinUser) return Promise.reject('User not logged in')
-
-    let likedSongIds = loggedinUser.likedSongIds || []
-    if (action === 'add') {
-        likedSongIds.push(songId)
-    } else if (action === 'remove') {
-        likedSongIds = likedSongIds.filter(id => id !== songId)
-    }
-
-    try {
-        const updatedUser = await httpService.put(`user/${loggedinUser._id}`, { likedSongIds })
-        _setLoggedinUser(updatedUser)
-        return updatedUser
-    } catch (err) {
-        return Promise.reject('Failed to update liked songs')
-    }
+function getUsers() {
+  return httpService.get(`user`)
 }
 
 async function getById(userId) {
-    try {
-        const user = await httpService.get(`user/${userId}`)
-        return user
-    } catch (err) {
-        return Promise.reject('User not found')
-    }
+  const user = await httpService.get(`user/${userId}`)
+  return user
+}
+
+function remove(userId) {
+  return httpService.delete(`user/${userId}`)
+}
+
+async function update({ _id, score }) {
+  const user = await httpService.put(`user/${_id}`, { _id, score })
+
+  // When admin updates other user's details, do not update loggedinUser
+  const loggedinUser = getLoggedinUser() // Might not work because its defined in the main service???
+  if (loggedinUser._id === user._id) saveLoggedinUser(user)
+
+  return user
+}
+
+async function login(userCred) {
+  const user = await httpService.post('auth/login', userCred)
+  if (user) return saveLoggedinUser(user)
+}
+
+async function signup(userCred) {
+  if (!userCred.imgUrl)
+    userCred.imgUrl =
+      'https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png'
+
+  const likedUserId = utilService.generateObjectId()
+  const { username, password, fullname } = userCred
+  const user = {
+    username,
+    password,
+    fullname,
+    likedStationsIds: [likedUserId],
+    likedSongsIds: [],
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  }
+
+  const savedUser = await httpService.post('auth/signup', user)
+
+  const userLikedStation = {
+    _id: likedUserId,
+    isLiked: true,
+    stationType: 'music',
+    title: 'Liked Songs',
+    items: [],
+    cover: 'https://misc.scdn.co/liked-songs/liked-songs-640.png',
+    tags: [],
+    createdBy: {
+      _id: savedUser._id,
+      fullname,
+      imgUrl: '',
+    },
+    likedByUsers: [{ fullname, id: savedUser._id }],
+    addedAt: Date.now(),
+  }
+
+  await httpService.post('station', userLikedStation)
+
+  return saveLoggedinUser(savedUser)
+}
+
+async function logout() {
+  sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN_USER)
+  return await httpService.post('auth/logout')
 }
 
 function getLoggedinUser() {
-    return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN))
+  return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN_USER))
 }
 
-function _setLoggedinUser(user) {
-    const userToSave = { 
-        _id: user._id, 
-        fullname: user.fullname, 
-        likedStations: user.likedStations || [], 
-        likedSongIds: user.likedSongIds || [] 
-    }
-    sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
-    return userToSave
+function saveLoggedinUser(user) {
+  const userToSave = {
+    _id: user._id,
+    fullname: user.fullname,
+    likedStationsIds: user.likedStationsIds,
+    likedSongsIds: user.likedSongsIds,
+  }
+  sessionStorage.setItem(STORAGE_KEY_LOGGEDIN_USER, JSON.stringify(userToSave))
+  return userToSave
+}
+
+function query() {
+  return httpService.get(STORAGE_KEY)
 }
 
 function getEmptyCredentials() {
-    return {
-        username: '',
-        password: '',
-        fullname: ''
-    }
+  return {
+    fullname: '',
+    username: '',
+    password: '',
+  }
+}
+
+async function updateUser(updatedUser) {
+  const loggedinUser = getLoggedinUser()
+  if (!loggedinUser) return Promise.reject('User not logged in')
+
+  const savedUser = await httpService.put(
+    `user/${updatedUser._id}`,
+    updatedUser
+  )
+
+  return saveLoggedinUser(savedUser)
+}
+
+async function guestLogin() {
+  try {
+    // 35675e68f4b5af7b995d9205 = mongo guest id
+    const guest = await getById('35675e68f4b5af7b995d9205')
+    return guest
+  } catch (err) {
+    console.log(err)
+  }
 }

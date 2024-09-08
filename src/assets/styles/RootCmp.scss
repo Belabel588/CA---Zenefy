@@ -32,18 +32,40 @@ body{
     cursor: pointer;
     // border: 1px double #FFFFFF;
   }
+
+
 }
 
 
 .app {
   &.main-layout {
+    margin-inline-end: 0.5em;
+    margin-inline-start: 0.5em;
     display: grid;
+    gap: 0.5em;
     grid-template-columns: 1fr 3fr;
-    min-height:100vh;
+    grid-template-rows: 65px 1fr 95px;
+    height:100vh;
     
 
     header {
       grid-column: 1 / -1;
+    }
+
+    .side-bar{
+      grid-column: 1/2;
+      grid-row: 2/3;
+    }
+    
+    .main-content{
+      
+      grid-column: 2/3;
+      grid-row: 2/3;
+    }
+
+    .footer{
+      grid-column: 1/-1;
+      grid-row: 3/4;
     }
   }
 
@@ -56,7 +78,9 @@ body{
     background-color:$background-black;
     border-radius: 0.5rem;
     height:fit-content;
-    width:98%;
+    // width:98%;
     // margin: 1rem 0;
   }
 }
+
+

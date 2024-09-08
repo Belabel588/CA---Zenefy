@@ -112,7 +112,9 @@ export function StationDetails() {
     setCurrColorPage(currColor)
   }, [stationId])
 
-  useEffect(() => {}, [stations])
+  useEffect(() => {
+    loadStation(stationId)
+  }, [stations])
 
   async function loadStation(stationId) {
     const stationToSet = await stationService.getById(stationId)
@@ -223,6 +225,13 @@ export function StationDetails() {
           },
         },
         {
+          text: 'Add Playlist',
+          icon: <PlusIcon />,
+          onClick: () => {
+            onAddStation(station)
+          },
+        },
+        {
           text: 'Delete',
           icon: <CiCircleMinus />,
           onClick: () => {
@@ -313,7 +322,8 @@ export function StationDetails() {
     }
 
     try {
-      await saveStation(likedStation)
+      const saved = await saveStation(likedStation)
+
       const userToSave = { ...user, likedSongsIds }
       await updateUser(userToSave)
       setLikedStation()
@@ -322,9 +332,9 @@ export function StationDetails() {
     }
   }
 
-  function onSelectStation(stationId) {
-    setCurrStation(stationId)
-    setCurrItem(0, currStation)
+  async function onSelectStation(stationId) {
+    await setCurrStation(stationId)
+    await setCurrItem(0, currStation)
     setIsPlaying(true)
   }
 
@@ -338,6 +348,20 @@ export function StationDetails() {
   const [create, setCreate] = useState(false)
   const [removeFromPlaylist, setRemoveFromPlaylist] = useState(false)
 
+  async function onAddStation(station) {
+    const stationId = station._id
+    if (user.likedStationsIds.includes(stationId)) return
+
+    try {
+      user.likedStationsIds.unshift(stationId)
+      const userToSave = { ...user }
+      const savedUser = await updateUser(userToSave)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const artists = []
+
   if (!isLoading)
     return (
       <section className='station-details-container'>
@@ -348,6 +372,7 @@ export function StationDetails() {
           saveStation={sendToSaveStation}
         />
         <EditOptions
+          setLikedStation={setLikedStation}
           options={options}
           station={station}
           toggleModal={toggleModal}
@@ -367,6 +392,7 @@ export function StationDetails() {
           optionsState={optionsState}
           handleClickOutside={handleClickOutside}
           itemToEdit={itemToEdit}
+          setStation={setStation}
         />
 
         <header className='station-header' ref={headerRef}>
@@ -379,8 +405,18 @@ export function StationDetails() {
             </b>
             {(station.preview && (
               <p className='playlist-summery'>{station.preview}</p>
-            )) || <p className='playlist-summery'>Playlist summery here</p>}
-            <span className='playlist-artist'>Playlist artist here</span>
+            )) || <p className='playlist-summery'>Your loved songs</p>}
+            {!station.isLiked && (
+              <span className='playlist-artist'>
+                {' '}
+                {station.items
+                  .reduce(
+                    (accu, currItem) => `${accu} ${currItem.artist},`,
+                    artists
+                  )
+                  .slice(0, 150) + '...'}
+              </span>
+            )}
           </div>
         </header>
         <div className='user-interface-container'>
@@ -408,13 +444,15 @@ export function StationDetails() {
                 )}
               </div>
               {/* <RxPlusCircled className='option-button plus-button' /> */}
-              <BsThreeDots
-                className='option-button more-button'
-                onClick={(event) => {
-                  optionsState.current = 'station'
-                  handleRightClick(event)
-                }}
-              />
+              {!station.isLiked && (
+                <BsThreeDots
+                  className='option-button more-button'
+                  onClick={(event) => {
+                    optionsState.current = 'station'
+                    handleRightClick(event)
+                  }}
+                />
+              )}
             </div>
             <div className='list-container'>
               <span>List</span>
@@ -452,7 +490,15 @@ export function StationDetails() {
                       {currItem.id === item.id ? (
                         <PlayingAnimation />
                       ) : (
-                        <span className='item-idx'>{++counter}</span>
+                        <span
+                          className={
+                            counter === 0 || (counter + 1) % 10 === 0
+                              ? 'item-idx custom-font'
+                              : 'item-idx'
+                          }
+                        >
+                          {++counter}
+                        </span>
                       )}
                     </div>
                     <div className='play-pause-container'>
@@ -518,7 +564,14 @@ export function StationDetails() {
                       <AddedIcon className={'added'} />
                     )) || <PlusIcon className={'to-add'} />}
                   </button>
-                  <HiOutlineDotsHorizontal />
+                  <HiOutlineDotsHorizontal
+                    className='dots'
+                    onClick={() => {
+                      setItemToEdit(item)
+                      optionsState.current = 'song'
+                      openSongOptions(event, item)
+                    }}
+                  />
                 </div>
               )
             })}

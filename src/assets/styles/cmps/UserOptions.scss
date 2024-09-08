@@ -1,0 +1,29 @@
+.user-options-container {
+    position: absolute;
+    top: 65px;
+    right: 0;
+    background-color: $grey-dark;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 200px;
+    padding: 5px;
+    z-index: 100;
+    // display: none;
+    
+    &.active {
+        display: block;
+    }
+    
+    .option-container {
+        padding: 10px 15px;
+
+      color: $white;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+        font-family: 'GothamLight';
+        font-size: 0.8em;
+      &:hover {
+        background-color: $grey-medium;
+      }
+    }
+  }

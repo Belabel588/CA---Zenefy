@@ -24,6 +24,7 @@ import { apiService } from '../services/youtube-spotify.service.js'
 
 import { Sort } from '../cmps/Sort.jsx'
 import { SuggestedStations } from '../cmps/SuggestedStations.jsx'
+import { Footer } from '../cmps/Footer.jsx'
 
 import { GoContainer } from 'react-icons/go'
 import { FaCirclePlay } from 'react-icons/fa6'
@@ -134,13 +135,13 @@ export function HomePage() {
       return accu
     }, [])
 
-    
+    // console.log(stationsToReturn)
     setAllStations(stationsToReturn)
   }
 
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window
-    
+    // console.log(width)
     return {
       width,
       height,
@@ -150,12 +151,13 @@ export function HomePage() {
   return (
     <section className='section home-container' ref={pageRef}>
       <div className='gradient-container' ref={gradientRefOne}></div>
-      <Sort filtered={filtered} setFiltered={setFiltered} />
-      <StationList gradientRefOne={gradientRefOne} stations={filtered} />
+      <Sort setFiltered={setFiltered} />
+      <StationList gradientRefOne={gradientRefOne} filtered={filtered} />
       {<h2 className='made-for'>Made for {user && user.fullname}</h2>}
       <SuggestedStations stations={allStations} color={'#4a0e8b00'} />
       {user && <h2 className='made-for'>Jump back in</h2>}
       <SuggestedStations stations={stations} />
+      <Footer />
     </section>
   )
 }

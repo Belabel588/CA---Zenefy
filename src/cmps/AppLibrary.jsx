@@ -1,27 +1,34 @@
 import { FaPlus } from 'react-icons/fa6'
 import { useState, useEffect, useRef } from 'react'
-import { useSelector , useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service'
+import { utilService } from '../services/util.service.js'
 import { loadStations } from '../store/actions/station.actions'
 import {
   setIsPlaying,
   setCurrStation,
   setCurrItem,
   saveStation,
+  setFilter,
 } from '../store/actions/station.actions.js'
 
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
+import { Sort } from './Sort.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
+import { IoSearch } from 'react-icons/io5'
+import { IoCloseOutline } from 'react-icons/io5'
 
 export function AppLibrary() {
   const dispatch = useDispatch()
-  const [defaultFilter, setFilterBy] = useState(stationService.getDefaultFilter())
+  const [defaultFilter, setFilterBy] = useState(
+    stationService.getDefaultFilter()
+  )
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
@@ -35,16 +42,50 @@ export function AppLibrary() {
 
   const navigate = useNavigate()
 
-  // const [stationsToSet, setStationToSet] = useState([
-  //   stationService.getEmptyStation(),
-  // ])
+  const [filtered, setFiltered] = useState([])
+  const [filterByToSet, setFilterByToSet] = useState(
+    stationService.getDefaultFilter()
+  )
+
+  const currFilter = useSelector(
+    (stateSelector) => stateSelector.stationModule.filterBy
+  )
+
+  const inputRef = useRef()
+
+  useEffect(() => {
+    loadStations()
+  }, [currFilter])
 
   useEffect(() => {
     //   loadStations()
-    dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
-    
+    // dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
     //   setStationToSet(stations)
   }, [stations])
+
+  useEffect(() => {
+    console.log(filterByToSet)
+    setFilter(filterByToSet)
+  }, [filterByToSet])
+
+  const handleChange = utilService.debounce(({ target }) => {
+    const field = target.name
+
+    let value = target.value
+
+    setFilterByToSet({ ...filterByToSet, txt: value })
+    // Dispatch action to update the filter in the Redux store
+    // dispatch({
+    //   type: SET_FILTER_BY,
+    //   filterBy: {
+    //     ...filterBy,
+    //     [field]: value,
+    //   },
+    // })
+
+    // Reload the stations with the updated filter
+    // loadStations() stopped the filtering of the stations on the side.
+  }, 800) // Debounce with a 300ms delay
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -95,9 +136,36 @@ export function AppLibrary() {
           <FaPlus className='plus-icon' onClick={onCreateNewStation} />
         </button>
       </div>
+      <Sort setFiltered={setFiltered} isNav={true} />
+      <div className='playlist-input-container'>
+        <IoSearch
+          className='icon search'
+          onClick={() => {
+            inputRef.current.focus()
+          }}
+        />
 
+        <input
+          type='text'
+          name='txt'
+          id=''
+          ref={inputRef}
+          placeholder='Search in your library'
+          // value={filterByToSet.txt}
+          onChange={handleChange}
+        />
+        {filterByToSet.txt && (
+          <IoCloseOutline
+            className='icon clear'
+            onClick={() => {
+              inputRef.current.value = ''
+              setFilterByToSet({ ...filterByToSet, txt: '' })
+            }}
+          />
+        )}
+      </div>
       <div className='library-stations-container'>
-        {stations.map((station) => {
+        {filtered.map((station) => {
           return (
             <div
               className='station-container'
@@ -112,7 +180,6 @@ export function AppLibrary() {
                   <div
                     className='pause-button-container'
                     onMouseEnter={() => {
-                      
                       isHover.current = true
                     }}
                     onMouseLeave={() => {
@@ -165,7 +232,7 @@ export function AppLibrary() {
                   {(station.items.length && (
                     <span>
                       {station.items.length}{' '}
-                      {station.stationType !== 'music' ? 'podcasts' : 'songs'}
+                      {station.stationType === 'podcast' ? 'podcasts' : 'songs'}
                     </span>
                   )) || <span>0 songs</span>}
                 </div>

@@ -15,6 +15,7 @@ import {
   SET_LIKED_STATION,
   SET_CURR_SEARCH,
   SET_IS_ACTIVE,
+  SET_FILTER_BY,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -40,6 +41,7 @@ export async function loadStations() {
       }
 
       store.dispatch({ type: SET_STATIONS, stations: userStations })
+      // console.log(userStations)
     }
   } catch (err) {
     console.error('Error loading stations:', err)
@@ -136,7 +138,6 @@ export async function setCurrColor(
     img.src = cover
     color = await fac.getColorAsync(img)
     const hex = color.hex
-    console.log(hex)
 
     store.dispatch({ type: SET_CURR_COLOR, currColor: hex })
     return hex
@@ -154,4 +155,8 @@ export function setCurrSearch(term) {
 
 export function setIsActive(stateToSet) {
   store.dispatch({ type: SET_IS_ACTIVE, isActive: stateToSet })
+}
+
+export function setFilter(filterBy) {
+  store.dispatch({ type: SET_FILTER_BY, filterBy })
 }
