@@ -353,6 +353,7 @@ async function searchStations(search) {
   )
 
   const data = await response.json()
+
   const url = data.playlists.items[0].tracks.href
 
   const items = await searchItems(url)

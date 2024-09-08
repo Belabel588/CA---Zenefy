@@ -44,7 +44,7 @@ export function ArtistDetails({}) {
   const navigate = useNavigate()
   const { artistId } = params
   const artist = useSelector((storeState) => storeState.artistModule.currArtist)
-  console.log(artist)
+
   const [station, setStation] = useState({ items: [] })
 
   const isPlaying = useSelector(
@@ -88,6 +88,7 @@ export function ArtistDetails({}) {
   }
 
   async function onSelectStation(stationId) {
+    console.log(stationId)
     await setCurrStation(stationId)
     await setCurrItem(0, currStation)
     setIsPlaying(true)
@@ -165,8 +166,15 @@ export function ArtistDetails({}) {
           icon: <FaPlus />,
           onClick: () => {
             setIsVisible(false)
-
-            onCreateNewStation()
+            console.log(station)
+            // onCreateNewStation(station._id)
+          },
+        },
+        {
+          text: 'Add Playlist',
+          icon: <PlusIcon />,
+          onClick: () => {
+            onAddStation(station)
           },
         },
       ])
@@ -242,6 +250,20 @@ export function ArtistDetails({}) {
     setIsPlaying(true)
   }
 
+  async function onAddStation(station) {
+    const stationId = station._id
+
+    if (user.likedStationsIds.includes(stationId)) return
+
+    try {
+      user.likedStationsIds.unshift(stationId)
+      const userToSave = { ...user }
+      const savedUser = await updateUser(userToSave)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div className='artist-details-container'>
       <header className='artist-header'>
@@ -279,6 +301,7 @@ export function ArtistDetails({}) {
                     setIsPlaying(true)
                     return
                   }
+
                   onSelectStation(station._id)
                 }}
               />

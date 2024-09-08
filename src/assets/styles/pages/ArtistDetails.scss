@@ -25,12 +25,21 @@
         display: flex;
         align-items: end;
         min-height: 420px;
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
 
+          z-index: 1;
+        }
     }
     .artist-cover{
         position: absolute;
-        z-index: -1;
+        z-index: 0;
         min-height: 420px;
       min-width: 120px;
 
@@ -57,6 +66,7 @@
       flex-direction: column;
       font-family: 'GothamBlackBold';
       font-size: 2em;
+      z-index: 1;
       
    
 
@@ -375,5 +385,7 @@
                   //   display: none;
                   // }  
                 }
+
+                
 }
 

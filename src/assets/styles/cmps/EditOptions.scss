@@ -43,6 +43,11 @@
         
 
       }
+      &:hover{
+        .plus{
+          fill: $white;
+        }
+  }
     }
 
     &.add-to-playlist{
@@ -88,6 +93,12 @@
     }
 
 
+  }
+
+  
+  .plus{
+    fill: $grey-light;
+    width: 20px;
   }
 
   .remove{

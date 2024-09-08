@@ -225,6 +225,13 @@ export function StationDetails() {
           },
         },
         {
+          text: 'Add Playlist',
+          icon: <PlusIcon />,
+          onClick: () => {
+            onAddStation(station)
+          },
+        },
+        {
           text: 'Delete',
           icon: <CiCircleMinus />,
           onClick: () => {
@@ -340,6 +347,19 @@ export function StationDetails() {
   const [addToPlaylist, setAddToPlaylist] = useState(false)
   const [create, setCreate] = useState(false)
   const [removeFromPlaylist, setRemoveFromPlaylist] = useState(false)
+
+  async function onAddStation(station) {
+    const stationId = station._id
+    if (user.likedStationsIds.includes(stationId)) return
+
+    try {
+      user.likedStationsIds.unshift(stationId)
+      const userToSave = { ...user }
+      const savedUser = await updateUser(userToSave)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   if (!isLoading)
     return (

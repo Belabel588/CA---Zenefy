@@ -232,7 +232,7 @@ export function AppLibrary() {
                   {(station.items.length && (
                     <span>
                       {station.items.length}{' '}
-                      {station.stationType !== 'music' ? 'podcasts' : 'songs'}
+                      {station.stationType === 'podcast' ? 'podcasts' : 'songs'}
                     </span>
                   )) || <span>0 songs</span>}
                 </div>
