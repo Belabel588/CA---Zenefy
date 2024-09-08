@@ -83,7 +83,7 @@ export function SearchIndex() {
   const navigate = useNavigate()
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
-  // console.log('categoriesWithImages', categoriesWithImages)
+  
 
 
   const tagColors = [
@@ -147,7 +147,7 @@ export function SearchIndex() {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        console.log(currSearch)
+        
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
       } catch (error) {
@@ -181,6 +181,8 @@ export function SearchIndex() {
       )
       setRefactoredResults(refactored)
       const savedStation = await stationService.save(refactored)
+      
+      
       setSearchedStation(savedStation)
       dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
@@ -204,13 +206,13 @@ export function SearchIndex() {
   async function likeSong(itemToEdit) {
     if (itemToEdit.url === '') return
     if (!user) return
-    console.log(itemToEdit)
+    
     try {
       setIsLoading(true)
       const likedStation = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
-      console.log(likedStation)
+      
       if (likedStation.items.find((item) => item.id === itemToEdit.id)) return
 
       likedStation.items.push(itemToEdit)
@@ -308,7 +310,7 @@ export function SearchIndex() {
     setIsPlaying(true)
   }
 
-  console.log(currSearch);
+  
 
   console.log(stations);
 
@@ -386,7 +388,7 @@ export function SearchIndex() {
                     <div
                       className='pause-button-container'
                       onMouseEnter={() => {
-                        console.log(isHover.current)
+                        
                         isHover.current = true
                       }}
                       onMouseLeave={() => {

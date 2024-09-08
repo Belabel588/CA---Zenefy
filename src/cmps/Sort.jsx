@@ -27,7 +27,7 @@ export function Sort({ filtered, setFiltered }) {
     // Set the filtered stations list in the local state
     setFilteredStations(filteredStations)
     setFiltered(filteredStations)
-    console.log(filtered)
+    
   }, [checkedLabel])
 
   function filterStations(label) {

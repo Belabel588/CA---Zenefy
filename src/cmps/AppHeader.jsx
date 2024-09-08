@@ -78,7 +78,7 @@ export function AppHeader() {
   const handleSearch = debounce(({ target }) => {
     const field = target.name
     let value = target.value
-    console.log(value);
+    
     setCurrSearch(value)
     // Dispatch action to update the filter in the Redux store
     dispatch({
@@ -111,11 +111,11 @@ export function AppHeader() {
 
   function onSearchClick({ target }) {
     if (inputRef.current) {
-      console.log(target.value);
+      
 
       inputRef.current.focus() // Focus the input field
       setIsActive(true)
-      console.log(isActive)
+      
       setCurrSearch('')
     }
     navigate('/search')

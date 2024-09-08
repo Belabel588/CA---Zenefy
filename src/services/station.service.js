@@ -22,6 +22,7 @@ export const stationService = {
   createStationFromSearch,
   likeSong,
   getCategoriesWithImages,
+  getRandomArtists,
 }
 window.cs = stationService
 
@@ -74,6 +75,10 @@ async function remove(stationIdToRemove) {
 }
 
 async function save(station) {
+
+  
+  
+
   const loggedInUser = userService.getLoggedinUser()
 
   var stationToSave
@@ -100,23 +105,24 @@ async function save(station) {
     }
 
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
+    
   } else {
     // var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {
-      title:
-        station.title || `My playlist #${loggedInUser.likedStationsIds.length}`,
+      title: station.title || `My playlist #${loggedInUser.likedStationsIds.length}`,
       items: station.items || [],
       cover:
-        station.cover ||
-        'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+      station.cover ||
+      'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
       preview: station.preview || '',
       addedAt: station.addedAt || Date.now(),
       likedByUsers: [{ id: loggedInUser._id, username: loggedInUser.username }],
       // Later, owner is set by the backend
       //   creator: userService.getLoggedinUser(),
     }
-
+    
     savedStation = await storageService.post(STORAGE_KEY, stationToSave)
+    
 
     if (!station.isSearched) {
       loggedInUser.likedStationsIds.push(stationToSave._id)
@@ -124,6 +130,8 @@ async function save(station) {
       await updateUser(loggedInUser)
     }
   }
+  
+  
   return savedStation
 }
 
@@ -199,7 +207,7 @@ async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
   const user = userService.getLoggedinUser()
   // if()
-  console.log(searchResults)
+  
   const station = {
     keyWord,
     isSearched: true,
@@ -1197,4 +1205,39 @@ function getCategoriesWithImages() {
   }))
 }
 
-export default getCategoriesWithImages
+
+function getRandomArtists(num) {
+  const artists = [
+    'Beyonce',
+    'Drake',
+    'Adele',
+    'Ed Sheeran',
+    'Taylor Swift',
+    'The Weeknd',
+    'NCS',
+    'Rihanna',
+    'Billie Eilish',
+    'Ariana Grande',
+    'Bruno Mars',
+    'Post Malone',
+    'Justin Bieber',
+    'Kendrick Lamar',
+    'Lady Gaga',
+  ];
+
+  if (num > artists.length) {
+    return 'The number exceeds the total number of available artists.';
+  }
+
+  const randomArtists = [];
+  const availableArtists = [...artists]; // Create a copy of the array to avoid repetition
+
+  for (let i = 0; i < num; i++) {
+    const randomIndex = Math.floor(Math.random() * availableArtists.length);
+    randomArtists.push(availableArtists[randomIndex]);
+    availableArtists.splice(randomIndex, 1); // Remove the selected artist to avoid duplicates
+  }
+
+  return randomArtists;
+}
+

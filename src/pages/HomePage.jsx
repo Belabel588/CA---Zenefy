@@ -134,13 +134,13 @@ export function HomePage() {
       return accu
     }, [])
 
-    console.log(stationsToReturn)
+    
     setAllStations(stationsToReturn)
   }
 
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window
-    console.log(width)
+    
     return {
       width,
       height,

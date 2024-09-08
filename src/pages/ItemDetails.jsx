@@ -61,7 +61,7 @@ export function ItemDetails() {
         const station = await stationService.getItemsStation(item.id)
         setItemsStation(station)
         setItem(itemToSet)
-        console.log(station)
+        
 
         const color = await setCurrColor(itemToSet.cover)
         headerRef.current.style.backgroundColor = color
@@ -164,7 +164,7 @@ export function ItemDetails() {
     const like = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
-    console.log(like)
+    
 
     const items = like.items || []
     const itemsId = items.map((item) => {
@@ -286,7 +286,7 @@ export function ItemDetails() {
             <div
               className='like-button-container'
               onClick={() => {
-                console.log(likedItems)
+                
                 if (likedItems.includes(item.id)) {
                   setItemToEdit(item)
                   optionsState.current = 'song'

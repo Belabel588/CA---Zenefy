@@ -38,9 +38,12 @@ export function SuggestedStations({ stations, color }) {
     setIsPlaying(true)
   }
 
+  console.log('stations inside suggested stations',stations);
+  
+
   // Use default color if none is provided
   const backgroundColor = color || '#191414' // Default color
-console.log('BACKGROUND COLOR IN SUGGESTED IS : ' , backgroundColor);
+
 
   // Determine class names dynamically
   const containerClass = color

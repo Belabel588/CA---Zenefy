@@ -62,7 +62,7 @@ export function StationEditModal({
   async function uploadFile(ev) {
     try {
       const res = await uploadService.uploadImg(ev)
-      console.log(res.url)
+      
       const coverSrc = res.url
       setCoverSrc(coverSrc)
     } catch (err) {
