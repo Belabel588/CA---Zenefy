@@ -6,7 +6,7 @@ import { utilService } from '../services/util.service.js'
 import { setCurrArtist } from '../store/actions/artist.actions.js'
 
 export function SuggestedArtists({ artists }) {
-  console.log(artists)
+  // console.log(artists)
   const navigate = useNavigate()
   const [isHover, setIsHover] = useState(false)
   return (
