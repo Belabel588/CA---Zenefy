@@ -19,6 +19,7 @@ import { updateUser } from '../store/actions/user.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
+import { utilService } from '../services/util.service.js'
 
 import { EditOptions } from '../cmps/EditOptions.jsx'
 import { PlayingAnimation } from '../cmps/PlayingAnimation.jsx'
@@ -89,6 +90,7 @@ export function SearchIndex() {
   const navigate = useNavigate()
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
+  const [randomStations, setRandomStations] = useState([])
 
   const tagColors = [
     '#006450',
@@ -159,9 +161,44 @@ export function SearchIndex() {
   }, [currSearch])
 
   useEffect(() => {
-    if (searchResults.length > 0) {
-      handleSearchResults(searchResults)
+    const fetchStations = async () => {
+      if (searchResults.length > 0) {
+        handleSearchResults(searchResults)
+      }
+
+      try {
+        const stations = await stationService.query({ stationType: 'music' })
+        const filtered = stations.filter(
+          (station) => !station.isLiked || station.isLiked === undefined
+        )
+
+        const numStationsToReturn = 6
+        const idxsToExclude = []
+
+        const stationsToReturn = filtered.reduce((accu, station, index) => {
+          if (accu.length >= numStationsToReturn) return accu
+
+          let randomIdx
+          do {
+            randomIdx = utilService.getRandomIntInclusive(
+              0,
+              filtered.length - 1
+            )
+          } while (idxsToExclude.includes(randomIdx))
+
+          idxsToExclude.push(randomIdx)
+          accu.push(filtered[randomIdx])
+
+          return accu
+        }, [])
+
+        setRandomStations(stationsToReturn)
+      } catch (error) {
+        console.error('Error fetching stations:', error)
+      }
     }
+
+    fetchStations()
   }, [searchResults])
 
   useEffect(() => {
@@ -480,7 +517,7 @@ export function SearchIndex() {
         </section>
         <div className='suggested-artist-stations'>
           <b>Featuring</b>
-          <SuggestedStations stations={stations} />
+          <SuggestedStations stations={randomStations} />
         </div>
         <div className='artists-container'>
           <b>Artists</b>

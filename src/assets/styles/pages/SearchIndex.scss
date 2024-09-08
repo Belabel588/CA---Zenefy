@@ -497,8 +497,17 @@
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
+  b{
+    margin-inline-start: 0.8em;
+  }
 
 
+}
+
+.artists-container{
+  b{
+    margin-inline-start: 0.8em;
+  }
 }
 }
 

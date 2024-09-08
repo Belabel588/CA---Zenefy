@@ -360,6 +360,7 @@ export function StationDetails() {
       console.log(err)
     }
   }
+  const artists = []
 
   if (!isLoading)
     return (
@@ -404,8 +405,18 @@ export function StationDetails() {
             </b>
             {(station.preview && (
               <p className='playlist-summery'>{station.preview}</p>
-            )) || <p className='playlist-summery'>Playlist summery here</p>}
-            <span className='playlist-artist'>Playlist artist here</span>
+            )) || <p className='playlist-summery'>Your loved songs</p>}
+            {!station.isLiked && (
+              <span className='playlist-artist'>
+                {' '}
+                {station.items
+                  .reduce(
+                    (accu, currItem) => `${accu} ${currItem.artist},`,
+                    artists
+                  )
+                  .slice(0, 150) + '...'}
+              </span>
+            )}
           </div>
         </header>
         <div className='user-interface-container'>
@@ -433,13 +444,15 @@ export function StationDetails() {
                 )}
               </div>
               {/* <RxPlusCircled className='option-button plus-button' /> */}
-              <BsThreeDots
-                className='option-button more-button'
-                onClick={(event) => {
-                  optionsState.current = 'station'
-                  handleRightClick(event)
-                }}
-              />
+              {!station.isLiked && (
+                <BsThreeDots
+                  className='option-button more-button'
+                  onClick={(event) => {
+                    optionsState.current = 'station'
+                    handleRightClick(event)
+                  }}
+                />
+              )}
             </div>
             <div className='list-container'>
               <span>List</span>
