@@ -351,6 +351,7 @@ export function StationDetails() {
           saveStation={sendToSaveStation}
         />
         <EditOptions
+          setLikedStation={setLikedStation}
           options={options}
           station={station}
           toggleModal={toggleModal}

@@ -37,6 +37,7 @@ export function EditOptions({
   setRemoveFromPlaylist,
   optionsState,
   setStation,
+  setLikedStation,
 }) {
   let id = 0
 
@@ -57,9 +58,12 @@ export function EditOptions({
       station.items.push(itemToEdit)
       const savedStation = await saveStation(station)
 
-      setStation({ ...savedStation })
+      if (pageStation._id === savedStation._id) {
+        setStation({ ...savedStation })
+      }
+      setLikedStation()
 
-      showSuccessMsg('Song added')
+      // showSuccessMsg('Song added')
     } catch (err) {
       console.log(err)
     } finally {
@@ -78,10 +82,11 @@ export function EditOptions({
       )
       station.items.splice(idxToRemove, 1)
       const savedStation = await saveStation(station)
-
-      setStation({ ...savedStation })
-
-      showSuccessMsg('Song removed')
+      if (pageStation._id === savedStation._id) {
+        setStation({ ...savedStation })
+      }
+      setLikedStation()
+      // showSuccessMsg('Song removed')
     } catch (err) {
       console.log(err)
     } finally {

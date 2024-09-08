@@ -92,8 +92,8 @@
     position: relative;
     background-color: $background-black;
     // background-color: black;
-        height: calc(100% - 18vw);
-        overflow: auto;
+        // height: calc(100% - 18vw);
+        // overflow: auto;
     .gradient{
       background: linear-gradient(180deg,  rgba(25, 20, 20, 0.151),rgba(25, 20, 20, 0.741) ,rgb(25, 20, 20));
       background: linear-gradient(
@@ -198,6 +198,12 @@
     justify-items: center;
     gap: 0.5em;
 
+    height: calc(100vh - 170px - 12vw - 95px);
+    overflow-y: auto;
+    @media (max-width:1000px) {
+      height: calc(100vh - 100px - 12vw);
+      
+    }
     margin: 0px 1.5em 0px 1.5em;
     .info-container{
       grid-column: 1/-1;
