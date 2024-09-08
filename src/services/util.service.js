@@ -10,6 +10,7 @@ export const utilService = {
   formatSongTime,
   generateObjectId,
   capitalizeFirstLetters,
+  debounce,
 }
 
 function makeId(length = 6) {
@@ -146,4 +147,12 @@ function capitalizeFirstLetters(str) {
     .split(' ') // Split the string into an array of words
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
     .join(' ') // Join the words back into a string
+}
+
+function debounce(func, delay) {
+  let timeout
+  return function (...args) {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func.apply(this, args), delay)
+  }
 }

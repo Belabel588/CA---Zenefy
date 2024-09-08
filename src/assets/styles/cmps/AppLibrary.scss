@@ -107,9 +107,10 @@ border-radius: 0.5rem;
 
   .clear{
     display: none;
+    
     inset-inline-end: 0.4em;
     &:hover{
-
+      display: block;
     }
 
   }

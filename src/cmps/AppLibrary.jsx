@@ -5,6 +5,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service'
+import { utilService } from '../services/util.service.js'
 import { loadStations } from '../store/actions/station.actions'
 import {
   setIsPlaying,
@@ -46,16 +47,45 @@ export function AppLibrary() {
     stationService.getDefaultFilter()
   )
 
+  const currFilter = useSelector(
+    (stateSelector) => stateSelector.stationModule.filterBy
+  )
+
   const inputRef = useRef()
 
-  useEffect(() => {}, [filterByToSet])
+  useEffect(() => {
+    loadStations()
+  }, [currFilter])
 
   useEffect(() => {
     //   loadStations()
-    dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
-
+    // dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
     //   setStationToSet(stations)
   }, [stations])
+
+  useEffect(() => {
+    console.log(filterByToSet)
+    setFilter(filterByToSet)
+  }, [filterByToSet])
+
+  const handleChange = utilService.debounce(({ target }) => {
+    const field = target.name
+
+    let value = target.value
+
+    setFilterByToSet({ ...filterByToSet, txt: value })
+    // Dispatch action to update the filter in the Redux store
+    // dispatch({
+    //   type: SET_FILTER_BY,
+    //   filterBy: {
+    //     ...filterBy,
+    //     [field]: value,
+    //   },
+    // })
+
+    // Reload the stations with the updated filter
+    // loadStations() stopped the filtering of the stations on the side.
+  }, 800) // Debounce with a 300ms delay
 
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
@@ -78,13 +108,6 @@ export function AppLibrary() {
     setCurrStation(stationId)
     setCurrItem(0, currStation)
     setIsPlaying(true)
-  }
-
-  function handleChange({ target }) {
-    let field = target.name
-    let value = target.value
-
-    setFilterByToSet({ ...filterByToSet, txt: value })
   }
 
   return (
@@ -128,13 +151,14 @@ export function AppLibrary() {
           id=''
           ref={inputRef}
           placeholder='Search in your library'
-          value={filterByToSet.txt}
+          // value={filterByToSet.txt}
           onChange={handleChange}
         />
         {filterByToSet.txt && (
           <IoCloseOutline
             className='icon clear'
             onClick={() => {
+              inputRef.current.value = ''
               setFilterByToSet({ ...filterByToSet, txt: '' })
             }}
           />

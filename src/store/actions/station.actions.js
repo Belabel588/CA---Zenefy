@@ -157,6 +157,6 @@ export function setIsActive(stateToSet) {
   store.dispatch({ type: SET_IS_ACTIVE, isActive: stateToSet })
 }
 
-export function setFilter(filterBy = { txt: '', stationType: '' }) {
+export function setFilter(filterBy) {
   store.dispatch({ type: SET_FILTER_BY, filterBy })
 }

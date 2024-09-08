@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect, useRef } from 'react'
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
 import { userService } from '../services/user.service.js'
+import { utilService } from '../services/util.service.js'
 import { logout } from '../store/actions/user.actions.js'
 import { FaSpotify, FaRegUserCircle } from 'react-icons/fa'
 import { GoHome, GoHomeFill } from 'react-icons/go'
@@ -47,6 +48,8 @@ export function AppHeader() {
   const [isFocus, setIsFocus] = useState(false)
 
   const [userBy, setUserBy] = useState()
+  const [searchTerm, setSearchTerm] = useState('')
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     if (location.pathname === '/') {
@@ -69,37 +72,32 @@ export function AppHeader() {
     }
   }, [location])
 
-  function debounce(func, delay) {
-    let timeout
-    return function (...args) {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => func.apply(this, args), delay)
-    }
-  }
-
-  const handleSearch = debounce(({ target }) => {
+  const handleSearch = utilService.debounce(({ target }) => {
     const field = target.name
+    console.log(field)
     let value = target.value
-
+    console.log(value)
+    setSearchTerm(value)
     // Dispatch action to update the filter in the Redux store
-    dispatch({
-      type: SET_FILTER_BY,
-      filterBy: {
-        ...filterBy,
-        [field]: value,
-      },
-    })
+    // dispatch({
+    //   type: SET_FILTER_BY,
+    //   filterBy: {
+    //     ...filterBy,
+    //     [field]: value,
+    //   },
+    // })
 
     // Reload the stations with the updated filter
     // loadStations() stopped the filtering of the stations on the side.
   }, 800) // Debounce with a 300ms delay
 
   useEffect(() => {
-    if (filterBy.txt !== '') {
-      dispatch({ type: SET_IS_LOADING, isLoading: true })
-      setCurrSearch(filterBy.txt)
+    if (searchTerm !== '') {
+      // console.log(inputRef.value)
+      // dispatch({ type: SET_IS_LOADING, isLoading: true })
+      setCurrSearch(searchTerm)
     }
-  }, [filterBy])
+  }, [searchTerm])
 
   async function onLogout() {
     try {
@@ -196,9 +194,11 @@ export function AppHeader() {
           <input
             type='text'
             name='txt'
+            id='text'
             onChange={handleSearch} // Use the debounced handleSearch
             placeholder='What do you want to play?'
             ref={inputRef} // Step 3: Bind the ref to the input field
+            // value={searchTerm}
           />
           {(filterBy.txt && (
             <IoClose
