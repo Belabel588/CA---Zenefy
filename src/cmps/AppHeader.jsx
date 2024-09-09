@@ -44,7 +44,7 @@ export function AppHeader() {
   const location = useLocation();
 
   const inputRef = useRef(null) // Step 1: Create a ref for the input field
-  const location = useLocation()
+  
   const [isHome, setIsHome] = useState()
   const [isFocus, setIsFocus] = useState(false)
 
