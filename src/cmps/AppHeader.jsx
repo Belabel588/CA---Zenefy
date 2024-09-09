@@ -231,7 +231,9 @@ export function AppHeader() {
         >
           <div className='login-link'>
             {' '}
-            <FaRegUserCircle className='user-logo' />
+            {(user.imgUrl && (
+              <img className='user-logo' src={user.imgUrl} alt='' />
+            )) || <FaRegUserCircle className='user-logo' />}
           </div>
         </div>
       )}
