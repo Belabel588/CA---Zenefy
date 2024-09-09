@@ -21,6 +21,7 @@ import { UserMsg } from './cmps/UserMsg.jsx'
 import { LoadingAnimation } from './cmps/LoadingAnimation.jsx'
 import { AppHeaderMobile } from './cmps/AppHeaderMobile.jsx'
 import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
+import { PlayList } from './cmps/PlayList.jsx'
 
 export function RootCmp() {
   return (
@@ -31,6 +32,7 @@ export function RootCmp() {
       <UserMsg />
       <LoadingAnimation />
       <LoginSignup />
+      <PlayList />
 
       <div className='main-content'>
         <main>
