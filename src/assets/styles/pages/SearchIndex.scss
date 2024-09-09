@@ -7,7 +7,11 @@
   border-radius: 8px;
   height: calc(100vh - 170px);
   overflow-y: auto;
-
+  
+  @media (max-width:770px) {
+    
+    width: 90vw;
+  }
 
   /* Dark background for a Spotify-like look */
   color: #ffffff;
@@ -27,7 +31,13 @@
     /* Ensure the grid takes up the full width of the container */
     /* Limit the maximum width */
     justify-items: stretch;
-    /* Stretch the items to fill the grid cells */
+    /* Stretch the items to fill the grid cells */ 
+    @media (max-width:770px) {
+      // flex-grow: 0;
+
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+    }
     a{
       flex-grow: 1;
       flex-basis: calc(20% - 1em); // Basis for each item (before growing)
@@ -38,16 +48,19 @@
       height: calc(15vw);
       
       @media (max-width:1060px) {
-        min-width: 200px;
+        // min-width: 200px;
 
 
         
       }
-      @media (max-width:770px) {
+      @media (max-width:550px) {
         // flex-grow: 0;
-        width: 180px;
+        min-width: 100px;
+        width: 130px;
+
       }
     }
+   
 
     li {
       // min-height: 6rem;
@@ -70,7 +83,13 @@
       transition: transform 0.3s ease, background-color 0.3s ease;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       /* Subtle shadow for depth */
+      @media (max-width:770px) {
+        // flex-grow: 0;
 
+      }
+      span{
+        z-index: 2;
+      }
       
 
       &:hover {
@@ -85,6 +104,7 @@
     a {
       text-decoration: none;
       color: inherit;
+
     }
 
   }

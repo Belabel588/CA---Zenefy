@@ -129,7 +129,7 @@ export function SearchIndex() {
     <Link to='#' key={idx}>
       <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
         <img src={category.image} />
-        {category.category}
+        <span>{category.category}</span>
       </li>
     </Link>
   ))
@@ -353,6 +353,30 @@ export function SearchIndex() {
     <section className='search-section'>
       <h1>Browse all</h1>
       <ul className='search-list'>
+        {stations
+          .filter(
+            (station, index, currentStations) =>
+              currentStations.findIndex(
+                (currentStation) =>
+                  currentStation.stationType === station.stationType
+              ) === index
+          )
+          .map((uniqueStation, index) => (
+            <Link
+              to={`/genere/${uniqueStation._id}`}
+              className='full-link'
+              key={uniqueStation._id}
+            >
+              <li
+                style={{
+                  backgroundColor: generateColor(index),
+                }}
+              >
+                <img src='../public/spotify-pics/music.png' alt='' />
+                <span>{uniqueStation.stationType}</span>
+              </li>
+            </Link>
+          ))}
         {tagElements}
       </ul>
     </section>

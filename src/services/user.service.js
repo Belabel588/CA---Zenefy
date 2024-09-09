@@ -96,6 +96,7 @@ function _setLoggedinUser(user) {
     fullname: user.fullname,
     likedStationsIds: user.likedStationsIds,
     likedSongsIds: user.likedSongsIds,
+    imgUrl: user.imgUrl,
     // prefs: user.prefs,
   }
   sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
@@ -129,6 +130,8 @@ function _createDemoUser() {
     _id: 'guest',
     fullname: 'Guest',
     username: 'Guest',
+    imgUrl:
+      'https://res.cloudinary.com/dpsnczn5n/image/upload/v1722939321/IMG_1626_qoscmz.jpg',
 
     likedStationsIds: [
       'likedSongs123',

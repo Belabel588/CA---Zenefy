@@ -190,12 +190,31 @@
         font-weight: bold;
         border-radius: 50%;
         padding: 5px;
+        &:hover{
+            transform: scale(1.05);
+
+            img{
+
+                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            }
+
+        }
             
         //    height: 100%;
             background-color: $grey-medium;
             color: white;
             display: flex;
             align-items: center;
+            justify-items: center;
+
+            img{
+                width: 40px;
+                height: 40px;
+                object-fit: cover;
+                border-radius: 50%;
+
+            }
+
 
     }
 
@@ -238,4 +257,11 @@
     align-items: center;
     justify-items: center;
     gap: 0.5em;
+
+
+    @media (max-width:770px) {
+        justify-self: end;
+
+        
+    }
 }

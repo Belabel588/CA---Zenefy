@@ -64,6 +64,9 @@ export function AppFooter() {
   const user = useSelector(
     (stateSelector) => stateSelector.userModule.loggedinUser
   )
+  const currColor = useSelector(
+    (stateSelector) => stateSelector.stationModule.currColor
+  )
 
   const [station, setStation] = useState([])
 
@@ -311,9 +314,43 @@ export function AppFooter() {
       setIsLoading(false)
     }
   }
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  )
+  const playBarRef = useRef()
+
+  useEffect(() => {
+    async function handleResize() {
+      setWindowDimensions(getWindowDimensions())
+    }
+    async function changeColor() {
+      const hex = await setCurrColor(currItem.cover)
+      playBarRef.current.style.backgroundColor = hex
+    }
+    if (windowDimensions.width < 770) {
+      changeColor()
+    } else {
+      playBarRef.current.style.backgroundColor = 'black'
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      // getAllStations()
+    }
+  }, [windowDimensions, currItem])
+
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window
+    // console.log(width)
+    return {
+      width,
+      height,
+    }
+  }
 
   return (
-    <footer className='app-footer play-bar-container'>
+    <footer className='app-footer play-bar-container' ref={playBarRef}>
       <div className='song-details-container'>
         <img src={currItem.cover} className='play-bar-cover' alt='' />
         <div className='song-text-container'>
