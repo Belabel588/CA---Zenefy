@@ -124,15 +124,26 @@ export function SearchIndex() {
   const generateColor = (index) => {
     return tagColors[index % tagColors.length]
   }
+console.log('categoriesWithImages' , categoriesWithImages);
 
-  const tagElements = categoriesWithImages.map((category, idx) => (
-    <Link to='#' key={idx}>
-      <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
-        <img src={category.image} />
-        <span>{category.category}</span>
-      </li>
-    </Link>
-  ))
+  const tagElements = categoriesWithImages.map((category, idx) => {
+    const backgroundColor = generateColor(idx);
+
+    return (
+      <Link
+        to={{
+          pathname: `/genere/${category.category}`,
+        }}
+        state={{ backgroundColor: backgroundColor }} // Use `state` here
+        key={idx}
+      >
+        <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
+          <img src={category.image} />
+          {category.category}
+        </li>
+      </Link>
+    )
+  })
 
   const [artists, setArtists] = useState([])
 
@@ -353,30 +364,6 @@ export function SearchIndex() {
     <section className='search-section'>
       <h1>Browse all</h1>
       <ul className='search-list'>
-        {stations
-          .filter(
-            (station, index, currentStations) =>
-              currentStations.findIndex(
-                (currentStation) =>
-                  currentStation.stationType === station.stationType
-              ) === index
-          )
-          .map((uniqueStation, index) => (
-            <Link
-              to={`/genere/${uniqueStation._id}`}
-              className='full-link'
-              key={uniqueStation._id}
-            >
-              <li
-                style={{
-                  backgroundColor: generateColor(index),
-                }}
-              >
-                <img src='../public/spotify-pics/music.png' alt='' />
-                <span>{uniqueStation.stationType}</span>
-              </li>
-            </Link>
-          ))}
         {tagElements}
       </ul>
     </section>

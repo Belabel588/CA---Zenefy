@@ -1245,7 +1245,7 @@ function getCategoriesWithImages() {
   }))
 }
 
-export default getCategoriesWithImages
+
 
 function getDefaultCurrItem() {
   return {

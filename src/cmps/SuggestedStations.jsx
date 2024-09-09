@@ -18,7 +18,7 @@ import { PlayingAnimation } from './PlayingAnimation.jsx'
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 
-export function SuggestedStations({ stations, color }) {
+export function SuggestedStations({ stations = '', color = '' }) {
   const navigate = useNavigate()
   const isHover = useRef(false)
   const currStation = useSelector(
