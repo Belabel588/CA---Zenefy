@@ -26,7 +26,7 @@
             border-radius: 50%;
             height: 40px;
             width: 40px;
-            transition: 0.2s;
+            // transition: 0.2s;
             &:hover{
                 background-color: $grey-dark;
                 svg{
@@ -56,7 +56,7 @@
         padding: 10px;
         border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        // transition: background-color 0.2s ease;
         &:hover {
             background-color: rgba(255, 255, 255, 0.1);  
             .img-container{
@@ -94,14 +94,14 @@
             align-items: center;
             background-color: rgba(0, 0, 0, 0.4);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            // transition: opacity 0.3s ease;
           }
     
        
     
           .play-button,
           .pause-button {
-            font-size: 24px;
+            font-size: 2em;
             color: $white;
             cursor: pointer;
           }
@@ -117,7 +117,7 @@
             font-size: 16px;
             font-weight: bold;
             color: $white;
-            transition: color 0.2s ease;
+            // transition: color 0.2s ease;
     
             &.playing {
               color: $green;
@@ -136,13 +136,17 @@
         }
 
         .dots{
+            color: $grey-light;
             opacity: 0;
         }
         
         &:hover{
             .dots{
-
                 opacity: 1;
+                &:hover{
+                    transform: scale(1.05);
+                    color: $white;
+                }
             }
         }
       }

@@ -22,6 +22,7 @@ import {
 import { apiService } from '../services/youtube-spotify.service.js'
 
 import { PlayingAnimation } from './PlayingAnimation.jsx'
+import { EditOptions } from './EditOptions.jsx'
 
 import { LuClock3 } from 'react-icons/lu'
 import { FaCirclePlay } from 'react-icons/fa6'
@@ -50,116 +51,278 @@ export function PlayList({ station }) {
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
   )
+  const stations = useSelector(
+    (stateSelector) => stateSelector.stationModule.stations
+  )
 
   const isHover = useRef(false)
   const [likedItems, setLikedItems] = useState([])
-  console.log(currStation)
+
+  const [pageStation, setPageStation] = useState(currStation)
+
+  const user = useSelector(
+    (stateSelector) => stateSelector.userModule.loggedinUser
+  )
+
+  useEffect(() => {
+    setPageStation(currStation)
+  }, [currStation])
 
   function onSelectStation(itemId) {
     setCurrStation(currStation._id)
     setCurrItem(itemId, currStation)
     setIsPlaying(true)
   }
-  return (
-    <div className='playlist-container'>
-      <div className='controller-container'>
-        <span>Queue</span>
-        <button>
-          <IoClose />
-        </button>
-      </div>
-      <div className='songs-container'>
-        {currStation.items.map((item) => {
-          return (
-            <div
-              className='song-container'
-              key={item.id}
-              onClick={() => {
-                if (isHover.current) return
-                // navigate(`station/${station._id}`)
-              }}
-            >
-              <div className='img-container'>
-                {(isPlaying && item.id === currItem.id && (
-                  <div
-                    className='pause-button-container'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                  >
-                    <BiPause
-                      className='pause-button'
-                      onClick={() => setIsPlaying(false)}
-                    />
-                  </div>
-                )) || (
-                  <div
-                    className='play-button-container'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                  >
-                    {' '}
-                    <BiPlay
-                      className='play-button'
-                      onClick={() => {
-                        //   if (currStation._id === station._id) {
-                        //   return
-                        // }
-                        setIsPlaying(true)
-                        onSelectStation(item.id)
-                      }}
-                    />
-                  </div>
-                )}
-                <img src={item.cover} alt='' />
-              </div>
-              <div className='info-container'>
-                <b
-                  className={
-                    currItem.id === item.id
-                      ? `station-name playing`
-                      : 'station-name'
-                  }
-                >
-                  {item.name}
-                </b>
-                <div className='playlist-details'>
-                  <span>{item.artist}</span>
-                </div>
-              </div>
+  async function setLikedStation() {
+    // await loadStations()
 
-              {(currItem.id === item.id && (
-                <HiOutlineDotsHorizontal
-                  className='dots'
-                  onClick={() => {
-                    setItemToEdit(item)
-                    optionsState.current = 'song'
-                    openSongOptions(event, item)
-                  }}
-                  style={{ opacity: '1' }}
-                />
-              )) || (
-                <HiOutlineDotsHorizontal
-                  className='dots'
-                  onClick={() => {
-                    setItemToEdit(item)
-                    optionsState.current = 'song'
-                    openSongOptions(event, item)
-                  }}
-                />
-              )}
-            </div>
-          )
-        })}{' '}
-      </div>
-    </div>
+    const like = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
+
+    const items = like.items || []
+    const itemsId = items.map((item) => {
+      return item.id
+    })
+    setLikedItems(itemsId)
+  }
+  const optionsState = useRef()
+  let options
+  const [itemToEdit, setItemToEdit] = useState({})
+
+  optionsState.current === 'station'
+    ? (options = [
+        {
+          text: 'Edit',
+          icon: <FiEdit2 />,
+          onClick: () => {
+            setIsVisible(false)
+
+            toggleModal()
+          },
+        },
+        {
+          text: 'Add Playlist',
+          icon: <PlusIcon />,
+          onClick: () => {
+            onAddStation(station)
+          },
+        },
+        {
+          text: 'Delete',
+          icon: <CiCircleMinus />,
+          onClick: () => {
+            setIsVisible(false)
+
+            onDeleteStation(station)
+          },
+        },
+        {
+          text: 'Create',
+          icon: <FaPlus />,
+          onClick: () => {
+            setIsVisible(false)
+
+            onCreateNewStation()
+          },
+        },
+      ])
+    : (options = [
+        {
+          text: 'Add to playlist',
+          icon: <FaPlus />,
+          onClick: () => {},
+          onClick: () => {},
+        },
+        {
+          text: 'Remove from playlist',
+          icon: <CiCircleMinus />,
+          onClick: () => {},
+          onClick: () => {},
+        },
+      ])
+  const [isVisible, setIsVisible] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const handleRightClick = (event) => {
+    if (station.isLiked) return
+    event.preventDefault()
+    setPosition({ x: event.pageX, y: event.pageY })
+
+    setIsVisible(true)
+  }
+
+  const handleClickOutside = () => {
+    setIsVisible(false)
+  }
+
+  async function onCreateNewStation() {
+    const emptyStation = stationService.getEmptyStation()
+    emptyStation.items = []
+    try {
+      const newStation = await saveStation(emptyStation)
+      navigate(`/station/${newStation._id}`)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  async function onDeleteStation(stationToDelete) {
+    if (stationToDelete.isLiked === true) return
+
+    try {
+      await removeStation(station._id)
+      navigate('/')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  function openSongOptions(event, item) {
+    event.preventDefault()
+    setPosition({ x: event.pageX, y: event.pageY })
+
+    setIsVisible(true)
+  }
+  const [addToPlaylist, setAddToPlaylist] = useState(false)
+  const [create, setCreate] = useState(false)
+  const [removeFromPlaylist, setRemoveFromPlaylist] = useState(false)
+
+  async function onAddStation(station) {
+    const stationId = station._id
+    if (user.likedStationsIds.includes(stationId)) return
+
+    try {
+      user.likedStationsIds.unshift(stationId)
+      const userToSave = { ...user }
+      const savedUser = await updateUser(userToSave)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  return (
+    <>
+      <div className='playlist-container'>
+        <div className='controller-container'>
+          <span>Queue</span>
+          <button>
+            <IoClose />
+          </button>
+        </div>
+        <div className='songs-container'>
+          {pageStation.items.map((item) => {
+            return (
+              <div
+                className='song-container'
+                key={item.id}
+                onDoubleClick={() => {
+                  if (isHover.current) return
+
+                  onSelectStation(item.id)
+                }}
+              >
+                <div className='img-container'>
+                  {(isPlaying && item.id === currItem.id && (
+                    <div
+                      className='pause-button-container'
+                      onMouseEnter={() => {
+                        isHover.current = true
+                      }}
+                      onMouseLeave={() => {
+                        isHover.current = false
+                      }}
+                    >
+                      <BiPause
+                        className='pause-button'
+                        onClick={() => setIsPlaying(false)}
+                      />
+                    </div>
+                  )) || (
+                    <div
+                      className='play-button-container'
+                      onMouseEnter={() => {
+                        isHover.current = true
+                      }}
+                      onMouseLeave={() => {
+                        isHover.current = false
+                      }}
+                    >
+                      {' '}
+                      <BiPlay
+                        className='play-button'
+                        onClick={() => {
+                          if (currItem.id === item.id) {
+                            setIsPlaying(true)
+                            return
+                          } else {
+                            onSelectStation(item.id)
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                  <img src={item.cover} alt='' />
+                </div>
+                <div className='info-container'>
+                  <b
+                    className={
+                      currItem.id === item.id
+                        ? `station-name playing`
+                        : 'station-name'
+                    }
+                  >
+                    {item.name}
+                  </b>
+                  <div className='playlist-details'>
+                    <span>{item.artist}</span>
+                  </div>
+                </div>
+
+                {(currItem.id === item.id && (
+                  <HiOutlineDotsHorizontal
+                    className='dots'
+                    onClick={() => {
+                      setItemToEdit(item)
+                      optionsState.current = 'song'
+                      openSongOptions(event, item)
+                    }}
+                    style={{ opacity: '1' }}
+                  />
+                )) || (
+                  <HiOutlineDotsHorizontal
+                    className='dots'
+                    onClick={() => {
+                      setItemToEdit(item)
+                      optionsState.current = 'song'
+                      openSongOptions(event, item)
+                    }}
+                  />
+                )}
+              </div>
+            )
+          })}{' '}
+        </div>
+      </div>{' '}
+      <EditOptions
+        setLikedStation={setLikedStation}
+        options={options}
+        station={station}
+        position={position}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        onDeleteStation={onDeleteStation}
+        onCreateNewStation={onCreateNewStation}
+        addToPlaylist={addToPlaylist}
+        setAddToPlaylist={setAddToPlaylist}
+        userStations={stations}
+        create={create}
+        setCreate={setCreate}
+        removeFromPlaylist={removeFromPlaylist}
+        setRemoveFromPlaylist={setRemoveFromPlaylist}
+        optionsState={optionsState}
+        handleClickOutside={handleClickOutside}
+        itemToEdit={itemToEdit}
+        pageStation={pageStation}
+        setStation={setPageStation}
+      />
+    </>
   )
 }
 

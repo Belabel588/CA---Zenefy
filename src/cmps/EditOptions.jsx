@@ -38,6 +38,7 @@ export function EditOptions({
   optionsState,
   setStation,
   setLikedStation,
+  pageStation,
 }) {
   let id = 0
 
@@ -85,6 +86,7 @@ export function EditOptions({
       if (pageStation._id === savedStation._id) {
         setStation({ ...savedStation })
       }
+
       setLikedStation()
       // showSuccessMsg('Song removed')
     } catch (err) {

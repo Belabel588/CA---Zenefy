@@ -536,11 +536,25 @@ const VolumeBar = ({ volume, setVolume, latestVolume }) => {
     const volumeToSet = +target.value
 
     latestVolume.current = volumeToSet
+    console.log(volumeToSet)
     setVolume(volumeToSet)
   }
 
   return (
-    <div className='volume-container'>
+    <div
+      className='volume-container'
+      onWheel={(event) => {
+        let newVolume = volume
+        const scrollStep = 10
+
+        if (event.deltaY < 0) {
+          newVolume = Math.min(100, volume + scrollStep)
+        } else {
+          newVolume = Math.max(0, volume - scrollStep)
+        }
+        setVolume(newVolume)
+      }}
+    >
       <input
         type='range'
         onChange={(event) => {
