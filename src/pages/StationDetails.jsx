@@ -542,7 +542,7 @@ export function StationDetails() {
                     {/* </div> */}
                   </div>
                   <span className='album'>{item.album}</span>
-                  <span>
+                  <span className='date-added'>
                     {Date(item.addedAt).toLocaleString('he').slice(0, 13)}
                   </span>
                   <span className='time' key={utilService.makeId()}>

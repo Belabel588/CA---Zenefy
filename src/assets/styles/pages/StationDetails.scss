@@ -6,6 +6,10 @@
     // container-type: inline-size;
     // background-color: #1ed760;
     height: calc(100vh - 170px);
+    @media (max-width:770px) {
+      
+      overflow-y: scroll;
+    }
 
   }
   
@@ -16,6 +20,13 @@
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: end;
+    @media (max-width:770px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr auto;
+
+      
+      
+    }
 
     width:100%;
     min-height: 150px;
@@ -42,6 +53,16 @@
       object-fit: scale-down;
 
       margin: 1em 0.5em 0.5em 1em;
+      @media (max-width:770px) {
+        width: 400px;
+        height: 400px;
+        justify-self: center;
+
+        margin: 1em 0em 0em 0em;
+        
+        
+        
+      }
       // background-color: $green;
     }
     .title-container{
@@ -115,6 +136,10 @@
       // background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
 
     }
+    @media (max-width:770px) {
+      height: calc(100vh);
+      
+    }
   }
 
   .buttons-container{
@@ -179,6 +204,7 @@
         gap: 0.5em;
         color: $grey-light;
         cursor: pointer;
+    
         &:hover{
           color: $white;
 
@@ -234,9 +260,17 @@
     .album{
       grid-column: 4/5;
       justify-self: start;
+      @media (max-width:770px) {
+        
+
+        
+        display: none;
+      }
     }
     .date-added{
-      @container (max-width: 800px) {
+      @media (max-width:770px) {
+        
+
         
         display: none;
       }
@@ -247,7 +281,12 @@
     }
     
     .time{
+      @media (max-width:770px) {
+        
 
+        
+        display: none;
+      }
       justify-self: start;
     }
 
@@ -258,12 +297,16 @@
         width: 100%;
 
         display: grid;
-        grid-template-columns: 20px 50px 1fr 1fr 0.5fr 0.5fr 50px 20px;
+        grid-template-columns: 20px auto 1fr 1fr 0.5fr 0.5fr 50px 20px;
         gap: 1em;
         align-items: center;
         justify-items: start;
         border-radius: 5px;
         padding: 0.5em 0.5em 0.5em 0.5em;
+        @media (max-width:770px) {
+          grid-template-columns: auto 1fr 20px;
+          
+        }
 
         &:hover{
           background-color: rgba(255, 255, 255, 0.1);
@@ -282,6 +325,10 @@
           justify-items: center;
           justify-self: center;
           grid-column: 1/2;
+
+          @media (max-width:770px) {
+            display: none;
+          }
 
         }
         .item-idx-container{
@@ -361,6 +408,12 @@
 
       .like-button{
         opacity: 0;
+        @media (max-width:770px) {
+        
+
+        
+          display: none;
+        }
         svg{
           fill: $grey-light;
           width: 17px;
@@ -390,6 +443,12 @@
       .dots{
         display: none;
         cursor: pointer;
+        @media (max-width:770px) {
+        
+
+        
+          display: block;
+        }
       }
 
       .song-title-container{
@@ -402,18 +461,27 @@
         justify-self: start;
         gap: 1em;
 
-        img{
-          border-radius: 5px;
-          height: calc(4vw);
-          width: 4vw;
-          object-fit:scale-down;
-          // background-color: $green;
+        
+      }
+      img{
+        border-radius: 5px;
+        height: calc(4vw);
+        width: 4vw;
+        object-fit:scale-down;
+        // background-color: $green;
 
-          max-width: 50px;
-          max-height: 50px;
+        max-width: 50px;
+        max-height: 50px;
 
+      }
+      img{
+        @media (max-width:770px) {
+        
+          max-width: none;
+        
+          width: 50px;
+          height: 50px;
         }
-
       }
       .name-artist-container{
         display: flex;
@@ -442,17 +510,25 @@
       .album{
         grid-column: 4/5;
         justify-self: start;
+        @media (max-width:770px) {
+          display: none;
+        }
       }
       
       .date-added{
         grid-column: 5/6;
         justify-self: start;
-        
+        @media (max-width:770px) {
+            display: none;
+        }
       }
       
       .time{
         grid-column: 6/7;
         justify-self: start;
+        @media (max-width:770px) {
+         display: none;   
+        }
 
       }
       *{
