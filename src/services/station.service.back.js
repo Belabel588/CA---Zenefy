@@ -23,6 +23,7 @@ export const stationService = {
   getCategoriesWithImages,
   getDefaultCurrItem,
   getDefaultCurrStation,
+  getRandomArtist,
 }
 
 async function query(filterBy = { txt: '' }) {
@@ -350,4 +351,42 @@ function getDefaultCurrStation() {
     likedByUsers: [],
     addedAt: 1724685172590,
   }
+}
+
+function getRandomArtist() {
+  const artists = [
+    'Adele',
+    'Beyoncé',
+    'Drake',
+    'Taylor Swift',
+    'Ed Sheeran',
+    'The Weeknd',
+    'Kendrick Lamar',
+    'Billie Eilish',
+    'Rihanna',
+    'Post Malone',
+    'Led Zeppelin',
+    'Pink Floyd',
+    'The Rolling Stones',
+    'Nirvana',
+    'Queen',
+    'The Beatles',
+    'Radiohead',
+    'U2',
+    'Red Hot Chili Peppers',
+    'David Bowie',
+    'אריק איינשטיין', // Arik Einstein
+    'שלמה ארצי', // Shlomo Artzi
+    'עידן רייכל', // Idan Raichel
+    'ריטה', // Rita
+    'היהודים', // HaYehudim (The Jews)
+    'משינה', // Mashina
+    'שלום חנוך', // Shalom Hanoch
+    'כוורת', // Kaveret
+    'אביתר בנאי', // Evyatar Banai
+    'עברי לידר', // Ivri Lider
+  ]
+
+  const randomIndex = Math.floor(Math.random() * artists.length)
+  return artists[randomIndex]
 }
