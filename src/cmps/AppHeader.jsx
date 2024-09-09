@@ -97,6 +97,8 @@ export function AppHeader() {
       // console.log(inputRef.value)
       // dispatch({ type: SET_IS_LOADING, isLoading: true })
       setCurrSearch(searchTerm)
+    } else {
+      setCurrSearch('')
     }
   }, [searchTerm])
 
