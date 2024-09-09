@@ -128,7 +128,7 @@ export function SearchIndex() {
     <Link to='#' key={idx}>
       <li className='tag' style={{ backgroundColor: generateColor(idx) }}>
         <img src={category.image} />
-        {category.category}
+        <span>{category.category}</span>
       </li>
     </Link>
   ))
@@ -372,7 +372,7 @@ export function SearchIndex() {
                 }}
               >
                 <img src='../public/spotify-pics/music.png' alt='' />
-                {uniqueStation.stationType}
+                <span>{uniqueStation.stationType}</span>
               </li>
             </Link>
           ))}

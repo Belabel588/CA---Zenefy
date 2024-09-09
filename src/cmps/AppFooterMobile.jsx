@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { GoHome, GoHomeFill } from 'react-icons/go'
 import { IoSearchOutline } from 'react-icons/io5'
@@ -6,12 +6,17 @@ import { IoSearchOutline } from 'react-icons/io5'
 
 export function AppFooterMobile() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     if (location.pathname === '/') {
       setIsHome(true)
-    } else {
+      setPage('/')
+    } else if (location.pathname === '/search') {
       setIsHome(false)
+      setPage('/search')
+    } else if (location.pathname === '/library') {
+      setPage('/library')
     }
     // Step 2: Reset the input value on route change using the ref
     if (inputRef.current) {
@@ -21,6 +26,7 @@ export function AppFooterMobile() {
 
   const [isHome, setIsHome] = useState()
   const inputRef = useRef(null)
+  const [page, setPage] = useState('/')
 
   function onSearchClick() {
     if (inputRef.current) {
@@ -38,13 +44,22 @@ export function AppFooterMobile() {
         <p>Home</p>
       </NavLink>
 
-      <div className='search-container' onClick={onSearchClick}>
+      <div
+        className={
+          page === '/search' ? 'search-container active' : 'search-container'
+        }
+        onClick={onSearchClick}
+      >
         <IoSearchOutline className='icon search' />
         {/* <PiBrowsersThin className='icon browse' /> */}
         <p>Search</p>
       </div>
 
-      <div className='library-title'>
+      <div
+        className={
+          page === '/library' ? 'library-title active' : 'library-title'
+        }
+      >
         <svg
           className='library-icon'
           xmlns='http://www.w3.org/2000/svg'
