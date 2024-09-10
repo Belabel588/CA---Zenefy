@@ -1,13 +1,15 @@
 import axios from 'axios'
 import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
+import { video } from '@cloudinary/url-gen/qualifiers/source'
 
 export const apiService = {
   getVideos,
   getArtistByName,
   searchStations,
+  getPlaylistsByCategory,
 }
-
+const API_URL2 = 'AIzaSyDSEYt2QYx3dXpdbWDzMu8aQOIRc8uHcLk'
 const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
 
 let url = 'https://www.googleapis.com/youtube/v3/channels'
@@ -32,6 +34,82 @@ async function getVideos(search) {
 
   return createList(search, videosWithDurations)
 }
+
+
+async function getPlaylistsByCategory(categoryName) {
+  const accessToken = await getAccessToken();
+  const listDB = `${categoryName}List`
+
+  // Fetch categories to get the ID for the category name
+  const categoryRes = await fetch(`https://api.spotify.com/v1/browse/categories`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const categoryData = await categoryRes.json();
+
+  console.log('categoryData', categoryData);
+
+
+  const category = categoryData.categories.items.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
+
+  if (!category) {
+    throw new Error('Category not found');
+  }
+
+  const categoryId = category.id;
+  console.log(categoryId);
+
+  // Fetch playlists based on category ID
+  const playlistsRes = await fetch(`https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+
+
+
+
+  const playlistsData = await playlistsRes.json();
+  console.log(playlistsData);
+  
+  // console.log(playlistsData.playlists.items[0]?.href);
+  // return playlistsData.playlists.items;
+
+  const url = playlistsData.playlists.items[0].tracks.href
+
+  // const url = data.playlists.items[0].tracks.href
+
+
+  const items = await searchItems(url)
+
+  console.log('ITEMS ARE', items);
+
+
+  let counter = 15
+
+  const list = []
+
+  for (var i = 0; i < counter; i++) {
+    const videos = await getVideos(items[i].track.name)
+    
+    
+    list[i] = videos[0]
+  }
+
+  console.log('LIST IS', list);
+
+
+  save(listDB, list)
+
+  return list
+}
+
+
+
+
 
 async function createList(search, videosWithDuration) {
   const db = `${search}Youtube`
