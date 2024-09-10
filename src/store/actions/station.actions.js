@@ -34,9 +34,19 @@ export async function loadStations() {
       const stationIds = loggedInUser.likedStationsIds
       let userStations
       if (stationIds && stationIds.length > 0) {
-        userStations = stations.filter((station) =>
-          loggedInUser.likedStationsIds.includes(station._id)
-        )
+        // userStations = stations.filter((station) =>
+        //   loggedInUser.likedStationsIds.includes(station._id)
+        // )
+        userStations = loggedInUser.likedStationsIds.map((stationId) => {
+          // if(stations.includes(stationId)){
+          const stationToReturn = stations.find(
+            (station) => station._id === stationId
+          )
+          if (stationToReturn) {
+            return stationToReturn
+          }
+          // }
+        })
       } else {
         userStations = []
       }

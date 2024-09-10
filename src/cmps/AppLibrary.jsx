@@ -14,6 +14,7 @@ import {
   saveStation,
   setFilter,
 } from '../store/actions/station.actions.js'
+import { updateUser } from '../store/actions/user.actions.js'
 
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
@@ -121,11 +122,21 @@ export function AppLibrary() {
     const dragged = updatedStations.splice(draggedItem, 1)[0] // remove the dragged item
 
     updatedStations.splice(index, 0, dragged) // insert it
-    // setPageStation(updatedStations)
-    console.log(updatedStations)
-    // setUpdated(updatedStations)
+
+    const newStationsOrder = []
+    updatedStations.map((station, idx) => {
+      newStationsOrder[idx] = station._id
+    })
+
+    const newUserToSave = { ...user, likedStationsIds: newStationsOrder }
+
     setFiltered(updatedStations)
     setDraggedItem(null)
+    try {
+      updateUser(newUserToSave)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
