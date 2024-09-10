@@ -19,6 +19,7 @@ import {
   setCurrItem,
   setCurrColor,
   setPlaylist,
+  setCurrItemIdx,
 } from '../store/actions/station.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
 
@@ -73,7 +74,7 @@ export function PlayList({ station }) {
   }, [currStation])
 
   function onSelectStation(itemId) {
-    setCurrStation(currStation._id)
+    setCurrStation(currStation._id, updated)
     setCurrItem(itemId, currStation)
     setIsPlaying(true)
   }
@@ -205,9 +206,37 @@ export function PlayList({ station }) {
   function onCloseQueue() {
     setPlaylist(false)
   }
+  const [draggedItem, setDraggedItem] = useState(null)
+  const [updated, setUpdated] = useState()
+
+  const onDragStart = (event, index) => {
+    setDraggedItem(index)
+    event.target.style.opacity = '1'
+    event.target.style.borderBottom = '2px solid #1DB954'
+  }
+
+  const onDragOver = (event) => {
+    event.preventDefault() // allow dropping
+    event.target.style.opacity = '1'
+    event.target.style.borderBottom = '0px solid black'
+  }
+
+  const onDrop = async (event, index) => {
+    let updatedStation = { ...pageStation }
+    const dragged = updatedStation.items.splice(draggedItem, 1)[0] // remove the dragged item
+
+    updatedStation.items.splice(index, 0, dragged) // insert it
+    setPageStation(updatedStation)
+    setUpdated(updatedStation)
+    if (currItem.id === dragged.id) {
+      setCurrItemIdx(index)
+    }
+    setDraggedItem(null)
+  }
+
   return (
     <>
-      <div className='playlist-container'>
+      <div className='playlist-container animate'>
         <div className='controller-container'>
           <span>Queue</span>
           <button
@@ -219,7 +248,7 @@ export function PlayList({ station }) {
           </button>
         </div>
         <div className='songs-container'>
-          {pageStation.items.map((item) => {
+          {pageStation.items.map((item, idx) => {
             return (
               <div
                 className='song-container'
@@ -229,6 +258,10 @@ export function PlayList({ station }) {
 
                   onSelectStation(item.id)
                 }}
+                draggable
+                onDragStart={(event) => onDragStart(event, idx)}
+                onDragOver={onDragOver}
+                onDrop={(event) => onDrop(event, idx)}
               >
                 <div className='img-container'>
                   {(isPlaying && item.id === currItem.id && (

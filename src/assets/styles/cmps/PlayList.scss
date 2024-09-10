@@ -13,6 +13,7 @@
   background-color: $dark-mode-background;
   border-radius: 10px;
   
+  
   @media (max-width:1120px) {
     position: absolute;
     right: 0;
@@ -168,4 +169,19 @@
       }
 
   
+}
+
+.animate {
+  animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+    // opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    // opacity: 1;
+  }
 }

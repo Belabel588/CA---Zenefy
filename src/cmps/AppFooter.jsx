@@ -96,7 +96,6 @@ export function AppFooter() {
         setUrlToPlay(currStation.items[currIdx].url)
       }
     }
-    setCurrentTime(0)
 
     setCurrColor(currStation.cover)
     setLikedStation()
@@ -112,6 +111,7 @@ export function AppFooter() {
   }, [stations])
 
   useEffect(() => {
+    setCurrentTime(0)
     playerRef.current.seekTo(0)
   }, [currItem])
 

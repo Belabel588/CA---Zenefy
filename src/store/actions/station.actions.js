@@ -72,8 +72,16 @@ export async function saveStation(station) {
   }
 }
 
-export async function setCurrStation(stationId) {
+export async function setCurrStation(stationId, draggedStation) {
   try {
+    if (draggedStation) {
+      store.dispatch({
+        type: SET_CURR_STATION,
+        currStation: { ...draggedStation },
+      })
+
+      return draggedStation
+    }
     const station = await stationService.getById(stationId)
     const stationToSet = { ...station }
     store.dispatch({
