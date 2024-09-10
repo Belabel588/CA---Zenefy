@@ -21,6 +21,8 @@ import { UserMsg } from './cmps/UserMsg.jsx'
 import { LoadingAnimation } from './cmps/LoadingAnimation.jsx'
 import { AppHeaderMobile } from './cmps/AppHeaderMobile.jsx'
 import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
+import { MobileLibrary } from './pages/MobileLibrary.jsx'
+
 
 export function RootCmp() {
   return (
@@ -39,6 +41,7 @@ export function RootCmp() {
             <Route path='/about' element={<AboutUs />} />
             <Route path='/search' element={<SearchIndex />} />
             <Route path='/genere/:category' element={<SearchDynamicCmp />} />
+            <Route path='/library' element={<MobileLibrary />} />
 
             <Route path='/station/:stationId' element={<StationDetails />} />
             <Route path='/item/:itemId' element={<ItemDetails />} />
