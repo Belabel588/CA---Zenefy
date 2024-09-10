@@ -16,6 +16,7 @@ import {
   SET_CURR_SEARCH,
   SET_IS_ACTIVE,
   SET_FILTER_BY,
+  SET_PLAYLIST,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -159,4 +160,8 @@ export function setIsActive(stateToSet) {
 
 export function setFilter(filterBy) {
   store.dispatch({ type: SET_FILTER_BY, filterBy })
+}
+export function setPlaylist(stateToSet) {
+  const isPlaylistShown = stateToSet
+  store.dispatch({ type: SET_PLAYLIST, isPlaylistShown: isPlaylistShown })
 }

@@ -17,6 +17,7 @@ import {
   saveStation,
   setIsLoading,
   loadStations,
+  setPlaylist,
 } from '../store/actions/station.actions.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
@@ -66,6 +67,10 @@ export function AppFooter() {
   )
   const currColor = useSelector(
     (stateSelector) => stateSelector.stationModule.currColor
+  )
+
+  const isPlaylistShown = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaylistShown
   )
 
   const [station, setStation] = useState([])
@@ -247,6 +252,16 @@ export function AppFooter() {
     {
       type: 'queue',
       icon: <i className='fa-solid fa-bars'></i>,
+      onClick: () => {
+        let stateToSet
+        if (!isPlaylistShown) {
+          stateToSet = true
+        } else {
+          stateToSet = false
+        }
+        setPlaylist(stateToSet)
+      },
+      className: isPlaylistShown ? 'active' : '',
     },
 
     {
@@ -452,7 +467,11 @@ export function AppFooter() {
           if (button.type === 'volumeLow' && volume >= 50) return
           if (button.type === 'volumeLow' && volume === 0) return
           return (
-            <button key={button.type} onClick={button.onClick}>
+            <button
+              key={button.type}
+              onClick={button.onClick}
+              className={button.className}
+            >
               {button.icon}
             </button>
           )

@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import { Provider } from 'react-redux'
 
@@ -24,6 +26,10 @@ import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
 import { PlayList } from './cmps/PlayList.jsx'
 
 export function RootCmp() {
+  const isPlaylistShown = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaylistShown
+  )
+
   return (
     <section className='app main-layout'>
       {/* <AppHeaderMobile /> */}
@@ -32,7 +38,7 @@ export function RootCmp() {
       <UserMsg />
       <LoadingAnimation />
       <LoginSignup />
-      <PlayList />
+      {isPlaylistShown && <PlayList />}
 
       <div className='main-content'>
         <main>
@@ -48,7 +54,6 @@ export function RootCmp() {
             {/* <Route path='/login' element={<LoginSignup />} /> */}
             <Route path='/artist/:artistId' element={<ArtistDetails />} />
           </Routes>
-          {/* <StationEditModal /> */}
         </main>
       </div>
 

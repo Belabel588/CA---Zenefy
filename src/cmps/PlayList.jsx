@@ -18,6 +18,7 @@ import {
   setIsPlaying,
   setCurrItem,
   setCurrColor,
+  setPlaylist,
 } from '../store/actions/station.actions.js'
 import { apiService } from '../services/youtube-spotify.service.js'
 
@@ -53,6 +54,9 @@ export function PlayList({ station }) {
   )
   const stations = useSelector(
     (stateSelector) => stateSelector.stationModule.stations
+  )
+  const isPlaylistShown = useSelector(
+    (stateSelector) => stateSelector.stationModule.isPlaylistShown
   )
 
   const isHover = useRef(false)
@@ -197,12 +201,20 @@ export function PlayList({ station }) {
       console.log(err)
     }
   }
+
+  function onCloseQueue() {
+    setPlaylist(false)
+  }
   return (
     <>
       <div className='playlist-container'>
         <div className='controller-container'>
           <span>Queue</span>
-          <button>
+          <button
+            onClick={() => {
+              onCloseQueue()
+            }}
+          >
             <IoClose />
           </button>
         </div>
