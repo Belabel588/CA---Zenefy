@@ -124,7 +124,7 @@ export function SearchIndex() {
   const generateColor = (index) => {
     return tagColors[index % tagColors.length]
   }
-console.log('categoriesWithImages' , categoriesWithImages);
+
 
   const tagElements = categoriesWithImages.map((category, idx) => {
     const backgroundColor = generateColor(idx);
