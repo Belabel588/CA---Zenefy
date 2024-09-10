@@ -1,11 +1,12 @@
-.made-for {
+.made-for{
     margin-inline-start: 0.5em;
     font-size: 1.3em;
     font-family: 'GothamMedium';
 }
 
-.suggested-stations-container {
-    width: 100%;
+.suggested-stations-container{
+    margin-inline-start: 0.5em;
+    margin-inline-end: 0.5em;
     margin-bottom: 2.5em;
     display: flex;
     flex-wrap: wrap;
@@ -13,169 +14,264 @@
     max-width: 100%;
     height: 265px;
     overflow: hidden;
-    background: linear-gradient(0deg, #191414 20%, 80%, #4a0e8b00 100%);
-    overflow-x: auto;
-
-    @media (max-width: 770px) {
+    @media (max-width:770px) {
+        
         // height: calc(50vw);
+        
+        
     }
-
-    .station-container {
-        margin-top: 6rem;
+    
+    .station-container{
         cursor: pointer;
         padding: 0.5em;
         border-radius: 8px;
         transition: 0.2s;
         width: 11vw;
+        
         height: 265px;
+        
+        @media (max-width:770px) {
+    
+         width: 40vw;   
+            
+        }
+        
+        &:hover{
+            
+            background-color: rgba(255, 255, 255, 0.141);  
+            .playlist-cover-overlay{
 
-        &:nth-child(1) {
-            margin-inline-start: 3rem;
+           background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+       }
+       .cover-container{
+
+           .title{
+            opacity: 1;
+           }
+       }
+    }
+    .cover-container{
+        position: relative;
+        display: flex;
+        border-radius: 8px;
+        width: 10vw;
+        height: calc(10vw);
+        @media (max-width:770px) {
+            
+            height: calc(35vw);
+            width: 35vw;   
+
+           }
+        img{
+            width: 10vw;
+            height: calc(10vw);
+            border-radius: 8px;
+            @media (max-width:770px) {
+    
+                width: 35vw;   
+                height: calc(35vw);   
+               }
+        }
+        .playlist-cover-overlay {
+            border-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+         
+          }
+
+        .title{
+            position: absolute;
+            bottom: 20px;
+            left: 12px;
+            color: $white;
+            text-decoration: none;
+            opacity: 0;
+            transition: 0.2s;
         }
 
-        @media (max-width: 770px) {
-            width: 40vw;
+        // 
+
+        // .station-cover-container {
+        //     position: relative;
+        //     width: 300px;
+
+        //     height: calc(11vw);
+        //     overflow: hidden;
+        //     border-radius: 15px;
+        //   }
+          
+        //   .station-cover-image {
+        //     // width: 100%;
+        //     // height: 100%;
+
+        //     height: calc(11vw);
+        //     object-fit: cover;
+        //     border-radius: 15px;
+        //   }
+          
+        //   .station-cover-overlay {
+        //     position: absolute;
+        //     top: 0;
+        //     left: 0;
+        //     width: 100%;
+        //     height: 100%;
+        //     display: flex;
+        //     justify-content: center;
+        //     align-items: center;
+        //     border-radius: 15px;
+        //   }
+          
+        //   .station-cover-overlay svg {
+        //     position: absolute;
+        //     bottom: 0;
+        //     width: 100%;
+        //     height: auto;
+        //   }
+          
+        //   .station-title {
+        //     position: absolute;
+        //     bottom: 20px;
+        //     left: 20px;
+        //     color: $white;
+        //     font-size: 24px;
+        //     font-weight: bold;
+        //   }
+
+        // 
+
+        .playing-container, .play-button-container{
+            position: absolute;
+            inset-inline-end: 0.25em;
+            bottom: -25px;
+            transition: 0.2s;
+            opacity: 0;
         }
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.141);
-
-            .playlist-cover-overlay {
-                background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-            }
-
-            .cover-container .title {
-                opacity: 1;
-            }
-
-            .playing-container,
-            .play-button-container {
+        &:hover{
+            // background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.15) 100%);
+            background-color: rgba(255, 255, 255, 0.25);
+            
+            .playing-container, .play-button-container{
+                
                 opacity: 1;
                 bottom: 5px;
-            }
-
-            .play-button,
-            .pause-button {
+    
+            }            
+            .play-button, .pause-button{
                 display: flex;
-            }
 
-            .animation-container {
+            }  
+             .animation-container{
                 display: none;
             }
         }
 
-        .cover-container {
-            position: relative;
+   
+        a{
+            color: $white;
+            text-decoration: none;
+            
+        }
+        span{
+            text-wrap: nowrap;
+            overflow: hidden;
+            // text-overflow: ellipsis;
+        }
+
+        // .station-cover{
+        //     // padding: 5px;
+        //     border-top-left-radius: 5px;
+        //     border-bottom-left-radius: 5px;
+
+        //     height: calc(3.5vw);
+        //     width: 3.5vw;
+        //     object-fit:scale-down;
+
+        //     min-width: 60px;
+        //     min-height: 60px;
+
+        // }
+
+        .play-button-container, .playing-container{
+
+            margin: 0.5em;
+            min-width: 36px;
+            width: clamp(16px, 5vw, 42px);
+            height: clamp(16px, 5vw, 42px);
+
+        }
+        .play-button, .pause-button{
+            display: none;
+            background-color: $green;
+            color: black;
+            // font-size: 2em;
+            // padding: 10px;
+            border: none;
+            border-radius: 50%;
+            padding: 0px 0px 0px 5px;
+            // padding: clamp(10px, 2vw, 20px);
+
+            @media (max-width: 900px) {
+                padding: 0px 0px 0px 2px;
+            }
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: clamp(16px, 5vw, 42px);
+            width: clamp(16px, 5vw, 42px);
+            height: clamp(16px, 5vw, 42px);
+            // font-size: calc(3vw);
+            // font-size: 1em;
+            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3), 0 4px 4px rgba(0, 0, 0, 0.2);
+
+        }
+        .pause-button{
+            padding: 0px;
+        }
+        .animation-container {
+            // justify-self: center;
+            // background-color: black;
+            // border-radius: 50%;
+            // display: flex;
+            // justify-content: center;
+            // align-items: center;
+            // color: $green;
+
+
+            width: clamp(16px, 5vw, 42px);
+            height: clamp(16px, 5vw, 42px);
             display: flex;
-            border-radius: 8px;
-            width: 11vw;
-            height: calc(10vw);
+            svg{
+                margin-inline-start: 0.8em;
+                justify-self: center;
+                align-self: center;
 
-            @media (max-width: 770px) {
-                height: calc(35vw);
-                width: 35vw;
+                // width: 50%;
+                // height: 50%;
             }
 
-            img {
-                width: 11vw;
-                height: calc(11vw);
-                border-radius: 8px;
+        }
+        
+        .play-button:hover, .pause-button:hover {
+            transform: scale(1.05);
 
-                @media (max-width: 770px) {
-                    width: 35vw;
-                    height: calc(35vw);
-                }
-            }
-
-            .playlist-cover-overlay {
-                border-radius: 8px;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
-
-            .title {
-                position: absolute;
-                bottom: 20px;
-                left: 12px;
-                color: $white;
-                text-decoration: none;
-                opacity: 0;
-                transition: 0.2s;
-            }
-
-            .playing-container,
-            .play-button-container {
-                position: absolute;
-                inset-inline-end: 0.25em;
-                bottom: -25px;
-                transition: 0.2s;
-                opacity: 0;
-            }
-
-            a {
-                color: $white;
-                text-decoration: none;
-            }
-
-            span {
-                text-wrap: nowrap;
-                overflow: hidden;
-            }
-
-            .play-button-container,
-            .playing-container {
-                margin: 0.5em;
-                min-width: 36px;
-                width: clamp(16px, 5vw, 42px);
-                height: clamp(16px, 5vw, 42px);
-            }
-
-            .play-button,
-            .pause-button {
-                display: none;
-                background-color: $green;
-                color: black;
-                border: none;
-                border-radius: 50%;
-                padding: 0px 0px 0px 5px;
-                cursor: pointer;
-                transition: 0.1s;
-                font-size: clamp(16px, 5vw, 42px);
-                width: clamp(16px, 5vw, 42px);
-                height: clamp(16px, 5vw, 42px);
-                box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3), 0 4px 4px rgba(0, 0, 0, 0.2);
-
-                @media (max-width: 900px) {
-                    padding: 0px 0px 0px 2px;
-                }
-
-                &:hover {
-                    transform: scale(1.05);
-                }
-            }
-
-            .animation-container {
-                width: clamp(16px, 5vw, 42px);
-                height: clamp(16px, 5vw, 42px);
-                display: flex;
-
-                svg {
-                    margin-inline-start: 0.8em;
-                    justify-self: center;
-                    align-self: center;
-                }
-            }
         }
 
-        .artists {
-            text-wrap: wrap;
-            font-size: 0.7em;
-            color: $grey-light;
-            width: 12vw;
-            overflow-x: hidden;
-        }
+
+    } 
+    // width:  12vw;
+    height: 265px;
+    overflow: hidden;  
+    
+    .artists{
+        text-wrap: wrap;
+        font-size: 0.7em;
+        color: $grey-light;
+        
+
+
     }
+}
+
 }
