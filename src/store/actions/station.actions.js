@@ -16,6 +16,7 @@ import {
   SET_CURR_SEARCH,
   SET_IS_ACTIVE,
   SET_FILTER_BY,
+  SET_PLAYLIST,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -71,8 +72,16 @@ export async function saveStation(station) {
   }
 }
 
-export async function setCurrStation(stationId) {
+export async function setCurrStation(stationId, draggedStation) {
   try {
+    if (draggedStation) {
+      store.dispatch({
+        type: SET_CURR_STATION,
+        currStation: { ...draggedStation },
+      })
+
+      return draggedStation
+    }
     const station = await stationService.getById(stationId)
     const stationToSet = { ...station }
     store.dispatch({
@@ -159,4 +168,8 @@ export function setIsActive(stateToSet) {
 
 export function setFilter(filterBy) {
   store.dispatch({ type: SET_FILTER_BY, filterBy })
+}
+export function setPlaylist(stateToSet) {
+  const isPlaylistShown = stateToSet
+  store.dispatch({ type: SET_PLAYLIST, isPlaylistShown: isPlaylistShown })
 }

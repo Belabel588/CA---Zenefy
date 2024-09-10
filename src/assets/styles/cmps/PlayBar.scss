@@ -194,6 +194,10 @@ svg{
 
 
             }
+            i{
+
+                color: $green;
+            }
                 fill: $green;
                 display: flex;
                 flex-direction: column;
@@ -333,6 +337,31 @@ i{
 
     min-width: 17px;
     color: $grey-light;
+}
+
+.active{
+    position: relative;
+    i{
+
+        color: $green;
+    }
+    &:hover{
+        i{
+    
+            color: $green;
+        }
+
+    }
+    &::after{
+        content: '';
+        height: 5px;
+        width: 5px;
+        border-radius: 50px;
+        background-color: $green;
+        position: absolute;
+        top: 2em;
+        right: 1.15em;
+    }
 }
 
   .volume-container{
