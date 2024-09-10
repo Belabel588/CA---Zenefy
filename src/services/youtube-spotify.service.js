@@ -193,11 +193,18 @@ function convertDuration(isoDuration) {
 }
 
 async function getLyrics(trackName, artistName) {
-  const response = await fetch(
-    `https://api.lyrics.ovh/v1/${artistName}/${trackName}`
-  )
-  const data = await response.json()
-  return data.lyrics
+  try {
+    const response = await fetch(
+      `https://api.lyrics.ovh/v1/${artistName}/${trackName}`
+    )
+    const data = await response.json()
+    if (!data.lyrics) {
+      return 'Lyrics not available'
+    }
+    return data.lyrics
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 async function query(search) {

@@ -55,6 +55,7 @@ export function AppLibrary() {
 
   useEffect(() => {
     loadStations()
+    // setUpdatedStations(stations)
   }, [currFilter])
 
   useEffect(() => {
@@ -64,7 +65,6 @@ export function AppLibrary() {
   }, [stations])
 
   useEffect(() => {
-    console.log(filterByToSet)
     setFilter(filterByToSet)
   }, [filterByToSet])
 
@@ -74,17 +74,6 @@ export function AppLibrary() {
     let value = target.value
 
     setFilterByToSet({ ...filterByToSet, txt: value })
-    // Dispatch action to update the filter in the Redux store
-    // dispatch({
-    //   type: SET_FILTER_BY,
-    //   filterBy: {
-    //     ...filterBy,
-    //     [field]: value,
-    //   },
-    // })
-
-    // Reload the stations with the updated filter
-    // loadStations() stopped the filtering of the stations on the side.
   }, 800) // Debounce with a 300ms delay
 
   const isPlaying = useSelector(
@@ -108,6 +97,35 @@ export function AppLibrary() {
     setCurrStation(stationId)
     setCurrItem(0, currStation)
     setIsPlaying(true)
+  }
+
+  const [draggedItem, setDraggedItem] = useState(null)
+  const [updated, setUpdated] = useState()
+  const [updatedStations, setUpdatedStations] = useState()
+
+  const onDragStart = (event, index) => {
+    setDraggedItem(index)
+    event.target.style.opacity = '1'
+    event.target.style.borderBottom = '2px solid #1DB954'
+  }
+
+  const onDragOver = (event) => {
+    event.preventDefault() // allow dropping
+    event.target.style.opacity = '1'
+    event.target.style.borderBottom = '0px solid black'
+  }
+
+  const onDrop = async (event, index) => {
+    let updatedStations = [...stations]
+    console.log(draggedItem)
+    const dragged = updatedStations.splice(draggedItem, 1)[0] // remove the dragged item
+
+    updatedStations.splice(index, 0, dragged) // insert it
+    // setPageStation(updatedStations)
+    console.log(updatedStations)
+    // setUpdated(updatedStations)
+    setFiltered(updatedStations)
+    setDraggedItem(null)
   }
 
   return (
@@ -165,7 +183,7 @@ export function AppLibrary() {
         )}
       </div>
       <div className='library-stations-container'>
-        {filtered.map((station) => {
+        {filtered.map((station, idx) => {
           return (
             <div
               className='station-container'
@@ -174,6 +192,10 @@ export function AppLibrary() {
                 if (isHover.current) return
                 navigate(`station/${station._id}`)
               }}
+              draggable
+              onDragStart={(event) => onDragStart(event, idx)}
+              onDragOver={onDragOver}
+              onDrop={(event) => onDrop(event, idx)}
             >
               <div className='img-container'>
                 {(isPlaying && currStation._id === station._id && (

@@ -7,6 +7,7 @@
     // background-color: #1ed760;
     height: calc(100vh - 170px);
     @media (max-width:770px) {
+      height: calc(100vh - 230px);
       
       overflow-y: scroll;
     }
@@ -113,8 +114,21 @@
     position: relative;
     background-color: $background-black;
     // background-color: black;
-        height: calc(100% - 18vw);
-        overflow: auto;
+        height: calc(100% - 15vw);
+        @media (max-width:1320px) {
+          height: calc(100% - 18vw);
+          
+    }
+        @media (max-width:850px) {
+          height: calc(100% - 25vw);
+          
+    }
+    overflow: auto;
+    @media (max-width:770px) {
+
+      overflow: visible;
+      
+}
     .gradient{
       background: linear-gradient(180deg,  rgba(25, 20, 20, 0.151),rgba(25, 20, 20, 0.741) ,rgb(25, 20, 20));
       background: linear-gradient(
