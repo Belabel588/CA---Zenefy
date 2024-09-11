@@ -2,6 +2,7 @@ import axios from 'axios'
 import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
 import { video } from '@cloudinary/url-gen/qualifiers/source'
+import { stationService } from './station.service.js'
 
 export const apiService = {
   getVideos,
@@ -9,9 +10,9 @@ export const apiService = {
   searchStations,
   getPlaylistsByCategory,
 }
-const API_URL2 = 'AIzaSyDSEYt2QYx3dXpdbWDzMu8aQOIRc8uHcLk'
-const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
-
+const API_URL2 = 'AIzaSyD5ya6TB4gnb47HnJwVKZB1xyKY4E71j5o'
+const API_URL = 'AIzaSyD5ya6TB4gnb47HnJwVKZB1xyKY4E71j5o'
+// OLD API_URL = AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU
 let url = 'https://www.googleapis.com/youtube/v3/channels'
 
 let search = 'naruto'
@@ -36,9 +37,81 @@ async function getVideos(search) {
 }
 
 
+// async function getPlaylistsByCategory(categoryName) {
+//   const accessToken = await getAccessToken();
+//   const listDB = `${categoryName}List`
+
+//   // Fetch categories to get the ID for the category name
+//   const categoryRes = await fetch(`https://api.spotify.com/v1/browse/categories`, {
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`,
+//     },
+//   });
+
+//   const categoryData = await categoryRes.json();
+
+//   console.log('categoryData', categoryData);
+
+
+//   const category = categoryData.categories.items.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
+
+//   if (!category) {
+//     throw new Error('Category not found');
+//   }
+
+//   const categoryId = category.id;
+//   console.log(categoryId);
+
+//   // Fetch playlists based on category ID
+//   const playlistsRes = await fetch(`https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`, {
+//     headers: {
+//       Authorization: `Bearer ${accessToken}`,
+//     },
+//   });
+
+
+
+
+
+//   const playlistsData = await playlistsRes.json();
+//   console.log(playlistsData);
+
+//   // console.log(playlistsData.playlists.items[0]?.href);
+//   // return playlistsData.playlists.items;
+
+//   const url = playlistsData.playlists.items[0].tracks.href
+
+//   // const url = data.playlists.items[0].tracks.href
+
+
+//   const items = await searchItems(url)
+
+//   console.log('ITEMS ARE', items);
+
+
+//   let counter = 5
+
+//   const list = []
+
+//   for (var i = 0; i < counter; i++) {
+//     const videos = await getVideos(items[i].track.name)
+
+
+//     list[i] = videos[0]
+//   }
+
+//   console.log('LIST IS', list);
+
+
+//   save(listDB, list)
+
+//   return list
+// }
+
+
 async function getPlaylistsByCategory(categoryName) {
   const accessToken = await getAccessToken();
-  const listDB = `${categoryName}List`
+  const listDB = `${categoryName}List`;
 
   // Fetch categories to get the ID for the category name
   const categoryRes = await fetch(`https://api.spotify.com/v1/browse/categories`, {
@@ -48,9 +121,7 @@ async function getPlaylistsByCategory(categoryName) {
   });
 
   const categoryData = await categoryRes.json();
-
   console.log('categoryData', categoryData);
-
 
   const category = categoryData.categories.items.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
 
@@ -61,51 +132,48 @@ async function getPlaylistsByCategory(categoryName) {
   const categoryId = category.id;
   console.log(categoryId);
 
-  // Fetch playlists based on category ID
-  const playlistsRes = await fetch(`https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`, {
+  // Fetch playlists based on category ID and limit to 5 items
+  const playlistsRes = await fetch(`https://api.spotify.com/v1/browse/categories/${categoryId}/playlists?limit=5`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
 
-
-
-
-
   const playlistsData = await playlistsRes.json();
   console.log(playlistsData);
-  
-  // console.log(playlistsData.playlists.items[0]?.href);
-  // return playlistsData.playlists.items;
 
-  const url = playlistsData.playlists.items[0].tracks.href
+  // Get the first 3 playlists
+  const playlists = playlistsData.playlists.items.slice(0, 3);
 
-  // const url = data.playlists.items[0].tracks.href
+  // Create a list to hold the 3 stations
+  const stationList = [];
 
+  // Loop through each playlist and gather 5 songs for each station
+  for (const playlist of playlists) {
+    const url = playlist.tracks.href;
+    const items = await searchItems(url); // Fetch the tracks in the playlist
+    console.log(items);
 
-  const items = await searchItems(url)
+    const songList = await getVideos(items[0].track.name)
+    console.log(songList);
 
-  console.log('ITEMS ARE', items);
+    // Use the createStationFromSearch function to create a station
+    const station = await stationService.createStationFromSearch(songList, categoryName);
 
+    // Save each individual station
+    const savedStation = await stationService.save(station);
 
-  let counter = 15
-
-  const list = []
-
-  for (var i = 0; i < counter; i++) {
-    const videos = await getVideos(items[i].track.name)
-    
-    
-    list[i] = videos[0]
+    // Add the station to the list to return later
+    stationList.push(savedStation);
   }
 
-  console.log('LIST IS', list);
+  console.log('Final Station List:', stationList);
 
-
-  save(listDB, list)
-
-  return list
+  // Return the entire list of stations
+  return stationList;
 }
+
+
 
 
 
@@ -450,13 +518,27 @@ async function searchStations(search) {
 }
 
 async function searchItems(url) {
-  const accessToken = await getAccessToken() // Replace with your Spotify API access token
+  const accessToken = await getAccessToken(); // Replace with your Spotify API access token
+  console.log('url INSIDE SEARCH ITEMS', url);
+
+  // Check if the URL already has query parameters
+  if (url.includes('?')) {
+    // If it already has query parameters, append using '&'
+    url = url + '&limit=5';
+  } else {
+    // If it doesn't have query parameters, append using '?'
+    url = url + '?limit=5';
+  }
+
   const response = await fetch(`${url}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
-  })
-  const data = await response.json()
+  });
 
-  return data.items
+  const data = await response.json();
+  console.log('data.items INSIDE SEARCH ITEMS', data.items);
+
+  return data.items;
 }
+

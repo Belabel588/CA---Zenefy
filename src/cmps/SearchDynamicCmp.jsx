@@ -11,43 +11,18 @@ export function SearchDynamicCmp() {
   const dispatch = useDispatch()
   const location = useLocation()
   const [searchResults, setSearchResults] = useState([])
-  const [refactoredResults, setRefactoredResults] = useState([])
 
   const isLoading = useSelector((storeState) => storeState.stationModule.isLoading)
   const stations = useSelector((storeState) => storeState.stationModule.stations)
 
   const backgroundColor = location.state?.backgroundColor || '#ffffff'
 
-  // Function to handle refactoring of the search results
-  async function handleSearchResults(searchResults, category) {
-    console.log(searchResults);
-    
-    try {
-      const refactored = await stationService.createStationFromSearch(searchResults, category)
-      console.log('Refactored Results:', refactored)
-  
-      const savedStation = await stationService.save(refactored)
-      console.log('Saved Station:', savedStation)
-  
-      return savedStation
-    } catch (error) {
-      console.error('Error refactoring search results:', error)
-      return null
-    }
-  }
-
   // Load playlists by category and handle results
   async function loadCategoryPlaylists(category) {
     try {
       const playlists = await apiService.getPlaylistsByCategory(category)
-      console.log('playlists' , playlists);
-      
       console.log('Playlists for category:', category, playlists)
       setSearchResults(playlists)
-
-      // Handle and refactor the search results
-      const refactored = await handleSearchResults(playlists, category)
-      setRefactoredResults(refactored)
     } catch (error) {
       console.error('Error fetching playlists for category:', error)
     }
@@ -59,7 +34,6 @@ export function SearchDynamicCmp() {
   }, [category])
 
   console.log('Search Results:', searchResults)
-  console.log('Refactored Results:', refactoredResults)
 
   return (
     <div className='main-search-container'>
@@ -67,7 +41,7 @@ export function SearchDynamicCmp() {
         <h1>{category}</h1>
       </section>
       {!isLoading && <h1 className='discover'>Discover new music</h1>}
-      <SuggestedStations stations={stations} color={backgroundColor} />
+      <SuggestedStations stations={searchResults} color={backgroundColor} />
       {!isLoading && <h1 className='from-editors'>From the Editors</h1>}
     </div>
   )
