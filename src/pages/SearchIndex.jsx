@@ -90,6 +90,8 @@ export function SearchIndex() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const [isGemeni, setIsGemeni] = useState(false)
+
   const categoriesWithImages = stationService.getCategoriesWithImages()
   const [randomStations, setRandomStations] = useState([])
 
@@ -157,6 +159,7 @@ export function SearchIndex() {
       try {
         // console.log(currSearch)
         setIsLoading(true)
+
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
         const artists = await apiService.getArtistByName(currSearch)
@@ -168,9 +171,28 @@ export function SearchIndex() {
         setIsLoading(false)
       }
     }
-
-    fetchSearchResults()
+    const handleUserPrompt = async () => {
+      try {
+        setIsLoading(true)
+        const geminiStation = await apiService.geminiGenerate(currSearch)
+        console.log(geminiStation)
+        navigate(`/station/${geminiStation._id}`)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    if (!isGemeni) {
+      fetchSearchResults()
+    } else {
+      handleUserPrompt()
+    }
   }, [currSearch])
+
+  useEffect(() => {
+    console.log(isGemeni)
+  }, [isGemeni])
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -360,9 +382,31 @@ export function SearchIndex() {
     setIsPlaying(true)
   }
 
+  function onSetIsGemeni({ target }) {
+    if (isGemeni) {
+      setIsGemeni(false)
+    } else {
+      setIsGemeni(true)
+    }
+  }
+
   return currSearch === '' ? (
     <section className='search-section'>
-      <h1>Browse all</h1>
+      <div className='search-header-container'>
+        <h1>Browse all</h1>
+
+        <div className='ai-container'>
+          <span class='label'>AI Mode</span>
+          <label class='ai-checkbox'>
+            <input
+              type='checkbox'
+              checked={isGemeni}
+              onChange={onSetIsGemeni}
+            />
+            <span class='slider'></span>
+          </label>
+        </div>
+      </div>
       <ul className='search-list'>
         {tagElements}
       </ul>
@@ -430,7 +474,7 @@ export function SearchIndex() {
                 onDoubleClick={() => onPlaySearchedSong(item.id)}
               >
                 <div className='img-container'>
-                  {(isPlaying && currItem.id === item.id && (
+                  {isPlaying && currItem.id === item.id ? (
                     <div
                       className='pause-button-container'
                       onMouseEnter={() => {
@@ -445,7 +489,7 @@ export function SearchIndex() {
                         onClick={() => setIsPlaying(false)}
                       />
                     </div>
-                  )) || (
+                  ) : (
                     <div
                       className='play-button-container'
                       onMouseEnter={() => {
@@ -463,14 +507,14 @@ export function SearchIndex() {
                             return
                           }
                           onSelectStation(searchedStation._id)
-
                           onPlaySearchedSong(item.id)
                         }}
                       />
                     </div>
                   )}
-                  <img src={item.cover} alt='' />
+                  <img src={item.cover} alt={item.name} />
                 </div>
+
                 <div className='song-details'>
                   <div className='name-container'>
                     <span
@@ -480,8 +524,9 @@ export function SearchIndex() {
                           : 'item-name'
                       }
                       onClick={() => {
-                        if (isHover.current) return
-                        navigate(`/item/${item.id}`)
+                        if (!isHover.current) {
+                          navigate(`/item/${item.id}`)
+                        }
                       }}
                     >
                       {item.name}
@@ -489,18 +534,19 @@ export function SearchIndex() {
                   </div>
                   <span className='artist-name'>{item.artist}</span>
                 </div>
+
                 <button onClick={() => likeSong(item)}>
-                  {(likedItems.includes(item.id) && <AddedIcon />) || (
-                    <PlusIcon />
-                  )}
+                  {likedItems.includes(item.id) ? <AddedIcon /> : <PlusIcon />}
                 </button>
+
                 <span className='time'>{item.duration || '00:00'}</span>
+
                 <HiOutlineDotsHorizontal
                   className='options-button'
-                  onClick={() => handleClick(event, item)}
+                  onClick={(event) => handleClick(event, item)}
                 />
               </div>
-            ))}{' '}
+            ))}
           </div>
         </section>
         <div className='suggested-artist-stations'>

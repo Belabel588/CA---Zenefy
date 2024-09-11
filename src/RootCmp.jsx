@@ -36,8 +36,8 @@ export function RootCmp() {
       <AppHeader />
       <SideBar />
       <UserMsg />
-      <LoadingAnimation />
       <LoginSignup />
+      <LoadingAnimation />
       {isPlaylistShown && <PlayList />}
 
       <div className='main-content'>

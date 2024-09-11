@@ -33,24 +33,28 @@
       
   
       .main-content{
+        position: relative;
         grid-column: 1 / -1;
+        min-height: calc(100vh - 170px);
         // margin: 1rem 0;
       }
-
+      
       header {
         grid-column: 1 / -1;
       }
     }
-  
-  
+    
+    
     .main{
-      height:fit-content;
+      // min-height: calc(100vh - 170px);
+      // height:fit-content;
       
     }
     .main-content{
       background-color:$background-black;
       border-radius: 0.5rem;
-      height:fit-content;
+      // min-height: calc(100vh - 170px);
+      // height:fit-content;
       width:98%;
       // margin: 1rem 0;
     }
