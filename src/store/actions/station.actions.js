@@ -37,16 +37,14 @@ export async function loadStations() {
         // userStations = stations.filter((station) =>
         //   loggedInUser.likedStationsIds.includes(station._id)
         // )
-        userStations = loggedInUser.likedStationsIds.map((stationId) => {
-          // if(stations.includes(stationId)){
-          const stationToReturn = stations.find(
-            (station) => station._id === stationId
-          )
-          if (stationToReturn) {
-            return stationToReturn
-          }
-          // }
-        })
+        userStations = stationIds
+          .map((stationId) => {
+            const stationToReturn = stations.find(
+              (station) => station._id === stationId
+            )
+            return stationToReturn || null // Return null if station is not found
+          })
+          .filter((station) => station) // Filter out any null values
       } else {
         userStations = []
       }
