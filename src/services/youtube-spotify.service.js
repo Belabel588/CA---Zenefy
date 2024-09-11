@@ -5,7 +5,6 @@ import { geminiApiService } from './gemini-ai.api.service.js'
 import { stationService } from './station.service.js'
 import { saveStation } from '../store/actions/station.actions.js'
 import { video } from '@cloudinary/url-gen/qualifiers/source'
-import { stationService } from './station.service.js'
 
 export const apiService = {
   getVideos,
@@ -434,4 +433,13 @@ async function searchItems(url) {
   const data = await response.json()
 
   return data.items
+}
+
+async function geminiGenerate(searchTerm) {
+  const list = await searchStations(searchTerm)
+  const newStation = await geminiApiService.gptCall(list, searchTerm)
+  await stationService.saveStation(newStation)
+
+  saveStation(newStation)
+  return newStation
 }
