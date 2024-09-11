@@ -3,6 +3,7 @@ import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
 import { geminiApiService } from './gemini-ai.api.service.js'
 import { stationService } from './station.service.js'
+import { saveStation } from '../store/actions/station.actions.js'
 
 export const apiService = {
   getVideos,
@@ -11,7 +12,8 @@ export const apiService = {
   geminiGenerate,
 }
 
-const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
+// const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
+const API_URL = 'AIzaSyCU634ZyyEilTDAXETrCwAJmpdmzuoMdv8'
 
 let url = 'https://www.googleapis.com/youtube/v3/channels'
 
@@ -25,7 +27,7 @@ async function getVideos(search) {
 
   if (localRes.length === 0) {
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet
-      &videoEmbeddable=true&type=video&key=${API_URL}&q=${search}`
+      &videoEmbeddable=true&type=video&key=${API_URL}&q=${search}&limit=1`
 
     const res = await axios.get(url)
 
@@ -54,19 +56,6 @@ async function createList(search, videosWithDuration) {
 
   const regex = new RegExp(search, 'i')
 
-  // const list = videos.map((video)=>{
-  //   const currVideo = createVideo(videos[i])
-
-  //   spotifyInfo.filter((track) => regex.test(track.name === currVideo.title))
-  //   return {
-  //     url: currVideo.url,
-  //     name: spotifyInfo[i].name,
-  //     artist: spotifyInfo[i].artist,
-  //     album: spotifyInfo[i].album,
-  //     cover: spotifyInfo[i].coverArt,
-  //   }
-  // })
-
   let counter
   if (spotifyInfo.length > videos.length) counter = videos.length
   if (
@@ -77,9 +66,10 @@ async function createList(search, videosWithDuration) {
 
   for (var i = 0; i < counter; i++) {
     const currVideo = createVideo(videos[i])
-
+    console.log(currVideo)
     spotifyInfo.filter((track) => regex.test(track.name === currVideo.title))
-
+    console.log(spotifyInfo)
+    console.log(videosWithDuration)
     list[i] = {
       url: currVideo.url,
       name: spotifyInfo[i].name || 'Title not available',
@@ -92,6 +82,7 @@ async function createList(search, videosWithDuration) {
       lyrics: spotifyInfo[i].lyrics || 'Lyrics not available',
       duration: videosWithDuration[i].duration || '00:00',
     }
+    console.log(list[i])
   }
 
   save(listDB, list)
@@ -398,64 +389,117 @@ async function geminiGenerate(category = 'Workout') {
   try {
     const res = await geminiApiService.generate(category)
     console.log(res)
-    const videosList = []
-    let counter = 0
-    const items = res.map(async (song, index) => {
-      // console.log(song)
-      // const item = await getVideos(song)
 
-      const db = `${song}Youtube`
-      const localRes = await storageService.query(db)
+    const items = await Promise.all(
+      res.map(async (song) => {
+        const db = `${song}Youtube`
+        let localRes = await storageService.query(db)
 
-      if (localRes.length === 0) {
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet
-        &videoEmbeddable=true&type=video&key=${API_URL}&q=${song}`
+        // If no local result, fetch from YouTube API and store it
+        if (!localRes || localRes.length === 0) {
+          const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&videoEmbeddable=true&type=video&key=${API_URL}&q=${song}`
+          const youtubeRes = await axios.get(url)
+          localRes = youtubeRes.data
+          await storageService.post(db, localRes)
+        }
 
-        const res = await axios.get(url)
+        const videosWithDurations = await addVideoDurations(song)
+        console.log(videosWithDurations)
 
-        await storageService.post(`${db}`, res.data)
-      }
-      const videosWithDurations = await addVideoDurations(song)
-      const video = videosWithDurations.find((video) => video)
-      // console.log(videosWithDurations[0])
-      // console.log(index)
-      // videosList[counter] = videosWithDurations[0]
-      // counter++
-      // return videosWithDurations[0]
-      const items = await createList(song, video)
-      const filtered = items.filter((item) => {
-        if (item) return item
+        const items = await createList(song, videosWithDurations)
+        const filtered = items.filter((item) => item) // Filter out falsy items
+
+        const itemToReturn = filtered.find(
+          (item) =>
+            item.album &&
+            item.artist &&
+            item.cover &&
+            item.duration &&
+            item.id &&
+            item.lyrics &&
+            item.name &&
+            item.url
+        )
+
+        console.log(itemToReturn)
+        return itemToReturn || null // Return the item or null if nothing found
       })
-      console.log(filtered)
-      const itemToReturn = filtered.find(
-        (item) =>
-          item.album &&
-          item.artist &&
-          item.cover &&
-          item.duration &&
-          item.id &&
-          item.lyrics &&
-          item.name &&
-          item.url
-      )
-
-      console.log(itemToReturn)
-      if (itemToReturn) {
-        return itemToReturn
-      } else {
-      }
-    })
-
-    // console.log(items)
-    // const itemsList = await createList('Workout', videosList)
-    const results = await Promise.all(items)
-    console.log(results)
-    const station = await stationService.createStationFromSearch(
-      results,
-      category
     )
-    const savedStation = await stationService.save(station)
-    console.log(savedStation)
+
+    console.log(items)
+
+    // Filter valid items
+    const filteredResults = items.filter((item) => item)
+    console.log(filteredResults)
+
+    // Create and save the station
+    if (filteredResults.length > 0) {
+      const station = await stationService.createStationFromGemini(
+        filteredResults,
+        category
+      )
+      const savedStation = await stationService.save(station)
+      console.log(savedStation)
+      return savedStation
+    }
+    // const res = await geminiApiService.generate(category)
+    // console.log(res)
+    // const videosList = []
+    // let counter = 0
+    // const items = res.map(async (song, index) => {
+    //   // console.log(song)
+    //   // const item = await getVideos(song)
+
+    //   const db = `${song}Youtube`
+    //   const localRes = await storageService.query(db)
+
+    //   if (localRes.length === 0 && !localRes[0]) {
+    //     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet
+    //     &videoEmbeddable=true&type=video&key=${API_URL}&q=${song}`
+
+    //     const res = await axios.get(url)
+
+    //     await storageService.post(`${db}`, res.data)
+    //   }
+    //   const videosWithDurations = await addVideoDurations(song)
+    //   console.log(videosWithDurations)
+
+    //   const items = await createList(song, videosWithDurations)
+
+    //   const filtered = items.filter((item) => {
+    //     if (item) return item
+    //   })
+    //   console.log(filtered)
+    //   const itemToReturn = filtered.find(
+    //     (item) =>
+    //       item.album &&
+    //       item.artist &&
+    //       item.cover &&
+    //       item.duration &&
+    //       item.id &&
+    //       item.lyrics &&
+    //       item.name &&
+    //       item.url
+    //   )
+
+    //   console.log(itemToReturn)
+    //   if (itemToReturn) {
+    //     return itemToReturn
+    //   } else {
+    //   }
+    // })
+
+    // // console.log(items)
+    // // const itemsList = await createList('Workout', videosList)
+    // const results = await Promise.all(items)
+    // console.log(results)
+    // const filteredResults = results.filter((item) => item)
+    // const station = await stationService.createStationFromGemini(
+    //   filteredResults,
+    //   category
+    // )
+    // const savedStation = await stationService.save(station)
+    // console.log(savedStation)
   } catch (err) {
     console.log(err)
   }

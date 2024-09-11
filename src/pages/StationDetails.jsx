@@ -44,6 +44,7 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 
 export function StationDetails() {
   const navigate = useNavigate()
+  const params = useParams()
   const currStation = useSelector(
     (stateSelector) => stateSelector.stationModule.currStation
   )
@@ -110,7 +111,7 @@ export function StationDetails() {
     setCoverColor()
     loadStation(stationId)
     setCurrColorPage(currColor)
-  }, [stationId])
+  }, [stationId, params])
 
   useEffect(() => {
     loadStation(stationId)
