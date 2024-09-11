@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
+import { geminiApiService } from './gemini-ai.api.service.js'
+import { stationService } from './station.service.js'
 
 export const apiService = {
   getVideos,
   getArtistByName,
   searchStations,
+  geminiGenerate,
 }
 
 const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
@@ -39,15 +42,15 @@ async function createList(search, videosWithDuration) {
   const list = []
   const listDB = `${search}List`
 
-  const res = await storageService.query(db)
   const listRes = await storageService.query(listDB)
-  videos = res[0].items
-
-  const spotifyInfo = await getSpotify(search)
-
   if (listRes[0] && listRes[0].length > 0) {
     return listRes[0]
   }
+
+  const res = await storageService.query(db)
+  videos = res[0].items
+
+  const spotifyInfo = await getSpotify(search)
 
   const regex = new RegExp(search, 'i')
 
@@ -98,6 +101,7 @@ async function createList(search, videosWithDuration) {
 // Spotify
 
 function createVideo(video) {
+  console.log(video)
   const youtubeVideo = {
     url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
     title: video.snippet.title,
@@ -299,7 +303,7 @@ async function getArtist(artistId, token) {
 async function searchTracks(query, token) {
   try {
     const response = await fetch(
-      `https://api.spotify.com/v1/search?type=track&q=${encodeURIComponent(
+      `https://api.spotify.com/v1/search?type=track&limit=5&q=${encodeURIComponent(
         query
       )}`,
       {
@@ -326,7 +330,7 @@ async function getArtistByName(artistName) {
   const response = await fetch(
     `https://api.spotify.com/v1/search?q=${encodeURIComponent(
       artistName
-    )}&type=artist`,
+    )}&type=artist&limit=5`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -351,7 +355,7 @@ async function searchStations(search) {
   const response = await fetch(
     `https://api.spotify.com/v1/search?q=${encodeURIComponent(
       search
-    )}&type=playlist`,
+    )}&type=playlist&limit=1`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -388,4 +392,71 @@ async function searchItems(url) {
   const data = await response.json()
 
   return data.items
+}
+
+async function geminiGenerate(category = 'Workout') {
+  try {
+    const res = await geminiApiService.generate(category)
+    console.log(res)
+    const videosList = []
+    let counter = 0
+    const items = res.map(async (song, index) => {
+      // console.log(song)
+      // const item = await getVideos(song)
+
+      const db = `${song}Youtube`
+      const localRes = await storageService.query(db)
+
+      if (localRes.length === 0) {
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet
+        &videoEmbeddable=true&type=video&key=${API_URL}&q=${song}`
+
+        const res = await axios.get(url)
+
+        await storageService.post(`${db}`, res.data)
+      }
+      const videosWithDurations = await addVideoDurations(song)
+      const video = videosWithDurations.find((video) => video)
+      // console.log(videosWithDurations[0])
+      // console.log(index)
+      // videosList[counter] = videosWithDurations[0]
+      // counter++
+      // return videosWithDurations[0]
+      const items = await createList(song, video)
+      const filtered = items.filter((item) => {
+        if (item) return item
+      })
+      console.log(filtered)
+      const itemToReturn = filtered.find(
+        (item) =>
+          item.album &&
+          item.artist &&
+          item.cover &&
+          item.duration &&
+          item.id &&
+          item.lyrics &&
+          item.name &&
+          item.url
+      )
+
+      console.log(itemToReturn)
+      if (itemToReturn) {
+        return itemToReturn
+      } else {
+      }
+    })
+
+    // console.log(items)
+    // const itemsList = await createList('Workout', videosList)
+    const results = await Promise.all(items)
+    console.log(results)
+    const station = await stationService.createStationFromSearch(
+      results,
+      category
+    )
+    const savedStation = await stationService.save(station)
+    console.log(savedStation)
+  } catch (err) {
+    console.log(err)
+  }
 }

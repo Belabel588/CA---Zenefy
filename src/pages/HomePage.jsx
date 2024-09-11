@@ -9,6 +9,8 @@ import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
 import { userService } from '../services/user.service.js'
 import { utilService } from '../services/util.service.js'
+import { geminiApiService } from '../services/gemini-ai.api.service.js'
+import { apiService } from '../services/youtube-spotify.service.js'
 
 import { StationList } from '../cmps/StationList.jsx'
 
@@ -20,7 +22,6 @@ import {
   setCurrItem,
   setCurrColor,
 } from '../store/actions/station.actions.js'
-import { apiService } from '../services/youtube-spotify.service.js'
 
 import { Sort } from '../cmps/Sort.jsx'
 import { SuggestedStations } from '../cmps/SuggestedStations.jsx'
@@ -75,6 +76,8 @@ export function HomePage() {
   useEffect(() => {
     dispatch({ type: SET_FILTER_BY, filterBy })
     getAllStations()
+    // geminiApiService.generate()
+    // apiService.geminiGenerate()
   }, [])
 
   useEffect(() => {
