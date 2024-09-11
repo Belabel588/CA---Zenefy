@@ -202,10 +202,11 @@ export function AppHeader() {
             ref={inputRef} // Step 3: Bind the ref to the input field
             // value={searchTerm}
           />
-          {(filterBy.txt && (
+          {(searchTerm && (
             <IoClose
               onClick={() => {
                 inputRef.current.value = ''
+                setSearchTerm('')
               }}
             />
           )) || <ExploreIcon isFocus={isFocus} />}

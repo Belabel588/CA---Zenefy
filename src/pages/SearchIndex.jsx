@@ -89,7 +89,7 @@ export function SearchIndex() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const [isGenemi, setIsGenemi] = useState(false)
+  const [isGemeni, setIsGemeni] = useState(false)
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
   const [randomStations, setRandomStations] = useState([])
@@ -147,26 +147,40 @@ export function SearchIndex() {
       try {
         // console.log(currSearch)
         setIsLoading(true)
-        let results
-        if (!isGenemi) {
-          results = await apiService.getVideos(currSearch)
-          setSearchResults(results)
-          const artists = await apiService.getArtistByName(currSearch)
-          setCurrArtists(artists)
-          setArtists(artists)
-        } else {
-          const geminiStation = await apiService.geminiGenerate(currSearch)
-          console.log(geminiStation)
-          navigate(`/station/${geminiStation._id}`)
-        }
+
+        const results = await apiService.getVideos(currSearch)
+        setSearchResults(results)
+        const artists = await apiService.getArtistByName(currSearch)
+        setCurrArtists(artists)
+        setArtists(artists)
       } catch (error) {
         console.error('Failed to fetch search results:', error)
       } finally {
         setIsLoading(false)
       }
     }
-    fetchSearchResults()
+    const handleUserPrompt = async () => {
+      try {
+        setIsLoading(true)
+        const geminiStation = await apiService.geminiGenerate(currSearch)
+        console.log(geminiStation)
+        navigate(`/station/${geminiStation._id}`)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    if (!isGemeni) {
+      fetchSearchResults()
+    } else {
+      handleUserPrompt()
+    }
   }, [currSearch])
+
+  useEffect(() => {
+    console.log(isGemeni)
+  }, [isGemeni])
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -356,11 +370,11 @@ export function SearchIndex() {
     setIsPlaying(true)
   }
 
-  function onSetIsGenemi({ target }) {
-    if (isGenemi) {
-      setIsGenemi(false)
+  function onSetIsGemeni({ target }) {
+    if (isGemeni) {
+      setIsGemeni(false)
     } else {
-      setIsGenemi(true)
+      setIsGemeni(true)
     }
   }
 
@@ -374,8 +388,8 @@ export function SearchIndex() {
           <label class='ai-checkbox'>
             <input
               type='checkbox'
-              checked={isGenemi}
-              onChange={onSetIsGenemi}
+              checked={isGemeni}
+              onChange={onSetIsGemeni}
             />
             <span class='slider'></span>
           </label>
