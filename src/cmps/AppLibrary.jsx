@@ -67,6 +67,7 @@ export function AppLibrary() {
 
   useEffect(() => {
     setFilter(filterByToSet)
+    console.log(filterByToSet)
   }, [filterByToSet])
 
   const handleChange = utilService.debounce(({ target }) => {

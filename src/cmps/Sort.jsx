@@ -12,6 +12,7 @@ export function Sort({ filtered, setFiltered, isNav }) {
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
+  console.log(stations)
 
   useEffect(() => {
     // Set the initial filtered stations list based on the stations in the store
@@ -23,7 +24,7 @@ export function Sort({ filtered, setFiltered, isNav }) {
     // Filter stations based on the selected label
 
     const filteredStations = filterStations(checkedLabel)
-    console.log(filteredStations)
+
     // Set the filtered stations list in the local state
     // setFilteredStations(filteredStations)
     setFiltered(filteredStations)
