@@ -6,6 +6,14 @@
       display: none !important;
     }
     } 
+
+    .mobile-library-header{
+      display: none;
+    }
+
+    .library-search-container{
+      display: none;
+    }
 }
 
 /* Tablet */
@@ -17,6 +25,15 @@
       display: none !important;
     }
     } 
+
+
+    .mobile-library-header{
+      display: none;
+    }
+
+    .library-search-container{
+      display: none;
+    }
 }
 
 
@@ -221,6 +238,24 @@
       color: $white;  
         text-decoration: none;
 
+    }
+
+
+  }
+
+
+  .plus-icon{
+    width: 1.2rem;
+    height: 1.2rem;
+    // margin-right: 0.5rem;
+    // margin-bottom: 0.8rem;
+
+
+    color:$grey-light;
+
+    &:hover{
+      color:$white;
+      transition: 1s;
     }
   }
 

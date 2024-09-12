@@ -55,28 +55,30 @@ export function AppFooterMobile() {
         <p>Search</p>
       </div>
 
-      <div
-        className={
-          page === '/library' ? 'library-title active' : 'library-title'
-        }
-      >
-        <svg
-          className='library-icon'
-          xmlns='http://www.w3.org/2000/svg'
-          role='img'
-          height='24'
-          width='24'
-          aria-hidden='true'
-          viewBox='0 0 24 24'
-          data-encore-id='icon'
+      <NavLink to='/library' className='library-link'>
+        <div
+          className={
+            page === '/library' ? 'library-title active' : 'library-title'
+          }
         >
-          <path
-            d='M3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zM15.5 2.134A1 1 0 0 0 14 3v18a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V6.464a1 1 0 0 0-.5-.866l-6-3.464zM9 2a1 1 0 0 0-1 1v18a1 1 0 1 0 2 0V3a1 1 0 0 0-1-1z'
-            fill='#b3b3af'
-          ></path>
-        </svg>
-        <p className='library-text'>Your Library</p>
-      </div>
-    </div>
+          <svg
+            className='library-icon'
+            xmlns='http://www.w3.org/2000/svg'
+            role='img'
+            height='24'
+            width='24'
+            aria-hidden='true'
+            viewBox='0 0 24 24'
+            data-encore-id='icon'
+          >
+            <path
+              d='M3 22a1 1 0 0 1-1-1V3a1 1 0 0 1 2 0v18a1 1 0 0 1-1 1zM15.5 2.134A1 1 0 0 0 14 3v18a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V6.464a1 1 0 0 0-.5-.866l-6-3.464zM9 2a1 1 0 0 0-1 1v18a1 1 0 1 0 2 0V3a1 1 0 0 0-1-1z'
+              fill='#b3b3af'
+            ></path>
+          </svg>
+          <p className='library-text'>Your Library</p>
+        </div>
+      </NavLink>
+    </div >
   )
 }
