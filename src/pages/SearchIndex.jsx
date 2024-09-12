@@ -161,18 +161,7 @@ export function SearchIndex() {
         // setIsLoading(false)
       }
     }
-    // const handleUserPrompt = async () => {
-    //   try {
-    //     setIsLoading(true)
-    //     const geminiStation = await apiService.geminiGenerate(currSearch)
-    //     console.log(geminiStation)
-    //     navigate(`/station/${geminiStation._id}`)
-    //   } catch (err) {
-    //     console.log(err)
-    //   } finally {
-    //     setIsLoading(false)
-    //   }
-    // }
+
     if (!currSearch) return
     fetchSearchResults()
   }, [currSearch])
@@ -382,8 +371,8 @@ export function SearchIndex() {
 
   return currSearch === '' ? (
     <section className='search-section'>
-      <div className='search-header-container'>
-        <h1>Browse all</h1>
+      <h1>Browse all</h1>
+      {/* <div className='search-header-container'>
 
         <div className='ai-container'>
           <span class='label'>AI Mode</span>
@@ -396,7 +385,7 @@ export function SearchIndex() {
             <span class='slider'></span>
           </label>
         </div>
-      </div>
+      </div> */}
       <ul className='search-list'>
         {stations
           .filter(
