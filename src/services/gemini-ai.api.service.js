@@ -14,7 +14,7 @@ const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 async function generate(category) {
   try {
     const json = JSON.stringify(station)
-    const prompt = `Generate an array of 5 song names. The prompt for the playlist is ${category}. Make the response ready to convert to useable array. Make the songs unique from call to call. Don't add any explanation.`
+    const prompt = `Generate an array of 5 unique song names based on the user's input: "${category}". The input might be a song name, a phrase, a category, an artist name, or anything that comes to mind. Respond in JSON format as an array of strings, with no additional text or explanation. Ensure that each response contains different song names from previous calls.`
 
     const result = await model.generateContent(prompt)
     let stringifyArray = result.response.text()
