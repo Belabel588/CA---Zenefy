@@ -367,7 +367,7 @@ export function StationDetails() {
     return (
       <section className='station-details-container'>
         <StationEditModal
-          station={station}
+          station={...station}
           modalRef={modalRef}
           toggleModal={toggleModal}
           saveStation={sendToSaveStation}

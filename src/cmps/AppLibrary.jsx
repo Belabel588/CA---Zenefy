@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service'
 import { utilService } from '../services/util.service.js'
-import { loadStations } from '../store/actions/station.actions'
+import { loadStations, setIsLoading } from '../store/actions/station.actions'
 import {
   setIsPlaying,
   setCurrStation,
@@ -55,6 +55,11 @@ export function AppLibrary() {
     (stateSelector) => stateSelector.stationModule.filterBy
   )
 
+  const isLoading = useSelector(
+    (stateSelector) => stateSelector.stationModule.isLoading
+  )
+
+  const [generateButton, setGenerateButton] = useState()
   const inputRef = useRef()
 
   useEffect(() => {
@@ -66,7 +71,7 @@ export function AppLibrary() {
     //   loadStations()
     // dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
     //   setStationToSet(stations)
-  }, [stations])
+  }, [])
 
   useEffect(() => {
     setFilter(filterByToSet)
@@ -156,15 +161,15 @@ export function AppLibrary() {
   async function handleUserPrompt() {
     try {
       if (!prompt) return
-      setIsGemini(false)
-      // setIsLoading(true)
+      setIsLoading(true)
       const geminiStation = await apiService.geminiGenerate(prompt)
       console.log(geminiStation)
       navigate(`/station/${geminiStation._id}`)
     } catch (err) {
       console.log(err)
     } finally {
-      // setIsLoading(false)
+      setIsGemini(false)
+      setIsLoading(false)
     }
   }
   const [prompt, setPrompt] = useState('')
@@ -211,7 +216,11 @@ export function AppLibrary() {
               <span>Generate by prompt</span>
               <div className='user-interface'>
                 <input type='text' onChange={handlePromptChange} />
-                <button onClick={handleUserPrompt}>Generate</button>
+                {!isLoading ? (
+                  <button onClick={handleUserPrompt}>Generate</button>
+                ) : (
+                  <button className='loading-button'>Generating</button>
+                )}
               </div>
             </div>
           )}

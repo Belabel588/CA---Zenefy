@@ -134,9 +134,34 @@ button{
         cursor: pointer;
         font-size: 1rem;
         transition: background-color 0.3s ease;
-  
+        
+        
         &:hover {
           background-color: #17a347; // Darker green on hover
+        }
+        
+        
+        
+      }
+      .loading-button{
+        animation: colorChange 2s linear infinite; // Infinite loop animation
+
+      }
+      @keyframes colorChange {
+        0% {
+          background-color: #1db954; // Spotify green
+        }
+        25% {
+          background-color: #1e3264; // Spotify blue
+        }
+        50% {
+          background-color: #f39c12; // Bright yellow-orange
+        }
+        75% {
+          background-color: #e74c3c; // Vibrant red
+        }
+        100% {
+          background-color: #1db954; // Back to Spotify green
         }
       }
     }

@@ -31,15 +31,19 @@ export function StationEditModal({
   saveStation,
 }) {
   const [editStation, setEditStation] = useState({})
-  const [coverSrc, setCoverSrc] = useState(station.cover)
+  const [coverSrc, setCoverSrc] = useState()
 
   useEffect(() => {
-    if (coverSrc) {
-      setEditStation({ ...editStation, cover: coverSrc })
-    } else {
-      setEditStation({ ...station })
-    }
+    console.log(station)
+    console.log(coverSrc)
+    setEditStation({ ...station })
   }, [station, coverSrc])
+
+  useEffect(() => {
+    if (coverSrc !== station.cover && coverSrc) {
+      setEditStation({ ...editStation, cover: coverSrc })
+    }
+  }, [coverSrc])
 
   function handleChange({ target }) {
     const field = target.name
