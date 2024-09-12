@@ -11,14 +11,7 @@ export const apiService = {
   getArtistByName,
   searchStations,
   geminiGenerate,
-  getPlaylistsByCategory,
 }
-
-const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
-
-let url = 'https://www.googleapis.com/youtube/v3/channels'
-
-// const API_URL = 'AIzaSyCU634ZyyEilTDAXETrCwAJmpdmzuoMdv8'
 const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
 
 // Youtube
@@ -365,27 +358,18 @@ async function searchStations(search) {
 }
 
 async function searchItems(url) {
-  const accessToken = await getAccessToken() // Replace with your Spotify API access token
-  console.log('url INSIDE SEARCH ITEMS', url)
-
-  // Check if the URL already has query parameters
-  if (url.includes('?')) {
-    // If it already has query parameters, append using '&'
-    url = url + '&limit=5'
-  } else {
-    // If it doesn't have query parameters, append using '?'
-    url = url + '?limit=5'
-  }
-  const response = await fetch(`${url}`, {
+  const accessToken = await getAccessToken()
+  const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   })
-  const data = await response.json()
 
+  const data = await response.json()
   return data.items
 }
 
+// Gemini AI
 async function geminiGenerate(searchTerm) {
   if (!searchTerm) return
   try {
