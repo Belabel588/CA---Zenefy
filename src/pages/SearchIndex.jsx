@@ -221,7 +221,7 @@ export function SearchIndex() {
     }
 
     fetchStations()
-  }, [searchResults])
+  }, [searchResults, currSearch])
 
   useEffect(() => {
     const userStationsToSet = stations.filter((station) =>

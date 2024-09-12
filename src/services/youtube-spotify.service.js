@@ -22,7 +22,7 @@ async function getVideos(search) {
   const localRes = await storageService.query(db)
 
   if (!localRes || localRes.length === 0) {
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&videoEmbeddable=true&type=video&key=${API_URL}&q=${search}&limit=1`
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&videoEmbeddable=true&type=video&key=${API_URL}&q=${search}&limit=4`
     const res = await axios.get(url)
     await storageService.post(db, res.data)
   }
@@ -34,8 +34,9 @@ async function getVideos(search) {
 async function createList(search, videosWithDuration) {
   const listDB = `${search}List`
   const listRes = await storageService.query(listDB)
-
-  if (listRes && listRes.length > 0) {
+  console.log(listRes)
+  // Return cached result if it already exists
+  if (listRes[0] && listRes[0].length > 0) {
     return listRes[0]
   }
 
@@ -44,12 +45,29 @@ async function createList(search, videosWithDuration) {
   const videos = res[0]?.items || []
   const spotifyInfo = await getSpotify(search)
   const regex = new RegExp(search, 'i')
+  console.log(spotifyInfo)
 
   const counter = Math.min(spotifyInfo.length, videos.length)
+  let filteredTracks = spotifyInfo
 
+  // Create a list of matched videos and tracks
   const list = videos.slice(0, counter).map((video, i) => {
+    // Find a matching track using regex and remove it from filteredTracks
+    const trackIndex = filteredTracks.findIndex(
+      (track) =>
+        regex.test(track.name) ||
+        regex.test(track.artist) ||
+        regex.test(track.album)
+    )
+
+    // If a matching track is found, remove it from the filteredTracks array
+    const track =
+      trackIndex !== -1 ? filteredTracks.splice(trackIndex, 1)[0] : null
+
+    // Create the video object
     const currVideo = createVideo(video)
-    const track = spotifyInfo.find((track) => regex.test(track.name))
+
+    // No filtering out of tracks; maintain the full list.
 
     return {
       url: currVideo.url,
@@ -126,29 +144,35 @@ async function getSpotify(search) {
   )
 
   const tracksToSave = await Promise.all(
-    tracks.map(async (track) => {
-      const title = track.name
-      const artist =
-        track.artists.map((artist) => artist.name).join(', ') ||
-        track.artists[0]
-      let lyrics
+    tracks
+      .filter(
+        (track, index, self) =>
+          // Keep only the first occurrence of each track name
+          index === self.findIndex((t) => t.name === track.name)
+      )
+      .map(async (track) => {
+        const title = track.name
+        const artist =
+          track.artists.map((artist) => artist.name).join(', ') ||
+          track.artists[0]
+        let lyrics
 
-      if (title && artist) {
-        try {
-          lyrics = await getLyrics(title, artist)
-        } catch (err) {
-          console.log(err)
+        if (title && artist) {
+          try {
+            lyrics = await getLyrics(title, artist)
+          } catch (err) {
+            console.log(err)
+          }
         }
-      }
 
-      return {
-        name: track.name,
-        artist,
-        album: track.album.name,
-        cover: track.album.images[0]?.url,
-        lyrics: lyrics || 'Lyrics not found',
-      }
-    })
+        return {
+          name: track.name,
+          artist,
+          album: track.album.name,
+          cover: track.album.images[0]?.url,
+          lyrics: lyrics || 'Lyrics not found',
+        }
+      })
   )
 
   await save(db, tracksToSave)
@@ -214,6 +238,7 @@ async function searchTracks(query, token) {
     )
 
     const data = await response.json()
+    console.log(data.tracks.items)
     return data.tracks.items
   } catch (error) {
     console.error('Error searching for tracks:', error)
