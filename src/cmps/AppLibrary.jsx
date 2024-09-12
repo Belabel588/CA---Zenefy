@@ -213,13 +213,17 @@ export function AppLibrary() {
           </button>
           {isGemini && (
             <div className='gemini-modal-container'>
-              <span>Generate by prompt</span>
+              {!isLoading ? (
+                <span>Generate by prompt</span>
+              ) : (
+                <span>Generating...</span>
+              )}
               <div className='user-interface'>
                 <input type='text' onChange={handlePromptChange} />
                 {!isLoading ? (
                   <button onClick={handleUserPrompt}>Generate</button>
                 ) : (
-                  <button className='loading-button'>Generating</button>
+                  <button className='loading-button'>Generate</button>
                 )}
               </div>
             </div>

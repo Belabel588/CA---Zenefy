@@ -144,24 +144,34 @@ button{
         
       }
       .loading-button{
-        animation: colorChange 2s linear infinite; // Infinite loop animation
+        animation: colorAndShapeChange 2s linear infinite; // Infinite loop animation
 
       }
-      @keyframes colorChange {
+      @keyframes colorAndShapeChange {
         0% {
           background-color: #1db954; // Spotify green
+          border-radius: 4px; // Normal button shape
+          transform: scale(1); // Regular size
         }
         25% {
           background-color: #1e3264; // Spotify blue
+          border-radius: 20px; // Slightly rounded corners
+          transform: scale(1.1); // Grow slightly
         }
         50% {
           background-color: #f39c12; // Bright yellow-orange
+          border-radius: 50px; // More rounded, pill shape
+          transform: scale(1.2); // Grow larger
         }
         75% {
           background-color: #e74c3c; // Vibrant red
+          border-radius: 50%; // Fully circular button
+          transform: scale(1.15); // Shrink a bit
         }
         100% {
           background-color: #1db954; // Back to Spotify green
+          border-radius: 4px; // Back to normal shape
+          transform: scale(1); // Back to original size
         }
       }
     }
