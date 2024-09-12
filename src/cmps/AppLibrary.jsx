@@ -16,6 +16,8 @@ import {
 } from '../store/actions/station.actions.js'
 import { updateUser } from '../store/actions/user.actions.js'
 
+import { apiService } from '../services/youtube-spotify.service.js'
+
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
 import { Sort } from './Sort.jsx'
@@ -24,6 +26,7 @@ import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
 import { IoSearch } from 'react-icons/io5'
 import { IoCloseOutline } from 'react-icons/io5'
+import { LuSparkles } from 'react-icons/lu'
 
 export function AppLibrary() {
   const dispatch = useDispatch()
@@ -140,6 +143,36 @@ export function AppLibrary() {
     }
   }
 
+  const [isGemini, setIsGemini] = useState(false)
+
+  function onSetGeminiModal() {
+    if (isGemini) {
+      setIsGemini(false)
+    } else {
+      setIsGemini(true)
+    }
+  }
+
+  async function handleUserPrompt() {
+    try {
+      if (!prompt) return
+      setIsGemini(false)
+      // setIsLoading(true)
+      const geminiStation = await apiService.geminiGenerate(prompt)
+      console.log(geminiStation)
+      navigate(`/station/${geminiStation._id}`)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      // setIsLoading(false)
+    }
+  }
+  const [prompt, setPrompt] = useState('')
+  function handlePromptChange({ target }) {
+    console.log(target.value)
+    setPrompt(target.value)
+  }
+
   return (
     <div className='library-container'>
       <div className='library-header'>
@@ -161,10 +194,28 @@ export function AppLibrary() {
           </svg>
           <p className='library-text'>Your Library</p>
         </div>
-
-        <button>
-          <FaPlus className='plus-icon' onClick={onCreateNewStation} />
-        </button>
+        <div className='action-buttons-container'>
+          <button>
+            <LuSparkles
+              className='ai-icon'
+              onClick={() => {
+                onSetGeminiModal()
+              }}
+            />
+          </button>
+          <button>
+            <FaPlus className='plus-icon' onClick={onCreateNewStation} />
+          </button>
+          {isGemini && (
+            <div className='gemini-modal-container'>
+              <span>Generate by prompt</span>
+              <div className='user-interface'>
+                <input type='text' onChange={handlePromptChange} />
+                <button onClick={handleUserPrompt}>Generate</button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <Sort setFiltered={setFiltered} isNav={true} />
       <div className='playlist-input-container'>
