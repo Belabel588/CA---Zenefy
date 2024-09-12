@@ -11,203 +11,107 @@ export const apiService = {
   getArtistByName,
   searchStations,
   geminiGenerate,
-  getPlaylistsByCategory,
 }
-
 const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
 
-let url = 'https://www.googleapis.com/youtube/v3/channels'
-
-let search = 'naruto'
-
 // Youtube
-async function getVideos(search) {
-  const db = `${search}Youtube`
-  const localRes = await storageService.query(db)
+async function getVideos(search, limit = null) {
+  try {
+    const db = `${search}Youtube`
+    const localRes = await storageService.query(db)
 
-  if (!localRes || localRes.length === 0) {
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&videoEmbeddable=true&type=video&key=${API_URL}&q=${search}&limit=1`
-    const res = await axios.get(url)
-    await storageService.post(db, res.data)
+    if (!localRes || localRes.length === 0) {
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&videoEmbeddable=true&type=video&key=${API_URL}&q=${search}&limit=4`
+      const res = await axios.get(url)
+      await storageService.post(db, res.data)
+    }
+    let videosWithDurations
+    if (limit) {
+      videosWithDurations = await addVideoDurations(search, limit)
+    } else {
+      videosWithDurations = await addVideoDurations(search)
+    }
+    console.log(videosWithDurations)
+    let list
+    if (limit) {
+      list = await createList(search, videosWithDurations, limit)
+    } else {
+      list = await createList(search, videosWithDurations)
+    }
+    if (limit === 1) {
+      return list[0]
+    } else {
+      return list
+    }
+  } catch (err) {
+    console.log(err)
   }
-
-  const videosWithDurations = await addVideoDurations(search)
-  return createList(search, videosWithDurations)
 }
 
-// async function getPlaylistsByCategory(categoryName) {
-//   const accessToken = await getAccessToken();
-//   const listDB = `${categoryName}List`
-
-//   // Fetch categories to get the ID for the category name
-//   const categoryRes = await fetch(`https://api.spotify.com/v1/browse/categories`, {
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//   });
-
-//   const categoryData = await categoryRes.json();
-
-//   console.log('categoryData', categoryData);
-
-//   const category = categoryData.categories.items.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
-
-//   if (!category) {
-//     throw new Error('Category not found');
-//   }
-
-//   const categoryId = category.id;
-//   console.log(categoryId);
-
-//   // Fetch playlists based on category ID
-//   const playlistsRes = await fetch(`https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`, {
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//   });
-
-//   const playlistsData = await playlistsRes.json();
-//   console.log(playlistsData);
-
-//   // console.log(playlistsData.playlists.items[0]?.href);
-//   // return playlistsData.playlists.items;
-
-//   const url = playlistsData.playlists.items[0].tracks.href
-
-//   // const url = data.playlists.items[0].tracks.href
-
-//   const items = await searchItems(url)
-
-//   console.log('ITEMS ARE', items);
-
-//   let counter = 5
-
-//   const list = []
-
-//   for (var i = 0; i < counter; i++) {
-//     const videos = await getVideos(items[i].track.name)
-
-//     list[i] = videos[0]
-//   }
-
-//   console.log('LIST IS', list);
-
-//   save(listDB, list)
-
-//   return list
-// }
-
-async function getPlaylistsByCategory(categoryName) {
-  const accessToken = await getAccessToken()
-  const listDB = `${categoryName}List`
-
-  // Fetch categories to get the ID for the category name
-  const categoryRes = await fetch(
-    `https://api.spotify.com/v1/browse/categories`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+async function createList(search, videosWithDuration, limit = null) {
+  try {
+    const listDB = `${search}List`
+    const listRes = await storageService.query(listDB)
+    console.log(listRes)
+    // Return cached result if it already exists
+    if (listRes[0] && listRes[0].length > 0) {
+      return listRes[0]
     }
-  )
 
-  const categoryData = await categoryRes.json()
-  console.log('categoryData', categoryData)
+    const db = `${search}Youtube`
+    const res = await storageService.query(db)
+    const videos = res[0]?.items || []
+    const spotifyInfo = await getSpotify(search)
+    const regex = new RegExp(search, 'i')
+    console.log(spotifyInfo)
 
-  const category = categoryData.categories.items.find(
-    (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
-  )
-
-  if (!category) {
-    throw new Error('Category not found')
-  }
-
-  const categoryId = category.id
-  console.log(categoryId)
-
-  // Fetch playlists based on category ID and limit to 5 items
-  const playlistsRes = await fetch(
-    `https://api.spotify.com/v1/browse/categories/${categoryId}/playlists?limit=5`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+    let counter
+    if (limit) {
+      counter = limit
+    } else {
+      counter = Math.min(spotifyInfo.length, videos.length)
     }
-  )
+    let filteredTracks = spotifyInfo
 
-  const playlistsData = await playlistsRes.json()
-  console.log(playlistsData)
+    // Create a list of matched videos and tracks
+    const list = videos.slice(0, counter).map((video, i) => {
+      // Find a matching track using regex and remove it from filteredTracks
+      const trackIndex = filteredTracks.findIndex(
+        (track) =>
+          regex.test(track.name) ||
+          regex.test(track.artist) ||
+          regex.test(track.album)
+      )
 
-  // Get the first 3 playlists
-  const playlists = playlistsData.playlists.items.slice(0, 3)
+      // If a matching track is found, remove it from the filteredTracks array
+      const track =
+        trackIndex !== -1 ? filteredTracks.splice(trackIndex, 1)[0] : null
 
-  // Create a list to hold the 3 stations
-  const stationList = []
+      // Create the video object
+      const currVideo = createVideo(video)
+      console.log(track)
+      console.log(video)
+      // No filtering out of tracks; maintain the full list.
 
-  // Loop through each playlist and gather 5 songs for each station
-  for (const playlist of playlists) {
-    const url = playlist.tracks.href
-    const items = await searchItems(url) // Fetch the tracks in the playlist
-    console.log(items)
+      return {
+        url: currVideo.url,
+        name: track?.name || 'Title not available',
+        artist: track?.artist || 'Artist not available',
+        album: track?.album || 'Album not available',
+        cover:
+          track?.cover ||
+          'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+        id: utilService.makeId(),
+        lyrics: track?.lyrics || 'Lyrics not available',
+        duration: videosWithDuration[0]?.duration || '00:00',
+      }
+    })
 
-    const songList = await getVideos(items[0].track.name)
-    console.log(songList)
-
-    // Use the createStationFromSearch function to create a station
-    const station = await stationService.createStationFromSearch(
-      songList,
-      categoryName
-    )
-
-    // Save each individual station
-    const savedStation = await stationService.save(station)
-
-    // Add the station to the list to return later
-    stationList.push(savedStation)
+    await storageService.post(listDB, list)
+    return list
+  } catch (err) {
+    console.log(err)
   }
-
-  console.log('Final Station List:', stationList)
-
-  // Return the entire list of stations
-  return stationList
-}
-
-async function createList(search, videosWithDuration) {
-  const listDB = `${search}List`
-  const listRes = await storageService.query(listDB)
-
-  if (listRes && listRes.length > 0) {
-    return listRes[0]
-  }
-
-  const db = `${search}Youtube`
-  const res = await storageService.query(db)
-  const videos = res[0]?.items || []
-  const spotifyInfo = await getSpotify(search)
-  const regex = new RegExp(search, 'i')
-
-  const counter = Math.min(spotifyInfo.length, videos.length)
-
-  const list = videos.slice(0, counter).map((video, i) => {
-    const currVideo = createVideo(video)
-    const track = spotifyInfo.find((track) => regex.test(track.name))
-
-    return {
-      url: currVideo.url,
-      name: track?.name || 'Title not available',
-      artist: track?.artist || 'Artist not available',
-      album: track?.album || 'Album not available',
-      cover:
-        track?.cover ||
-        'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
-      id: utilService.makeId(),
-      lyrics: track?.lyrics || 'Lyrics not available',
-      duration: videosWithDuration[i]?.duration || '00:00',
-    }
-  })
-
-  await storageService.post(listDB, list)
-  return list
 }
 
 function createVideo(video) {
@@ -217,21 +121,40 @@ function createVideo(video) {
   }
 }
 
-async function addVideoDurations(search) {
-  const db = `${search}Youtube`
-  const localRes = await storageService.query(db)
-  const videoIds = localRes[0].items.map((video) => video.id.videoId).join(',')
+async function addVideoDurations(search, limit = null) {
+  try {
+    const db = `${search}Youtube`
+    const localRes = await storageService.query(db)
+    const videoIds = localRes[0].items
+      .map((video) => video.id.videoId)
+      .join(',')
+    const video = localRes[0]
 
-  const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_URL}`
-  const res = await axios.get(url)
-  const videoDetails = res.data.items
-
-  return localRes[0].items.map((video, index) => {
-    const duration = convertDuration(
-      videoDetails[index].contentDetails.duration
-    )
-    return { ...video, duration }
-  })
+    const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_URL}`
+    const res = await axios.get(url)
+    console.log(res)
+    const videoDetails = res.data.items
+    if (!limit) {
+      return localRes[0].items.map((video, index) => {
+        const duration = convertDuration(
+          videoDetails[index].contentDetails.duration
+        )
+        return { ...video, duration }
+      })
+    } else {
+      for (let i = 0; i < limit; i++) {
+        console.log(videoDetails[i])
+        const duration = convertDuration(
+          videoDetails[i].contentDetails.duration
+        )
+        console.log(duration)
+        console.log({ ...video, duration })
+        return { ...video, duration }
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 function convertDuration(isoDuration) {
@@ -248,52 +171,70 @@ function convertDuration(isoDuration) {
 
 // Spotify
 async function getSpotify(search) {
-  const token = await getAccessToken()
-  const db = `${search}Spotify`
-  const res = await query(db)
+  try {
+    const token = await getAccessToken()
+    const db = `${search}Spotify`
+    const res = await query(db)
 
-  if (res && res.length > 0) {
-    return res
-  }
+    if (res && res.length > 0) {
+      return res
+    }
 
-  let tracks = await searchTracks(search, token)
-  const regex = new RegExp(search, 'i')
+    let tracks = await searchTracks(search, token)
+    const regex = new RegExp(search, 'i')
+    console.log(tracks)
+    tracks = tracks.filter((track) => {
+      // Ensure fields exist before applying regex
+      const name = track.name || ''
+      const albumName = track.album?.name || ''
+      const artists = track.artists?.map((artist) => artist.name) || []
 
-  tracks = tracks.filter(
-    (track) =>
-      regex.test(track.name) ||
-      regex.test(track.artists.map((artist) => artist.name).join(', ')) ||
-      regex.test(track.album.name)
-  )
-
-  const tracksToSave = await Promise.all(
-    tracks.map(async (track) => {
-      const title = track.name
-      const artist =
-        track.artists.map((artist) => artist.name).join(', ') ||
-        track.artists[0]
-      let lyrics
-
-      if (title && artist) {
-        try {
-          lyrics = await getLyrics(title, artist)
-        } catch (err) {
-          console.log(err)
-        }
-      }
-
-      return {
-        name: track.name,
-        artist,
-        album: track.album.name,
-        cover: track.album.images[0]?.url,
-        lyrics: lyrics || 'Lyrics not found',
-      }
+      // Check if any field matches the regex
+      return (
+        regex.test(name) ||
+        artists.some((artistName) => regex.test(artistName)) ||
+        regex.test(albumName)
+      )
     })
-  )
 
-  await save(db, tracksToSave)
-  return tracksToSave
+    console.log(tracks)
+
+    const tracksToSave = await Promise.all(
+      tracks
+        .filter(
+          (track, index, self) =>
+            // Keep only the first occurrence of each track name
+            index === self.findIndex((t) => t.name === track.name)
+        )
+        .map((track) => {
+          const title = track.name
+          const artist = track.artists[0].name
+          let lyrics
+
+          // if (title && artist) {
+          //   try {
+          //     lyrics = await getLyrics(title, artist)
+          //   } catch (err) {
+          //     console.log(err)
+          //   }
+          // }
+          // console.log(track)
+          return {
+            name: track.name,
+            artist,
+            album: track.album.name,
+            cover: track.album.images[0]?.url,
+            lyrics: 'Lyrics not found',
+          }
+        })
+    )
+
+    // await save(db, tracksToSave)
+    save(db, tracksToSave)
+    return tracksToSave
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 async function getLyrics(trackName, artistName) {
@@ -305,6 +246,7 @@ async function getLyrics(trackName, artistName) {
     return data.lyrics || 'Lyrics not available'
   } catch (err) {
     console.log(err)
+    return 'Lyrics not available'
   }
 }
 
@@ -341,6 +283,7 @@ async function getAccessToken() {
 }
 
 async function searchTracks(query, token) {
+  console.log(query)
   try {
     const response = await fetch(
       `https://api.spotify.com/v1/search?type=track&limit=5&q=${encodeURIComponent(
@@ -355,6 +298,7 @@ async function searchTracks(query, token) {
     )
 
     const data = await response.json()
+    console.log(data.tracks.items)
     return data.tracks.items
   } catch (error) {
     console.error('Error searching for tracks:', error)
@@ -414,32 +358,37 @@ async function searchStations(search) {
 }
 
 async function searchItems(url) {
-  const accessToken = await getAccessToken() // Replace with your Spotify API access token
-  console.log('url INSIDE SEARCH ITEMS', url)
-
-  // Check if the URL already has query parameters
-  if (url.includes('?')) {
-    // If it already has query parameters, append using '&'
-    url = url + '&limit=5'
-  } else {
-    // If it doesn't have query parameters, append using '?'
-    url = url + '?limit=5'
-  }
-  const response = await fetch(`${url}`, {
+  const accessToken = await getAccessToken()
+  const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   })
-  const data = await response.json()
 
+  const data = await response.json()
   return data.items
 }
 
+// Gemini AI
 async function geminiGenerate(searchTerm) {
-  const list = await searchStations(searchTerm)
-  const newStation = await geminiApiService.gptCall(list, searchTerm)
-  await stationService.saveStation(newStation)
-
-  saveStation(newStation)
-  return newStation
+  if (!searchTerm) return
+  try {
+    // Get generated results from Gemini API
+    const songs = await geminiApiService.generate(searchTerm)
+    console.log(songs)
+    const videoPromises = songs.map((song) => getVideos(song, 1))
+    console.log(videoPromises)
+    const resolved = await Promise.all(videoPromises)
+    console.log(resolved)
+    const filteredResults = resolved.filter((video) => video.url)
+    const station = await stationService.createStationFromGemini(
+      filteredResults,
+      searchTerm
+    )
+    const savedStation = await stationService.save(station)
+    console.log(savedStation)
+    return savedStation
+  } catch (err) {
+    console.error('Error in geminiGenerate:', err)
+  }
 }

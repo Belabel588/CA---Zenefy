@@ -78,6 +78,7 @@ export function SearchIndex() {
   const currSearch = useSelector(
     (stateSelector) => stateSelector.stationModule.currSearch
   )
+  console.log(currSearch)
   const isActive = useSelector(
     (stateSelector) => stateSelector.stationModule.isActive
   )
@@ -157,7 +158,8 @@ export function SearchIndex() {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        // console.log(currSearch)
+        console.log(currSearch)
+
         setIsLoading(true)
 
         const results = await apiService.getVideos(currSearch)
@@ -168,26 +170,12 @@ export function SearchIndex() {
       } catch (error) {
         console.error('Failed to fetch search results:', error)
       } finally {
-        setIsLoading(false)
+        // setIsLoading(false)
       }
     }
-    const handleUserPrompt = async () => {
-      try {
-        setIsLoading(true)
-        const geminiStation = await apiService.geminiGenerate(currSearch)
-        console.log(geminiStation)
-        navigate(`/station/${geminiStation._id}`)
-      } catch (err) {
-        console.log(err)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    if (!isGemeni) {
-      fetchSearchResults()
-    } else {
-      handleUserPrompt()
-    }
+
+    if (!currSearch) return
+    fetchSearchResults()
   }, [currSearch])
 
   useEffect(() => {
@@ -229,11 +217,13 @@ export function SearchIndex() {
         setRandomStations(stationsToReturn)
       } catch (error) {
         console.error('Error fetching stations:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchStations()
-  }, [searchResults])
+  }, [searchResults, currSearch])
 
   useEffect(() => {
     const userStationsToSet = stations.filter((station) =>
@@ -255,9 +245,10 @@ export function SearchIndex() {
       const savedStation = await stationService.save(refactored)
 
       setSearchedStation(savedStation)
-      dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
       console.error('Error refactoring search results:', error)
+    } finally {
+      // dispatch({ type: SET_IS_LOADING, isLoading: false })
     }
   }
 
@@ -392,8 +383,8 @@ export function SearchIndex() {
 
   return currSearch === '' ? (
     <section className='search-section'>
-      <div className='search-header-container'>
-        <h1>Browse all</h1>
+      <h1>Browse all</h1>
+      {/* <div className='search-header-container'>
 
         <div className='ai-container'>
           <span class='label'>AI Mode</span>
@@ -406,7 +397,7 @@ export function SearchIndex() {
             <span class='slider'></span>
           </label>
         </div>
-      </div>
+      </div> */}
       <ul className='search-list'>
         {tagElements}
       </ul>
