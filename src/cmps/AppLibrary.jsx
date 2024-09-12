@@ -135,6 +135,8 @@ export function AppLibrary() {
         <button>
           <FaPlus className='plus-icon' onClick={onCreateNewStation} />
         </button>
+
+
       </div>
       <Sort setFiltered={setFiltered} isNav={true} />
       <div className='playlist-input-container'>
@@ -192,29 +194,29 @@ export function AppLibrary() {
                     />
                   </div>
                 )) || (
-                  <div
-                    className='play-button-container'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
-                  >
-                    {' '}
-                    <BiPlay
-                      className='play-button'
-                      onClick={() => {
-                        if (station.items.length === 0) return
-                        if (currStation._id === station._id) {
-                          setIsPlaying(true)
-                          return
-                        }
-                        onSelectStation(station._id)
+                    <div
+                      className='play-button-container'
+                      onMouseEnter={() => {
+                        isHover.current = true
                       }}
-                    />
-                  </div>
-                )}
+                      onMouseLeave={() => {
+                        isHover.current = false
+                      }}
+                    >
+                      {' '}
+                      <BiPlay
+                        className='play-button'
+                        onClick={() => {
+                          if (station.items.length === 0) return
+                          if (currStation._id === station._id) {
+                            setIsPlaying(true)
+                            return
+                          }
+                          onSelectStation(station._id)
+                        }}
+                      />
+                    </div>
+                  )}
                 <img src={station.cover} alt='' />
               </div>
               <div className='info-container'>
