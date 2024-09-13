@@ -72,7 +72,7 @@ async function createList(search, videosWithDuration, limit = null) {
       counter = Math.min(spotifyInfo.length, videos.length)
     }
     let filteredTracks = spotifyInfo
-
+    console.log(videosWithDuration)
     // Create a list of matched videos and tracks
     const list = videos.slice(0, counter).map((video, i) => {
       // Find a matching track using regex and remove it from filteredTracks
@@ -103,7 +103,7 @@ async function createList(search, videosWithDuration, limit = null) {
           'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
         id: utilService.makeId(),
         lyrics: track?.lyrics || 'Lyrics not available',
-        duration: videosWithDuration[0]?.duration || '00:00',
+        duration: videosWithDuration?.duration || '00:00',
       }
     })
 

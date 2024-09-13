@@ -21,6 +21,7 @@ import { apiService } from '../services/youtube-spotify.service.js'
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
 import { Sort } from './Sort.jsx'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -112,42 +113,65 @@ export function AppLibrary() {
 
   const [draggedItem, setDraggedItem] = useState(null)
   const [updated, setUpdated] = useState()
-  const [updatedStations, setUpdatedStations] = useState()
+  // const [updatedStations, setUpdatedStations] = useState()
 
-  const onDragStart = (event, index) => {
-    setDraggedItem(index)
-    event.target.style.opacity = '1'
-    event.target.style.borderBottom = '2px solid #1DB954'
-  }
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return
 
-  const onDragOver = (event) => {
-    event.preventDefault() // allow dropping
-    event.target.style.opacity = '1'
-    event.target.style.borderBottom = '0px solid black'
-  }
-
-  const onDrop = async (event, index) => {
-    let updatedStations = [...stations]
-    console.log(draggedItem)
-    const dragged = updatedStations.splice(draggedItem, 1)[0] // remove the dragged item
-
-    updatedStations.splice(index, 0, dragged) // insert it
-
-    const newStationsOrder = []
-    updatedStations.map((station, idx) => {
-      newStationsOrder[idx] = station._id
-    })
-
-    const newUserToSave = { ...user, likedStationsIds: newStationsOrder }
-
-    setFiltered(updatedStations)
-    setDraggedItem(null)
+    const stationsArray = Array.from(stations)
+    let updatedStations = [...stationsArray]
+    const [reorderedStation] = stationsArray.splice(result.source.index, 1)
+    stationsArray.splice(result.destination.index, 0, reorderedStation)
+    setFiltered([...stationsArray])
     try {
+      const newStationsOrder = []
+      stationsArray.map((station, idx) => {
+        newStationsOrder[idx] = station._id
+      })
+
+      const newUserToSave = { ...user, likedStationsIds: newStationsOrder }
       updateUser(newUserToSave)
     } catch (err) {
       console.log(err)
     }
+
+    // setPageStation((prevStation) => ({ ...prevStation, items }))
   }
+
+  // const onDragStart = (event, index) => {
+  //   setDraggedItem(index)
+  //   event.target.style.opacity = '1'
+  //   event.target.style.borderBottom = '2px solid #1DB954'
+  // }
+
+  // const onDragOver = (event) => {
+  //   event.preventDefault() // allow dropping
+  //   event.target.style.opacity = '1'
+  //   event.target.style.borderBottom = '0px solid black'
+  // }
+
+  // const onDrop = async (event, index) => {
+  //   let updatedStations = [...stations]
+  //   console.log(draggedItem)
+  //   const dragged = updatedStations.splice(draggedItem, 1)[0] // remove the dragged item
+
+  //   updatedStations.splice(index, 0, dragged) // insert it
+
+  //   const newStationsOrder = []
+  //   updatedStations.map((station, idx) => {
+  //     newStationsOrder[idx] = station._id
+  //   })
+
+  //   const newUserToSave = { ...user, likedStationsIds: newStationsOrder }
+
+  //   setFiltered(updatedStations)
+  //   setDraggedItem(null)
+  //   try {
+  //     updateUser(newUserToSave)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
   const [isGemini, setIsGemini] = useState(false)
 
@@ -268,87 +292,111 @@ export function AppLibrary() {
           />
         )}
       </div>
-      <div className='library-stations-container'>
-        {filtered.map((station, idx) => {
-          return (
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId='stations'>
+          {(provided) => (
             <div
-              className='station-container'
-              key={station._id}
-              onClick={() => {
-                if (isHover.current) return
-                navigate(`station/${station._id}`)
-              }}
-              draggable
-              onDragStart={(event) => onDragStart(event, idx)}
-              onDragOver={onDragOver}
-              onDrop={(event) => onDrop(event, idx)}
+              className='library-stations-container'
+              {...provided.droppableProps}
+              ref={provided.innerRef}
             >
-              <div className='img-container'>
-                {(isPlaying && currStation._id === station._id && (
-                  <div
-                    className='pause-button-container'
-                    onMouseEnter={() => {
-                      isHover.current = true
-                    }}
-                    onMouseLeave={() => {
-                      isHover.current = false
-                    }}
+              {filtered.map((station, idx) => {
+                return (
+                  <Draggable
+                    draggableId={station._id}
+                    key={station._id}
+                    index={idx}
                   >
-                    <BiPause
-                      className='pause-button'
-                      onClick={() => setIsPlaying(false)}
-                    />
-                  </div>
-                )) || (
-                    <div
-                      className='play-button-container'
-                      onMouseEnter={() => {
-                        isHover.current = true
-                      }}
-                      onMouseLeave={() => {
-                        isHover.current = false
-                      }}
-                    >
-                      {' '}
-                      <BiPlay
-                        className='play-button'
+                    {(provided) => (
+                      <div
+                        className='station-container'
+                        // key={station._id}
                         onClick={() => {
-                          if (station.items.length === 0) return
-                          if (currStation._id === station._id) {
-                            setIsPlaying(true)
-                            return
-                          }
-                          onSelectStation(station._id)
+                          if (isHover.current) return
+                          navigate(`station/${station._id}`)
                         }}
-                      />
-                    </div>
-                  )}
-                <img src={station.cover} alt='' />
-              </div>
-              <div className='info-container'>
-                <b
-                  className={
-                    currStation._id === station._id
-                      ? `station-name playing`
-                      : 'station-name'
-                  }
-                >
-                  {station.title}
-                </b>
-                <div className='playlist-details'>
-                  <span>Playlist</span>
-                  {(station.items.length && (
-                    <span>
-                      {station.items.length}{' '}
-                      {station.stationType === 'podcast' ? 'podcasts' : 'songs'}
-                    </span>
-                  )) || <span>0 songs</span>}
-                </div>
-              </div>
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        // draggable
+                        // onDragStart={(event) => onDragStart(event, idx)}
+                        // onDragOver={onDragOver}
+                        // onDrop={(event) => onDrop(event, idx)}
+                      >
+                        <div className='img-container'>
+                          {(isPlaying && currStation._id === station._id && (
+                            <div
+                              className='pause-button-container'
+                              onMouseEnter={() => {
+                                isHover.current = true
+                              }}
+                              onMouseLeave={() => {
+                                isHover.current = false
+                              }}
+                            >
+                              <BiPause
+                                className='pause-button'
+                                onClick={() => setIsPlaying(false)}
+                              />
+                            </div>
+                          )) || (
+                            <div
+                              className='play-button-container'
+                              onMouseEnter={() => {
+                                isHover.current = true
+                              }}
+                              onMouseLeave={() => {
+                                isHover.current = false
+                              }}
+                            >
+                              {' '}
+                              <BiPlay
+                                className='play-button'
+                                onClick={() => {
+                                  if (station.items.length === 0) return
+                                  if (currStation._id === station._id) {
+                                    setIsPlaying(true)
+                                    return
+                                  }
+                                  onSelectStation(station._id)
+                                }}
+                              />
+                            </div>
+                          )}
+                          <img src={station.cover} alt='' />
+                        </div>
+                        <div className='info-container'>
+                          <b
+                            className={
+                              currStation._id === station._id
+                                ? `station-name playing`
+                                : 'station-name'
+                            }
+                          >
+                            {station.title}
+                          </b>
+                          <div className='playlist-details'>
+                            <span>Playlist</span>
+                            {(station.items.length && (
+                              <span>
+                                {station.items.length}{' '}
+                                {station.stationType === 'podcast'
+                                  ? 'podcasts'
+                                  : 'songs'}
+                              </span>
+                            )) || <span>0 songs</span>}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                )
+              })}{' '}
+              {provided.placeholder}
             </div>
-          )
-        })}
-      </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   )
 }
