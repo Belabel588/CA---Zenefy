@@ -61,6 +61,7 @@ export function AppLibrary() {
 
   const [generateButton, setGenerateButton] = useState()
   const inputRef = useRef()
+  const [geminiLoader, setGeminiLoader] = useState(false)
 
   useEffect(() => {
     loadStations()
@@ -161,15 +162,20 @@ export function AppLibrary() {
   async function handleUserPrompt() {
     try {
       if (!prompt) return
-      setIsLoading(true)
+      if (geminiLoader) return
+
+      console.log(geminiRef.current)
+      geminiRef.current.className = 'loading-button'
+      setGeminiLoader(true)
       const geminiStation = await apiService.geminiGenerate(prompt)
-      console.log(geminiStation)
+
       navigate(`/station/${geminiStation._id}`)
     } catch (err) {
       console.log(err)
     } finally {
+      geminiRef.current.className = ''
       setIsGemini(false)
-      setIsLoading(false)
+      setGeminiLoader(false)
     }
   }
   const [prompt, setPrompt] = useState('')
@@ -177,6 +183,8 @@ export function AppLibrary() {
     console.log(target.value)
     setPrompt(target.value)
   }
+
+  const geminiRef = useRef()
 
   return (
     <div className='library-container'>
@@ -213,18 +221,20 @@ export function AppLibrary() {
           </button>
           {isGemini && (
             <div className='gemini-modal-container'>
-              {!isLoading ? (
+              {!geminiLoader ? (
                 <span>Generate by prompt</span>
               ) : (
                 <span>Generating...</span>
               )}
               <div className='user-interface'>
                 <input type='text' onChange={handlePromptChange} />
-                {!isLoading ? (
-                  <button onClick={handleUserPrompt}>Generate</button>
+                <button ref={geminiRef} onClick={handleUserPrompt}>
+                  {geminiLoader ? '' : 'Generate'}
+                </button>
+                {/* {!geminiLoader ? (
                 ) : (
-                  <button className='loading-button'>Generate</button>
-                )}
+                  <button className='loading-button'></button>
+                )} */}
               </div>
             </div>
           )}
