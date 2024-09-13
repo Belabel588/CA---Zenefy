@@ -18,6 +18,7 @@ import {
   setIsLoading,
   loadStations,
   setPlaylist,
+  setIsItem,
 } from '../store/actions/station.actions.js'
 import { showSuccessMsg } from '../services/event-bus.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
@@ -30,6 +31,7 @@ import { BiSkipNext } from 'react-icons/bi'
 import { BiSkipPrevious } from 'react-icons/bi'
 import { BiRepeat } from 'react-icons/bi'
 import { TiArrowShuffle } from 'react-icons/ti'
+import { ItemPlay } from './ItemPlay.jsx'
 
 export function AppFooter() {
   const [currentTime, setCurrentTime] = useState(0)
@@ -71,6 +73,9 @@ export function AppFooter() {
 
   const isPlaylistShown = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaylistShown
+  )
+  const isItemShown = useSelector(
+    (stateSelector) => stateSelector.stationModule.isItemShown
   )
 
   const [station, setStation] = useState([])
@@ -247,12 +252,27 @@ export function AppFooter() {
   const buttonsContainer = [
     {
       type: 'nowPlaying',
-      icon: <i className='fa-solid fa-play'></i>,
+      icon: <ItemIcon />,
+      onClick: () => {
+        console.log(isPlaylistShown)
+        console.log(isItemShown)
+        setPlaylist(false)
+        let stateToSet
+        if (!isItemShown) {
+          stateToSet = true
+        } else {
+          stateToSet = false
+        }
+        setIsItem(stateToSet)
+        console.log(isItemShown)
+      },
+      className: isItemShown ? 'active' : '',
     },
     {
       type: 'queue',
       icon: <i className='fa-solid fa-bars'></i>,
       onClick: () => {
+        setIsItem(false)
         let stateToSet
         if (!isPlaylistShown) {
           stateToSet = true
@@ -722,6 +742,21 @@ function ExpendIcon() {
       className='svg-icon'
     >
       <path d='M6.53 9.47a.75.75 0 0 1 0 1.06l-2.72 2.72h1.018a.75.75 0 0 1 0 1.5H1.25v-3.579a.75.75 0 0 1 1.5 0v1.018l2.72-2.72a.75.75 0 0 1 1.06 0zm2.94-2.94a.75.75 0 0 1 0-1.06l2.72-2.72h-1.018a.75.75 0 1 1 0-1.5h3.578v3.579a.75.75 0 0 1-1.5 0V3.81l-2.72 2.72a.75.75 0 0 1-1.06 0z'></path>
+    </svg>
+  )
+}
+
+function ItemIcon() {
+  return (
+    <svg
+      data-encore-id='icon'
+      role='img'
+      aria-hidden='true'
+      viewBox='0 0 16 16'
+      className='svg-icon'
+    >
+      <path d='M11.196 8 6 5v6l5.196-3z'></path>
+      <path d='M15.002 1.75A1.75 1.75 0 0 0 13.252 0h-10.5a1.75 1.75 0 0 0-1.75 1.75v12.5c0 .966.783 1.75 1.75 1.75h10.5a1.75 1.75 0 0 0 1.75-1.75V1.75zm-1.75-.25a.25.25 0 0 1 .25.25v12.5a.25.25 0 0 1-.25.25h-10.5a.25.25 0 0 1-.25-.25V1.75a.25.25 0 0 1 .25-.25h10.5z'></path>
     </svg>
   )
 }

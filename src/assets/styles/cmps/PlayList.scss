@@ -3,7 +3,7 @@
   grid-row: 2/3;
   background-color: black;
   // height: 300px;
-  width: 30vw;
+    width: 22vw;
   max-width: 500px;
   // bottom: 95px;
   z-index: 4;
@@ -12,6 +12,7 @@
   padding: 10px;
   background-color: $dark-mode-background;
   border-radius: 10px;
+  height: calc(100vh - 170px);
   
   
   @media (max-width:1120px) {
@@ -176,16 +177,16 @@
 }
 
 .animate {
-  animation: slideIn 0.3s;
+  animation: slideInY 0.3s;
 }
 
-@keyframes slideIn {
+@keyframes slideInY {
   0% {
-    transform: translateX(100%);
+    transform: translateY(100%);
     // opacity: 0;
   }
   100% {
-    transform: translateX(0);
+    transform: translateY(0);
     // opacity: 1;
   }
 }

@@ -341,6 +341,13 @@ i{
 
 .active{
     position: relative;
+    display: grid;
+    grid-template-rows: auto 5px;
+    align-items: center;
+    justify-items: center;
+    height: 45px;
+
+
     i{
 
         color: $green;
@@ -350,7 +357,13 @@ i{
     
             color: $green;
         }
+        svg{
+            fill: $green;
+        }
 
+    }
+    svg{
+        fill: $green;
     }
     &::after{
         content: '';
@@ -359,8 +372,9 @@ i{
         border-radius: 50px;
         background-color: $green;
         position: absolute;
-        top: 2em;
-        right: 1.15em;
+        // top: 2em;
+        // right: 1.15em;
+        grid-row: 2/3;
     }
 }
 

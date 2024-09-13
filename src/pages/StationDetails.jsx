@@ -51,6 +51,7 @@ export function StationDetails() {
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
   )
+  console.log(currItem)
 
   const { stationId } = useParams()
 
@@ -99,7 +100,7 @@ export function StationDetails() {
       try {
         await loadStation(stationId)
         await setCurrColor(station.cover)
-        pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
+        // pageRef.current.style.background = `linear-gradient(0deg, #191414 60%, ${currColor} 90%, ${currColor} 100%)`
         // setCurrColorPage((prev) => (prev = currColor))
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -333,12 +334,6 @@ export function StationDetails() {
     }
   }
 
-  async function onSelectStation(stationId) {
-    await setCurrStation(stationId)
-    await setCurrItem(0, currStation)
-    setIsPlaying(true)
-  }
-
   function openSongOptions(event, item) {
     event.preventDefault()
     setPosition({ x: event.pageX, y: event.pageY })
@@ -349,6 +344,16 @@ export function StationDetails() {
   const [create, setCreate] = useState(false)
   const [removeFromPlaylist, setRemoveFromPlaylist] = useState(false)
 
+  async function onSelectStation(stationId) {
+    const curr = await setCurrStation(stationId)
+    const idToSet = curr.items[0].id
+    console.log(idToSet)
+    await setCurrItem(idToSet, { ...curr })
+    console.log(currItem)
+
+    setCurrItemIdx(0)
+    setIsPlaying(true)
+  }
   async function onAddStation(station) {
     const stationId = station._id
     if (user.likedStationsIds.includes(stationId)) return
@@ -363,13 +368,11 @@ export function StationDetails() {
   }
   const artists = []
 
-
-
   if (!isLoading)
     return (
       <section className='station-details-container'>
         <StationEditModal
-          station={...station}
+          station={station}
           modalRef={modalRef}
           toggleModal={toggleModal}
           saveStation={sendToSaveStation}
@@ -427,17 +430,20 @@ export function StationDetails() {
           <div className='buttons-container'>
             <div className='play-container'>
               <div className='play-button-container'>
-                {(isPlaying && currStation._id === station._id && (
-                  <BiPause
-                    className='pause-button'
-                    onClick={() => setIsPlaying(false)}
-                  />
-                )) || (
+                {(isPlaying &&
+                  JSON.stringify(currStation) === JSON.stringify(station) && (
+                    <BiPause
+                      className='pause-button'
+                      onClick={() => setIsPlaying(false)}
+                    />
+                  )) || (
                   <BiPlay
                     className='play-button'
                     onClick={() => {
                       if (station.items.length === 0) return
-                      if (currStation._id === station._id) {
+                      if (
+                        JSON.stringify(currStation) === JSON.stringify(station)
+                      ) {
                         setIsPlaying(true)
                         return
                       }
@@ -496,7 +502,7 @@ export function StationDetails() {
                       ) : (
                         <span
                           className={
-                            counter === 1 || (counter) % 10 === 0
+                            counter === 1 || counter % 10 === 0
                               ? 'item-idx custom-font'
                               : 'item-idx'
                           }
