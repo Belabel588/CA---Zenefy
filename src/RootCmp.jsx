@@ -39,7 +39,7 @@ export function RootCmp() {
       <SideBar />
       <UserMsg />
       <LoginSignup />
-      <LoadingAnimation />
+      {/* <LoadingAnimation /> */}
       {isPlaylistShown && <PlayList />}
 
       <div className='main-content'>

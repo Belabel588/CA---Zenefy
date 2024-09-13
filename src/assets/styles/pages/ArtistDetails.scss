@@ -24,7 +24,7 @@
         position: relative;
         display: flex;
         align-items: end;
-        min-height: 420px;
+        min-height: 350px;
         &::before {
           content: '';
           position: absolute;
@@ -40,7 +40,7 @@
     .artist-cover{
         position: absolute;
         z-index: 0;
-        min-height: 420px;
+        min-height: 350px;
       min-width: 120px;
 
       border-radius: 5px;

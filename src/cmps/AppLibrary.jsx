@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router'
 import { SET_FILTER_BY } from '../store/reducers/station.reducer.js'
 import { stationService } from '../services/station.service'
 import { utilService } from '../services/util.service.js'
-import { loadStations } from '../store/actions/station.actions'
+import { loadStations, setIsLoading } from '../store/actions/station.actions'
 import {
   setIsPlaying,
   setCurrStation,
@@ -55,7 +55,13 @@ export function AppLibrary() {
     (stateSelector) => stateSelector.stationModule.filterBy
   )
 
+  const isLoading = useSelector(
+    (stateSelector) => stateSelector.stationModule.isLoading
+  )
+
+  const [generateButton, setGenerateButton] = useState()
   const inputRef = useRef()
+  const [geminiLoader, setGeminiLoader] = useState(false)
 
   useEffect(() => {
     loadStations()
@@ -66,7 +72,7 @@ export function AppLibrary() {
     //   loadStations()
     // dispatch({ type: SET_FILTER_BY, filterBy: defaultFilter })
     //   setStationToSet(stations)
-  }, [stations])
+  }, [])
 
   useEffect(() => {
     setFilter(filterByToSet)
@@ -156,15 +162,20 @@ export function AppLibrary() {
   async function handleUserPrompt() {
     try {
       if (!prompt) return
-      setIsGemini(false)
-      // setIsLoading(true)
+      if (geminiLoader) return
+
+      console.log(geminiRef.current)
+      geminiRef.current.className = 'loading-button'
+      setGeminiLoader(true)
       const geminiStation = await apiService.geminiGenerate(prompt)
-      console.log(geminiStation)
+
       navigate(`/station/${geminiStation._id}`)
     } catch (err) {
       console.log(err)
     } finally {
-      // setIsLoading(false)
+      geminiRef.current.className = ''
+      setIsGemini(false)
+      setGeminiLoader(false)
     }
   }
   const [prompt, setPrompt] = useState('')
@@ -172,6 +183,8 @@ export function AppLibrary() {
     console.log(target.value)
     setPrompt(target.value)
   }
+
+  const geminiRef = useRef()
 
   return (
     <div className='library-container'>
@@ -208,10 +221,20 @@ export function AppLibrary() {
           </button>
           {isGemini && (
             <div className='gemini-modal-container'>
-              <span>Generate by prompt</span>
+              {!geminiLoader ? (
+                <span>Generate by prompt</span>
+              ) : (
+                <span>Generating...</span>
+              )}
               <div className='user-interface'>
                 <input type='text' onChange={handlePromptChange} />
-                <button onClick={handleUserPrompt}>Generate</button>
+                <button ref={geminiRef} onClick={handleUserPrompt}>
+                  {geminiLoader ? '' : 'Generate'}
+                </button>
+                {/* {!geminiLoader ? (
+                ) : (
+                  <button className='loading-button'></button>
+                )} */}
               </div>
             </div>
           )}
