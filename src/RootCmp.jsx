@@ -26,7 +26,6 @@ import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
 import { PlayList } from './cmps/PlayList.jsx'
 import { MobileLibrary } from './pages/MobileLibrary.jsx'
 
-
 export function RootCmp() {
   const isPlaylistShown = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaylistShown
@@ -39,7 +38,7 @@ export function RootCmp() {
       <SideBar />
       <UserMsg />
       <LoginSignup />
-      {/* <LoadingAnimation /> */}
+      <LoadingAnimation />
       {isPlaylistShown && <PlayList />}
 
       <div className='main-content'>

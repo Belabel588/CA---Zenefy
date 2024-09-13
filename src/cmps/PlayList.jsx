@@ -51,6 +51,9 @@ export function PlayList({ station }) {
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
   )
+  const currItemIdx = useSelector(
+    (stateSelector) => stateSelector.stationModule.currItemIdx
+  )
   const isPlaying = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaying
   )
@@ -240,8 +243,20 @@ export function PlayList({ station }) {
     const items = Array.from(pageStation.items)
     const [reorderedItem] = items.splice(result.source.index, 1)
     items.splice(result.destination.index, 0, reorderedItem)
+    const stationToSet = { ...pageStation, items }
 
-    setPageStation((prevStation) => ({ ...prevStation, items }))
+    const prevIdx = currItemIdx
+    const playedItem = pageStation.items[prevIdx]
+    setPageStation(stationToSet)
+    setCurrStation(stationToSet._id, stationToSet)
+    const newIdx = stationToSet.items.findIndex(
+      (item) => item.id === playedItem.id
+    )
+    if (currItem.id === result.draggableId) {
+      setCurrItemIdx(result.destination.index)
+    } else {
+      setCurrItemIdx(newIdx)
+    }
   }
 
   return (
