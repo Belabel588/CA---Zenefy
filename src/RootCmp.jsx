@@ -25,10 +25,14 @@ import { AppHeaderMobile } from './cmps/AppHeaderMobile.jsx'
 import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
 import { PlayList } from './cmps/PlayList.jsx'
 import { MobileLibrary } from './pages/MobileLibrary.jsx'
+import { ItemPlay } from './cmps/ItemPlay.jsx'
 
 export function RootCmp() {
   const isPlaylistShown = useSelector(
     (stateSelector) => stateSelector.stationModule.isPlaylistShown
+  )
+  const isItemShown = useSelector(
+    (stateSelector) => stateSelector.stationModule.isItemShown
   )
 
   return (
@@ -39,7 +43,8 @@ export function RootCmp() {
       <UserMsg />
       <LoginSignup />
       <LoadingAnimation />
-      {isPlaylistShown && <PlayList />}
+      {(isPlaylistShown && !isItemShown && <PlayList />) ||
+        (isItemShown && !isPlaylistShown && <ItemPlay />)}
 
       <div className='main-content'>
         <main>

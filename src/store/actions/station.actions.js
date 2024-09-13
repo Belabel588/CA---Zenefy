@@ -17,6 +17,7 @@ import {
   SET_IS_ACTIVE,
   SET_FILTER_BY,
   SET_PLAYLIST,
+  SET_IS_ITEM,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
@@ -180,4 +181,8 @@ export function setFilter(filterBy) {
 export function setPlaylist(stateToSet) {
   const isPlaylistShown = stateToSet
   store.dispatch({ type: SET_PLAYLIST, isPlaylistShown: isPlaylistShown })
+}
+export function setIsItem(stateToSet) {
+  const isItemShown = stateToSet
+  store.dispatch({ type: SET_IS_ITEM, isItemShown: isItemShown })
 }
