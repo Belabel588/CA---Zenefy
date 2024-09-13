@@ -36,79 +36,6 @@ async function getVideos(search) {
   return createList(search, videosWithDurations)
 }
 
-
-// async function getPlaylistsByCategory(categoryName) {
-//   const accessToken = await getAccessToken();
-//   const listDB = `${categoryName}List`
-
-//   // Fetch categories to get the ID for the category name
-//   const categoryRes = await fetch(`https://api.spotify.com/v1/browse/categories`, {
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//   });
-
-//   const categoryData = await categoryRes.json();
-
-//   console.log('categoryData', categoryData);
-
-
-//   const category = categoryData.categories.items.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
-
-//   if (!category) {
-//     throw new Error('Category not found');
-//   }
-
-//   const categoryId = category.id;
-//   console.log(categoryId);
-
-//   // Fetch playlists based on category ID
-//   const playlistsRes = await fetch(`https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`, {
-//     headers: {
-//       Authorization: `Bearer ${accessToken}`,
-//     },
-//   });
-
-
-
-
-
-//   const playlistsData = await playlistsRes.json();
-//   console.log(playlistsData);
-
-//   // console.log(playlistsData.playlists.items[0]?.href);
-//   // return playlistsData.playlists.items;
-
-//   const url = playlistsData.playlists.items[0].tracks.href
-
-//   // const url = data.playlists.items[0].tracks.href
-
-
-//   const items = await searchItems(url)
-
-//   console.log('ITEMS ARE', items);
-
-
-//   let counter = 5
-
-//   const list = []
-
-//   for (var i = 0; i < counter; i++) {
-//     const videos = await getVideos(items[i].track.name)
-
-
-//     list[i] = videos[0]
-//   }
-
-//   console.log('LIST IS', list);
-
-
-//   save(listDB, list)
-
-//   return list
-// }
-
-
 async function getPlaylistsByCategory(categoryName) {
   const accessToken = await getAccessToken();
   const listDB = `${categoryName}List`;
@@ -122,6 +49,7 @@ async function getPlaylistsByCategory(categoryName) {
 
   const categoryData = await categoryRes.json();
   console.log('categoryData', categoryData);
+
 
   const category = categoryData.categories.items.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
 
@@ -147,27 +75,34 @@ async function getPlaylistsByCategory(categoryName) {
 
   // Create a list to hold the 3 stations
   const stationList = [];
-
+  
+  console.log('playlists ARE' , playlists);
   // Loop through each playlist and gather 5 songs for each station
-  for (const playlist of playlists) {
+  for (let i = 0; i < playlists.length; i++) {
+    const playlist = playlists[i];
     const url = playlist.tracks.href;
-    const items = await searchItems(url); // Fetch the tracks in the playlist
-    console.log(items);
-
-    const songList = await getVideos(items[0].track.name)
-    console.log(songList);
-
+    
+    // Fetch the tracks in the playlist
+    const items = await searchItems(url);
+    console.log('Fetched Items:', items);
+  
+    // Get video list for the first track
+    const songList = await getVideos(items[0].track.name);
+    console.log('Song List:', songList);
+  
     // Use the createStationFromSearch function to create a station
     const station = await stationService.createStationFromSearch(songList, categoryName);
-
+    console.log('STATION IS', station);
+  
     // Save each individual station
     const savedStation = await stationService.save(station);
-
+    console.log('SAVED STATION IS', savedStation);
+  
     // Add the station to the list to return later
     stationList.push(savedStation);
+    console.log('Updated Station List:', stationList);
   }
 
-  console.log('Final Station List:', stationList);
 
   // Return the entire list of stations
   return stationList;

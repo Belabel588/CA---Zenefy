@@ -31,7 +31,7 @@ export function SearchDynamicCmp() {
   useEffect(() => {
     console.log('LOADING CATEGORY', category)
     loadCategoryPlaylists(category)
-  }, [category])
+  }, [])
 
   console.log('Search Results:', searchResults)
 
