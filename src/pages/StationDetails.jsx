@@ -363,13 +363,11 @@ export function StationDetails() {
   }
   const artists = []
 
-
-
   if (!isLoading)
     return (
       <section className='station-details-container'>
         <StationEditModal
-          station={...station}
+          station={station}
           modalRef={modalRef}
           toggleModal={toggleModal}
           saveStation={sendToSaveStation}
@@ -496,7 +494,7 @@ export function StationDetails() {
                       ) : (
                         <span
                           className={
-                            counter === 1 || (counter) % 10 === 0
+                            counter === 1 || counter % 10 === 0
                               ? 'item-idx custom-font'
                               : 'item-idx'
                           }

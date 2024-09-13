@@ -307,9 +307,13 @@ export function AppLibrary() {
                     key={station._id}
                     index={idx}
                   >
-                    {(provided) => (
+                    {(provided, snapshot) => (
                       <div
-                        className='station-container'
+                        className={
+                          snapshot.isDragging
+                            ? 'station-container dragged'
+                            : 'station-container'
+                        }
                         // key={station._id}
                         onClick={() => {
                           if (isHover.current) return

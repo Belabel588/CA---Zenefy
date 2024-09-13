@@ -283,9 +283,13 @@ export function PlayList({ station }) {
                 {pageStation.items.map((item, idx) => {
                   return (
                     <Draggable draggableId={item.id} key={item.id} index={idx}>
-                      {(provided) => (
+                      {(provided, snapshot) => (
                         <div
-                          className='song-container'
+                          className={
+                            snapshot.isDragging
+                              ? 'song-container dragged'
+                              : 'song-container'
+                          }
                           onDoubleClick={() => {
                             if (isHover.current) return
 
