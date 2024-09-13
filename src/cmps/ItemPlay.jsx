@@ -16,7 +16,11 @@ import {
   setCurrColor,
   setPlaylist,
   setCurrItemIdx,
+  setIsItem,
+  saveStation,
 } from '../store/actions/station.actions.js'
+
+import { updateUser } from '../store/actions/user.actions.js'
 
 import { EditOptions } from './EditOptions.jsx'
 
@@ -30,9 +34,12 @@ import { IoClose } from 'react-icons/io5'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 
 export function ItemPlay() {
-  console.log('works')
+  const navigate = useNavigate()
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
+  )
+  const currStation = useSelector(
+    (stateSelector) => stateSelector.stationModule.currStation
   )
   const stations = useSelector(
     (stateSelector) => stateSelector.stationModule.stations
@@ -45,7 +52,7 @@ export function ItemPlay() {
 
   useEffect(() => {
     setLikedStation()
-  }, [currItem])
+  }, [currItem, stations])
 
   async function setLikedStation() {
     // await loadStations()
@@ -61,15 +68,182 @@ export function ItemPlay() {
     setLikedItems(itemsId)
   }
 
+  function onCloseItem() {
+    setIsItem(false)
+  }
+
+  const [isVisible, setIsVisible] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const handleRightClick = (event) => {
+    event.preventDefault()
+    setPosition({ x: event.pageX, y: event.pageY })
+
+    setIsVisible(true)
+  }
+
+  const handleClickOutside = () => {
+    setIsVisible(false)
+  }
+
+  async function onCreateNewStation() {
+    const emptyStation = stationService.getEmptyStation()
+    emptyStation.items = []
+    try {
+      const newStation = await saveStation(emptyStation)
+      navigate(`/station/${newStation._id}`)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const optionsState = useRef()
+  let options
+  const [itemToEdit, setItemToEdit] = useState({})
+
+  optionsState.current === 'station'
+    ? (options = [
+        {
+          text: 'Edit',
+          icon: <FiEdit2 />,
+          onClick: () => {
+            setIsVisible(false)
+
+            toggleModal()
+          },
+        },
+        {
+          text: 'Add Playlist',
+          icon: <PlusIcon />,
+          onClick: () => {
+            onAddStation(station)
+          },
+        },
+        {
+          text: 'Delete',
+          icon: <CiCircleMinus />,
+          onClick: () => {
+            setIsVisible(false)
+
+            onDeleteStation(station)
+          },
+        },
+        {
+          text: 'Create',
+          icon: <FaPlus />,
+          onClick: () => {
+            setIsVisible(false)
+
+            onCreateNewStation()
+          },
+        },
+      ])
+    : (options = [
+        {
+          text: 'Add to playlist',
+          icon: <FaPlus />,
+          onClick: () => {
+            // onCreateNewStation()
+            // if (!addToPlaylist) {
+            //   setAddToPlaylist(true)
+            // } else {
+            //   setAddToPlaylist(false)
+            // }
+          },
+          onClick: () => {},
+        },
+        {
+          text: 'Create',
+          icon: <FaPlus />,
+          onClick: () => {
+            setIsVisible(false)
+            onCreateNewStation()
+          },
+        },
+        {
+          text: 'Remove from playlist',
+          icon: <CiCircleMinus />,
+          onClick: () => {
+            // onCreateNewStation()
+            // if (!addToPlaylist) {
+            //   setAddToPlaylist(true)
+            // } else {
+            //   setAddToPlaylist(false)
+            // }
+          },
+          onClick: () => {},
+        },
+      ])
+
+  async function setLikedStation() {
+    // await loadStations()
+
+    const like = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
+
+    const items = like.items || []
+    const itemsId = items.map((item) => {
+      return item.id
+    })
+    setLikedItems(itemsId)
+  }
+
+  async function likeSong(itemToEdit) {
+    if (itemToEdit.url === '') return
+    if (!user) return
+
+    const likedStation = stations.find(
+      (station) => station.isLiked && station.createdBy._id === user._id
+    )
+    const likedSongsIds = user.likedSongsIds
+    if (user.likedSongsIds.includes(itemToEdit.id)) {
+      const idx = likedStation.items.findIndex(
+        (item) => item.id === itemToEdit.id
+      )
+      likedStation.items.splice(idx, 1)
+      const songIdx = likedSongsIds.findIndex((id) => id === itemToEdit.id)
+      likedSongsIds.splice(songIdx, 1)
+    } else {
+      likedStation.items.push(itemToEdit)
+      likedSongsIds.push(itemToEdit.id)
+    }
+
+    try {
+      const saved = await saveStation(likedStation)
+
+      const userToSave = { ...user, likedSongsIds }
+      await updateUser(userToSave)
+      setLikedStation()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  function openSongOptions(event, item) {
+    event.preventDefault()
+    setPosition({ x: event.pageX, y: event.pageY })
+
+    setIsVisible(true)
+  }
+  const [addToPlaylist, setAddToPlaylist] = useState(false)
+  const [create, setCreate] = useState(false)
+  const [removeFromPlaylist, setRemoveFromPlaylist] = useState(false)
+
   return (
     <div className='item-play-container'>
       <div className='header-container'>
         <span>{currItem.album}</span>
         <div className='buttons-container'>
-          <button>
+          <button
+            onClick={() => {
+              setItemToEdit(currItem)
+              optionsState.current = 'song'
+              openSongOptions(event, currItem)
+            }}
+          >
             <HiOutlineDotsHorizontal />
           </button>
-          <button>
+          <button onClick={onCloseItem}>
             <IoClose />
           </button>
         </div>{' '}
@@ -100,6 +274,29 @@ export function ItemPlay() {
           </button>
         </div>
       </div>
+      <EditOptions
+        setLikedStation={setLikedStation}
+        options={options}
+        station={currStation}
+        // toggleModal={toggleModal}
+        // editRef={editRef}
+        position={position}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        // onDeleteStation={onDeleteStation}
+        onCreateNewStation={onCreateNewStation}
+        addToPlaylist={addToPlaylist}
+        setAddToPlaylist={setAddToPlaylist}
+        userStations={stations}
+        create={create}
+        setCreate={setCreate}
+        removeFromPlaylist={removeFromPlaylist}
+        setRemoveFromPlaylist={setRemoveFromPlaylist}
+        optionsState={optionsState}
+        handleClickOutside={handleClickOutside}
+        itemToEdit={itemToEdit}
+        // setStation={setStation}
+      />
     </div>
   )
 }

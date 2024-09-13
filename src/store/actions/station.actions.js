@@ -116,7 +116,7 @@ export async function setCurrItem(itemId, currStation, isDoubleClick = false) {
         currItem: itemToSet,
         currItemIdx: idx,
       })
-      return
+      return itemToSet
     }
 
     const idx = currStation.items.findIndex((item) => item.id === itemId)
