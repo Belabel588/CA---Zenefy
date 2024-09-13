@@ -347,9 +347,7 @@ export function StationDetails() {
   async function onSelectStation(stationId) {
     const curr = await setCurrStation(stationId)
     const idToSet = curr.items[0].id
-    console.log(idToSet)
     await setCurrItem(idToSet, { ...curr })
-    console.log(currItem)
 
     setCurrItemIdx(0)
     setIsPlaying(true)
