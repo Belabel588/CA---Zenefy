@@ -363,6 +363,8 @@ export function StationDetails() {
   }
   const artists = []
 
+
+
   if (!isLoading)
     return (
       <section className='station-details-container'>
@@ -471,6 +473,7 @@ export function StationDetails() {
               <LuClock3 className='time' />
             </div>
             {station.items.map((item) => {
+              counter++
               return (
                 <div
                   className='song-container'
@@ -493,12 +496,12 @@ export function StationDetails() {
                       ) : (
                         <span
                           className={
-                            counter === 0 || (counter + 1) % 10 === 0
+                            counter === 1 || (counter) % 10 === 0
                               ? 'item-idx custom-font'
                               : 'item-idx'
                           }
                         >
-                          {++counter}
+                          {counter}
                         </span>
                       )}
                     </div>
