@@ -73,6 +73,8 @@ export function MobileLibrary() {
   const currFilter = useSelector(
     (stateSelector) => stateSelector.stationModule.filterBy
   )
+
+  const isHover = useRef(false)
   async function onCreateNewStation() {
     const emptyStation = stationService.getEmptyStation()
     emptyStation.items = []
@@ -101,6 +103,12 @@ export function MobileLibrary() {
 
     setFilterByToSet({ ...filterByToSet, txt: value })
   }, 800) // Debounce with a 300ms delay
+
+  function onSelectStation(stationId) {
+    setCurrStation(stationId)
+    setCurrItem(0, currStation)
+    setIsPlaying(true)
+  }
 
   return (
     <section className='section mobile-library-container' ref={pageRef}>
@@ -162,14 +170,7 @@ export function MobileLibrary() {
       <div className='library-stations-container'>
         {filtered.map((station, idx) => {
           return (
-            <div
-              className='station-container'
-              key={station._id}
-              onClick={() => {
-                if (isHover.current) return
-                navigate(`station/${station._id}`)
-              }}
-            >
+            <div className='station-container' key={station._id}>
               <div className='img-container'>
                 {(isPlaying && currStation._id === station._id && (
                   <div
@@ -212,7 +213,12 @@ export function MobileLibrary() {
                 )}
                 <img src={station.cover} alt='' />
               </div>
-              <div className='info-container'>
+              <div
+                className='info-container'
+                onClick={() => {
+                  navigate(`/station/${station._id}`)
+                }}
+              >
                 <b
                   className={
                     currStation._id === station._id
