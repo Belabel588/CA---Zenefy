@@ -61,6 +61,8 @@
 
         max-height: calc(100vh - 240px);
     overflow-y: auto;
+
+    
     }
 
     .song-container {
@@ -71,6 +73,8 @@
         gap: 15px;
         padding: 10px;
         border-radius: 8px;
+        transition: all 0.3s ease; /* Add smooth transition */
+
         cursor: pointer;
         // transition: background-color 0.2s ease;
         &:hover {

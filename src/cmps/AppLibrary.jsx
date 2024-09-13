@@ -21,6 +21,7 @@ import { apiService } from '../services/youtube-spotify.service.js'
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
 import { Sort } from './Sort.jsx'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -300,29 +301,29 @@ export function AppLibrary() {
                     />
                   </div>
                 )) || (
-                    <div
-                      className='play-button-container'
-                      onMouseEnter={() => {
-                        isHover.current = true
+                  <div
+                    className='play-button-container'
+                    onMouseEnter={() => {
+                      isHover.current = true
+                    }}
+                    onMouseLeave={() => {
+                      isHover.current = false
+                    }}
+                  >
+                    {' '}
+                    <BiPlay
+                      className='play-button'
+                      onClick={() => {
+                        if (station.items.length === 0) return
+                        if (currStation._id === station._id) {
+                          setIsPlaying(true)
+                          return
+                        }
+                        onSelectStation(station._id)
                       }}
-                      onMouseLeave={() => {
-                        isHover.current = false
-                      }}
-                    >
-                      {' '}
-                      <BiPlay
-                        className='play-button'
-                        onClick={() => {
-                          if (station.items.length === 0) return
-                          if (currStation._id === station._id) {
-                            setIsPlaying(true)
-                            return
-                          }
-                          onSelectStation(station._id)
-                        }}
-                      />
-                    </div>
-                  )}
+                    />
+                  </div>
+                )}
                 <img src={station.cover} alt='' />
               </div>
               <div className='info-container'>

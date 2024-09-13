@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
 import { FastAverageColor } from 'fast-average-color'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { stationService } from '../services/station.service.js'
@@ -209,29 +210,38 @@ export function PlayList({ station }) {
   const [draggedItem, setDraggedItem] = useState(null)
   const [updated, setUpdated] = useState()
 
-  const onDragStart = (event, index) => {
-    setDraggedItem(index)
-    event.target.style.opacity = '1'
-    event.target.style.borderBottom = '2px solid #1DB954'
-  }
+  // const onDragStart = (event, index) => {
+  //   setDraggedItem(index)
+  //   event.target.style.opacity = '1'
+  //   event.target.style.borderBottom = '2px solid #1DB954'
+  // }
 
-  const onDragOver = (event) => {
-    event.preventDefault() // allow dropping
-    event.target.style.opacity = '1'
-    event.target.style.borderBottom = '0px solid black'
-  }
+  // const onDragOver = (event) => {
+  //   event.preventDefault() // allow dropping
+  //   event.target.style.opacity = '1'
+  //   event.target.style.borderBottom = '0px solid black'
+  // }
 
-  const onDrop = async (event, index) => {
-    let updatedStation = { ...pageStation }
-    const dragged = updatedStation.items.splice(draggedItem, 1)[0] // remove the dragged item
+  // const onDrop = async (event, index) => {
+  //   let updatedStation = { ...pageStation }
+  //   const dragged = updatedStation.items.splice(draggedItem, 1)[0] // remove the dragged item
 
-    updatedStation.items.splice(index, 0, dragged) // insert it
-    setPageStation(updatedStation)
-    setUpdated(updatedStation)
-    if (currItem.id === dragged.id) {
-      setCurrItemIdx(index)
-    }
-    setDraggedItem(null)
+  //   updatedStation.items.splice(index, 0, dragged) // insert it
+  //   setPageStation(updatedStation)
+  //   setUpdated(updatedStation)
+  //   if (currItem.id === dragged.id) {
+  //     setCurrItemIdx(index)
+  //   }
+  //   setDraggedItem(null)
+  // }
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return
+
+    const items = Array.from(pageStation.items)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+
+    setPageStation((prevStation) => ({ ...prevStation, items }))
   }
 
   return (
@@ -247,103 +257,120 @@ export function PlayList({ station }) {
             <IoClose />
           </button>
         </div>
-        <div className='songs-container'>
-          {pageStation.items.map((item, idx) => {
-            return (
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId='songs'>
+            {(provided) => (
               <div
-                className='song-container'
-                key={item.id}
-                onDoubleClick={() => {
-                  if (isHover.current) return
-
-                  onSelectStation(item.id)
-                }}
-                draggable
-                onDragStart={(event) => onDragStart(event, idx)}
-                onDragOver={onDragOver}
-                onDrop={(event) => onDrop(event, idx)}
+                className='songs-container'
+                {...provided.droppableProps}
+                ref={provided.innerRef}
               >
-                <div className='img-container'>
-                  {(isPlaying && item.id === currItem.id && (
-                    <div
-                      className='pause-button-container'
-                      onMouseEnter={() => {
-                        isHover.current = true
-                      }}
-                      onMouseLeave={() => {
-                        isHover.current = false
-                      }}
-                    >
-                      <BiPause
-                        className='pause-button'
-                        onClick={() => setIsPlaying(false)}
-                      />
-                    </div>
-                  )) || (
-                    <div
-                      className='play-button-container'
-                      onMouseEnter={() => {
-                        isHover.current = true
-                      }}
-                      onMouseLeave={() => {
-                        isHover.current = false
-                      }}
-                    >
-                      {' '}
-                      <BiPlay
-                        className='play-button'
-                        onClick={() => {
-                          if (currItem.id === item.id) {
-                            setIsPlaying(true)
-                            return
-                          } else {
-                            onSelectStation(item.id)
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-                  <img src={item.cover} alt='' />
-                </div>
-                <div className='info-container'>
-                  <b
-                    className={
-                      currItem.id === item.id
-                        ? `station-name playing`
-                        : 'station-name'
-                    }
-                  >
-                    {item.name}
-                  </b>
-                  <div className='playlist-details'>
-                    <span>{item.artist}</span>
-                  </div>
-                </div>
+                {pageStation.items.map((item, idx) => {
+                  return (
+                    <Draggable draggableId={item.id} key={item.id} index={idx}>
+                      {(provided) => (
+                        <div
+                          className='song-container'
+                          onDoubleClick={() => {
+                            if (isHover.current) return
 
-                {(currItem.id === item.id && (
-                  <HiOutlineDotsHorizontal
-                    className='dots'
-                    onClick={() => {
-                      setItemToEdit(item)
-                      optionsState.current = 'song'
-                      openSongOptions(event, item)
-                    }}
-                    style={{ opacity: '1' }}
-                  />
-                )) || (
-                  <HiOutlineDotsHorizontal
-                    className='dots'
-                    onClick={() => {
-                      setItemToEdit(item)
-                      optionsState.current = 'song'
-                      openSongOptions(event, item)
-                    }}
-                  />
-                )}
+                            onSelectStation(item.id)
+                          }}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          // draggable
+                          // onDragStart={(event) => onDragStart(event, idx)}
+                          // onDragOver={onDragOver}
+                          // onDrop={(event) => onDrop(event, idx)}
+                        >
+                          <div className='img-container'>
+                            {(isPlaying && item.id === currItem.id && (
+                              <div
+                                className='pause-button-container'
+                                onMouseEnter={() => {
+                                  isHover.current = true
+                                }}
+                                onMouseLeave={() => {
+                                  isHover.current = false
+                                }}
+                              >
+                                <BiPause
+                                  className='pause-button'
+                                  onClick={() => setIsPlaying(false)}
+                                />
+                              </div>
+                            )) || (
+                              <div
+                                className='play-button-container'
+                                onMouseEnter={() => {
+                                  isHover.current = true
+                                }}
+                                onMouseLeave={() => {
+                                  isHover.current = false
+                                }}
+                              >
+                                {' '}
+                                <BiPlay
+                                  className='play-button'
+                                  onClick={() => {
+                                    if (currItem.id === item.id) {
+                                      setIsPlaying(true)
+                                      return
+                                    } else {
+                                      onSelectStation(item.id)
+                                    }
+                                  }}
+                                />
+                              </div>
+                            )}
+                            <img src={item.cover} alt='' />
+                          </div>
+                          <div className='info-container'>
+                            <b
+                              className={
+                                currItem.id === item.id
+                                  ? `station-name playing`
+                                  : 'station-name'
+                              }
+                            >
+                              {item.name}
+                            </b>
+                            <div className='playlist-details'>
+                              <span>{item.artist}</span>
+                            </div>
+                          </div>
+
+                          {(currItem.id === item.id && (
+                            <HiOutlineDotsHorizontal
+                              className='dots'
+                              onClick={() => {
+                                setItemToEdit(item)
+                                optionsState.current = 'song'
+                                openSongOptions(event, item)
+                              }}
+                              style={{ opacity: '1' }}
+                            />
+                          )) || (
+                            <HiOutlineDotsHorizontal
+                              className='dots'
+                              onClick={() => {
+                                setItemToEdit(item)
+                                optionsState.current = 'song'
+                                openSongOptions(event, item)
+                              }}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </Draggable>
+                  )
+                })}{' '}
+                {provided.placeholder}
               </div>
-            )
-          })}{' '}
-        </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>{' '}
       <EditOptions
         setLikedStation={setLikedStation}
