@@ -28,23 +28,23 @@ import { login, signup } from '../store/actions/user.actions.js'
 import { stationService } from '../services/station.service.js'
 
 export function AppHeader() {
-  const user = useSelector((storeState) => storeState.userModule.loggedinUser);
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
   const filterBy = useSelector(
     (storeState) => storeState.stationModule.filterBy
-  );
+  )
   const currSearch = useSelector(
     (stateSelector) => stateSelector.stationModule.currSearch
-  );
+  )
   const isActive = useSelector(
     (stateSelector) => stateSelector.stationModule.isActive
-  );
+  )
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const location = useLocation()
 
   const inputRef = useRef(null) // Step 1: Create a ref for the input field
-  
+
   const [isHome, setIsHome] = useState()
   const [isFocus, setIsFocus] = useState(false)
 
@@ -54,10 +54,10 @@ export function AppHeader() {
 
   useEffect(() => {
     if (location.pathname === '/') {
-      setIsHome(true);
-      setCurrSearch('');
+      setIsHome(true)
+      setCurrSearch('')
     } else {
-      setIsHome(false);
+      setIsHome(false)
     }
     setIsActive(false)
 
@@ -69,7 +69,7 @@ export function AppHeader() {
 
     // Step 2: Reset the input value on route change using the ref
     if (inputRef.current) {
-      inputRef.current.value = ''; // Clear the input value
+      inputRef.current.value = '' // Clear the input value
     }
   }, [location])
 
@@ -116,13 +116,13 @@ export function AppHeader() {
 
   function onSearchClick({ target }) {
     if (inputRef.current) {
-      
-
       inputRef.current.focus() // Focus the input field
       setIsFocus(true)
       setIsActive(true)
     }
-    navigate('/search')
+    if (location.pathname !== '/search') {
+      navigate('/search')
+    }
   }
 
   async function onLoginGuest() {

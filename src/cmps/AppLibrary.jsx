@@ -236,32 +236,35 @@ export function AppLibrary() {
             <LuSparkles
               className='ai-icon'
               onClick={() => {
-                onSetGeminiModal()
+                // onSetGeminiModal()
+                navigate('/generate')
               }}
             />
           </button>
           <button>
             <FaPlus className='plus-icon' onClick={onCreateNewStation} />
           </button>
-          {isGemini && (
-            <div className='gemini-modal-container'>
-              {!geminiLoader ? (
-                <span>Generate by prompt</span>
-              ) : (
-                <span>Generating...</span>
-              )}
-              <div className='user-interface'>
-                <input type='text' onChange={handlePromptChange} />
-                <button ref={geminiRef} onClick={handleUserPrompt}>
-                  {geminiLoader ? '' : 'Generate'}
-                </button>
-                {/* {!geminiLoader ? (
-                ) : (
-                  <button className='loading-button'></button>
-                )} */}
-              </div>
-            </div>
-          )}
+          {
+            // isGemini && (
+            //   <div className='gemini-modal-container'>
+            //     {!geminiLoader ? (
+            //       <span>Generate by prompt</span>
+            //     ) : (
+            //       <span>Generating...</span>
+            //     )}
+            //     <div className='user-interface'>
+            //       <input type='text' onChange={handlePromptChange} />
+            //       <button ref={geminiRef} onClick={handleUserPrompt}>
+            //         {geminiLoader ? '' : 'Generate'}
+            //       </button>
+            //       {/* {!geminiLoader ? (
+            //       ) : (
+            //         <button className='loading-button'></button>
+            //       )} */}
+            //     </div>
+            //   </div>
+            // )
+          }
         </div>
       </div>
       <Sort setFiltered={setFiltered} isNav={true} />

@@ -93,17 +93,32 @@ async function createList(search, videosWithDuration, limit = null) {
       console.log(video)
       // No filtering out of tracks; maintain the full list.
 
-      return {
-        url: currVideo.url,
-        name: track?.name || 'Title not available',
-        artist: track?.artist || 'Artist not available',
-        album: track?.album || 'Album not available',
-        cover:
-          track?.cover ||
-          'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
-        id: utilService.makeId(),
-        lyrics: track?.lyrics || 'Lyrics not available',
-        duration: videosWithDuration?.duration || '00:00',
+      if (limit) {
+        return {
+          url: currVideo.url,
+          name: track?.name || 'Title not available',
+          artist: track?.artist || 'Artist not available',
+          album: track?.album || 'Album not available',
+          cover:
+            track?.cover ||
+            'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+          id: utilService.makeId(),
+          lyrics: track?.lyrics || 'Lyrics not available',
+          duration: videosWithDuration.duration || '00:00',
+        }
+      } else {
+        return {
+          url: currVideo.url,
+          name: track?.name || 'Title not available',
+          artist: track?.artist || 'Artist not available',
+          album: track?.album || 'Album not available',
+          cover:
+            track?.cover ||
+            'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+          id: utilService.makeId(),
+          lyrics: track?.lyrics || 'Lyrics not available',
+          duration: videosWithDuration[i].duration || '00:00',
+        }
       }
     })
 
