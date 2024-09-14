@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const API_KEY = 'AIzaSyDvZP4kLVdM-zLNfIHZNgg_swlq2uoMElI'
+const API_KEY = import.meta.env.GEMINI_API
 const API_BASE_URL =
   'https://generativelanguage.googleapis.com/v1beta2/models/{model}:generate'
 
