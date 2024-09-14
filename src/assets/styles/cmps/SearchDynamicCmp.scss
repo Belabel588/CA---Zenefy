@@ -7,16 +7,28 @@
 
 .main-search-container {
   display: grid;
-  place-items: center; // Centers content both horizontally and vertically
-  grid-template-rows: 18rem 1fr 1fr 1fr;
+
+  grid-template-rows: 15rem 1fr;
   border-radius: 0.5rem;
   height: fit-content;
 
-  
-  .discover {
-    position: absolute;
-    top: 400px;
-    left: 29vw;
+
+  .discover-new-music {
+    display: flex;
+    flex-direction: column;
+
+    h1 {
+      padding-top: 2rem;
+      padding-left: 0.5rem;
+      background: linear-gradient(180deg, rgba(32, 26, 23, 0.5) 0%, rgba(30, 24, 20, 0.5) 50%, rgb(30, 22, 18 , 0.5) 100%);
+
+      margin-bottom: 0;
+      
+    }
+    
+    .gradient {
+      background: linear-gradient(180deg, rgb(33, 22, 18 , 0.5) 0%, rgba(30, 24, 20, 0.5) 25%, #121212 50%);
+    }
   }
 
   // .stations-container {
@@ -68,4 +80,8 @@
     border-radius: 0.5rem;
     padding: 1rem;
   }
+}
+
+.discover-new-music .h1{
+
 }

@@ -43,14 +43,6 @@ async function query(filterBy = { txt: '', stationType: '' }) {
     stations = stations.filter((station) => stationType === station.stationType)
   }
 
-  //   stations = stations.map(({ _id, vendor, price, speed, owner }) => ({
-  //     _id,
-  //     vendor,
-  //     price,
-  //     speed,
-  //     owner,
-  //   }))
-
   return stations
 }
 
@@ -217,7 +209,7 @@ async function createStationFromSearch(searchResults, keyWord) {
     title: searchResults[0]?.artist || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
     items: searchResults.map((result) => ({
       artist: result.artist,
-      id: result.id, // Generate a unique ID for each item
+      id: result.id || utilService.makeId(), // Generate a unique ID for each item
       name: result.name,
       album: result.album,
       url: result.url,
