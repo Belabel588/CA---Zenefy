@@ -25,6 +25,7 @@ export const stationService = {
   getDefaultCurrItem,
   getDefaultCurrStation,
   getRandomArtist,
+  getSubCategories,
 }
 window.cs = stationService
 
@@ -70,8 +71,8 @@ async function remove(stationIdToRemove) {
 
 async function save(station) {
 
-  
-  
+
+
 
   const loggedInUser = userService.getLoggedinUser()
 
@@ -99,24 +100,24 @@ async function save(station) {
     }
 
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
-    
+
   } else {
     // var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {
       title: station.title || `My playlist #${loggedInUser.likedStationsIds.length}`,
       items: station.items || [],
       cover:
-      station.cover ||
-      'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+        station.cover ||
+        'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
       preview: station.preview || '',
       addedAt: station.addedAt || Date.now(),
       likedByUsers: [{ id: loggedInUser._id, username: loggedInUser.username }],
       // Later, owner is set by the backend
       //   creator: userService.getLoggedinUser(),
     }
-    
+
     savedStation = await storageService.post(STORAGE_KEY, stationToSave)
-    
+
 
     if (!station.isSearched) {
       loggedInUser.likedStationsIds.push(stationToSave._id)
@@ -124,8 +125,8 @@ async function save(station) {
       await updateUser(loggedInUser)
     }
   }
-  
-  
+
+
   return savedStation
 }
 
@@ -1310,4 +1311,37 @@ function getDefaultCurrStation() {
     likedByUsers: [],
     addedAt: 1724685172590,
   }
+}
+
+function getSubCategories(category) {
+  const allCategoriesWithImages = getCategoriesWithImages();
+
+  // Define subcategories for Music and Podcasts
+  const musicSubCategories = [
+    'Pop', 'Hip-Hop', , 'Latin', ,
+    'Indie', 'R&B', 'K-pop', 
+
+
+  ];
+
+  const podcastSubCategories = [
+    'Educational', 'Documentary', 'Comedy', 'Trending',
+    'Kids & Family'
+  ];
+
+  let subCategories;
+  if (category === 'Music') {
+    subCategories = musicSubCategories;
+  } else if (category === 'Podcasts') {
+    subCategories = podcastSubCategories;
+  } else {
+    return [];
+  }
+
+  // Filter the categories with images to match the subcategories
+  const filteredSubCategories = allCategoriesWithImages.filter(catWithImg =>
+    subCategories.includes(catWithImg.category)
+  );
+
+  return filteredSubCategories;
 }
