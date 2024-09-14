@@ -112,7 +112,7 @@ export function AppHeader() {
       await logout()
       await loadStations()
 
-      showSuccessMsg(`Bye now`)
+      // showSuccessMsg(`Bye now`)
     } catch (err) {
       showErrorMsg('Cannot logout')
     }
@@ -138,9 +138,9 @@ export function AppHeader() {
       navigate('/')
     } catch (err) {
       console.log(err)
-      showErrorMsg('Error login')
+      // showErrorMsg('Error login')
     } finally {
-      showSuccessMsg('Welcome')
+      // showSuccessMsg('Welcome')
     }
   }
 

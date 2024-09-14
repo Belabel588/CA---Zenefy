@@ -286,10 +286,10 @@ export function SearchIndex() {
       )
 
       setUserStations([...userStationsToSet])
-      showSuccessMsg('Song added')
+      // showSuccessMsg('Song added')
     } catch (err) {
       console.log(err)
-      showErrorMsg(`Couldn't like song`)
+      // showErrorMsg(`Couldn't like song`)
     } finally {
       setIsLoading(false)
     }

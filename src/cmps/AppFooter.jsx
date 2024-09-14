@@ -343,7 +343,7 @@ export function AppFooter() {
       const savedStation = await saveStation(station)
       await loadStations()
       setLikedStation(savedStation)
-      showSuccessMsg('Song removed')
+      // showSuccessMsg('Song removed')
     } catch (err) {
       console.log(err)
     } finally {

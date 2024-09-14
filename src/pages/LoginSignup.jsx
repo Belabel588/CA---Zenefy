@@ -25,7 +25,7 @@ export function LoginSignup() {
       console.log(err)
       showErrorMsg('Error login')
     } finally {
-      showSuccessMsg('Welcome')
+      // showSuccessMsg('Welcome')
     }
   }
 
@@ -56,22 +56,22 @@ export function LoginSignup() {
       ? signup(credentials)
           .then((loggedinUser) => {
             setCredentials(userService.getEmptyCredentials())
-            showSuccessMsg('Signed in successfully')
+            // showSuccessMsg('Signed in successfully')
           })
 
           .catch((err) => {
             console.log(err)
-            showErrorMsg('Oops try again')
+            // showErrorMsg('Oops try again')
           })
       : login(credentials)
           .then((data) => {
             setCredentials(userService.getEmptyCredentials())
             // backshadowRef.current.style.display = 'none'
             loadStations()
-            showSuccessMsg('Logged in successfully')
+            // showSuccessMsg('Logged in successfully')
           })
           .catch((err) => {
-            showErrorMsg('Oops try again')
+            // showErrorMsg('Oops try again')
           })
   }
   if (!user)
