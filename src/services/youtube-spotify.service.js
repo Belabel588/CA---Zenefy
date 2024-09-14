@@ -13,7 +13,7 @@ export const apiService = {
   geminiGenerate,
 }
 
-const API_URL = import.meta.env.YOUTUBE_API
+const API_URL = import.meta.env.VITE_YOUTUBE_API
 
 // Youtube
 async function getVideos(search, limit = null) {
