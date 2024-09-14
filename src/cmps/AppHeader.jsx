@@ -11,6 +11,7 @@ import { GoHome, GoHomeFill } from 'react-icons/go'
 import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
 import { IoClose } from 'react-icons/io5'
+import { LuSparkles } from 'react-icons/lu'
 
 import { UserOptions } from './UserOptions.jsx'
 
@@ -20,7 +21,10 @@ import {
   SET_FILTER_BY,
   SET_IS_LOADING,
 } from '../store/reducers/station.reducer.js'
-import { setCurrSearch } from '../store/actions/station.actions.js'
+import {
+  setCurrSearch,
+  setIsLoading,
+} from '../store/actions/station.actions.js'
 
 import { loadStations, setIsActive } from '../store/actions/station.actions.js'
 
@@ -169,11 +173,21 @@ export function AppHeader() {
   return (
     <header className='app-header full'>
       {isShown && <UserOptions options={options} isHover={isHover} />}
+      <button className='ai-button'>
+        <LuSparkles
+          className='ai-icon'
+          onClick={() => {
+            // onSetGeminiModal()
+            navigate('/generate')
+          }}
+        />
+      </button>
+
       <nav>
         <div
           onClick={async () => {
-            await loadStations()
             navigate('/')
+            await loadStations()
           }}
         >
           <div className='logo-container'>
@@ -186,8 +200,9 @@ export function AppHeader() {
           to='/'
           className='home-button-container'
           onClick={async () => {
-            await loadStations()
             navigate('/')
+
+            await loadStations()
           }}
         >
           {(isHome && <GoHomeFill className='home-button active' />) || (

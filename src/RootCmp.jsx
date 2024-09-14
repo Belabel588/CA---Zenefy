@@ -43,12 +43,13 @@ export function RootCmp() {
       <SideBar />
       <UserMsg />
       <LoginSignup />
-      <LoadingAnimation />
       {(isPlaylistShown && !isItemShown && <PlayList />) ||
         (isItemShown && !isPlaylistShown && <ItemPlay />)}
 
+      {/* <LoadingAnimation /> */}
       <div className='main-content'>
         <main>
+          <LoadingAnimation />
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<AboutUs />} />
@@ -67,7 +68,9 @@ export function RootCmp() {
       </div>
 
       <AppFooterMobile />
-      <AppFooter className='app-footer' />
+      <div className='app-footer'>
+        <AppFooter />
+      </div>
     </section>
   )
 }

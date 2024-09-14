@@ -3,6 +3,10 @@
     // width: 200px;
     // height: 200px;
     height: calc(100vh - 170px);
+    @media (max-width:770px) {
+      height: calc(100vh - 220px);
+      
+    }
     background-color: #fff;
     display: flex;
     flex-direction: column;
@@ -60,11 +64,11 @@
         .msg {
 
             min-width: 50px;
-            width: fit-content;
+            width: 40%;
             text-align: center;
           
             min-width: 50px;
-            width: fit-content;
+
             text-align: center;
 
             background-color: $white;
@@ -76,6 +80,8 @@
             align-self: self-start;
             display: inline-block;
             position: relative;
+            max-width: 400px;
+            text-align: start;
           
             // Animation for the typing dots
             &.typing {

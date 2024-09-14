@@ -128,9 +128,8 @@ export function SearchIndex() {
     return tagColors[index % tagColors.length]
   }
 
-
   const tagElements = categoriesWithImages.map((category, idx) => {
-    const backgroundColor = generateColor(idx);
+    const backgroundColor = generateColor(idx)
 
     return (
       <Link
@@ -158,8 +157,6 @@ export function SearchIndex() {
   useEffect(() => {
     const fetchSearchResults = async () => {
       try {
-        console.log(currSearch)
-
         setIsLoading(true)
 
         const results = await apiService.getVideos(currSearch)
@@ -177,10 +174,6 @@ export function SearchIndex() {
     if (!currSearch) return
     fetchSearchResults()
   }, [currSearch])
-
-  useEffect(() => {
-    console.log(isGemeni)
-  }, [isGemeni])
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -398,9 +391,7 @@ export function SearchIndex() {
           </label>
         </div>
       </div> */}
-      <ul className='search-list'>
-        {tagElements}
-      </ul>
+      <ul className='search-list'>{tagElements}</ul>
     </section>
   ) : loading ? (
     <LoadingAnimation />

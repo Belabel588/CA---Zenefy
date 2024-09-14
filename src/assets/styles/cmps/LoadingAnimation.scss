@@ -1,29 +1,32 @@
 // LoadingAnimation.scss
 
 .back-shadow{
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: $dark-mode-background;
   // background-color: rgb(0, 0, 0);
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 10;
+  // position: absolute;
+  // top: 0;
+  // right: 0;
+  // bottom: 0;
+  // left: 0;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-items: center;
-
+  
 }
 .loading-container{
-  position: absolute;
+  // position: absolute;
   display: flex;
   align-items: center;
   justify-items: center;
   left: 50%;
-  top: calc(50% - 80px);
+  // top: calc(50% - 80px);
+  
+  z-index: 30;
 
+height: calc(100vh - 170px);
 // height: 100%;
-// width: 100%;
+width: 100%;
 }
 .loading-animation {
     display: flex;
@@ -36,8 +39,8 @@
     gap: 5px;
     position: absolute;
     // top: 50%;
-    // left: 58%;
-    // transform: translate(-50%, -50%); // Center the animation horizontally and vertically
+    left: 50%;
+    transform: translate(-50%, -50%); // Center the animation horizontally and vertically
     
   }
   

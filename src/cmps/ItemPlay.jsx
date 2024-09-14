@@ -23,6 +23,7 @@ import {
 import { updateUser } from '../store/actions/user.actions.js'
 
 import { EditOptions } from './EditOptions.jsx'
+import { AppFooter } from './AppFooter.jsx'
 
 import { BiPlay } from 'react-icons/bi'
 import { BiPause } from 'react-icons/bi'
@@ -53,6 +54,30 @@ export function ItemPlay() {
   useEffect(() => {
     setLikedStation()
   }, [currItem, stations])
+
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  )
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions())
+      console.log(windowDimensions.width)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      // getAllStations()
+    }
+  }, [windowDimensions])
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window
+    // console.log(width)
+    return {
+      width,
+      height,
+    }
+  }
 
   async function setLikedStation() {
     // await loadStations()
@@ -273,6 +298,8 @@ export function ItemPlay() {
             )) || <PlusIcon className={'to-add'} />}
           </button>
         </div>
+
+        {/* {windowDimensions.width <= 770 && <AppFooter />} */}
       </div>
       <EditOptions
         setLikedStation={setLikedStation}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import ReactPlayer from 'react-player'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
+import { FastAverageColor } from 'fast-average-color'
 
 import { stationService } from '../services/station.service.js'
 import { utilService } from '../services/util.service.js'
@@ -385,7 +386,7 @@ export function AppFooter() {
   }
 
   return (
-    <footer className='app-footer play-bar-container' ref={playBarRef}>
+    <footer className='play-bar-container' ref={playBarRef}>
       <div className='song-details-container'>
         <img src={currItem.cover} className='play-bar-cover' alt='' />
         <div className='song-text-container'>

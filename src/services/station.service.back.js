@@ -268,7 +268,7 @@ function getCategoriesWithImages() {
   // Assuming the images are located in a folder named 'assets/images' in your project
   const categoryImages = categories.map(
     (category) =>
-      `../../../public/spotify-pics/${category
+      `/spotify-pics/${category
         .toLowerCase()
         .replace(/ & /g, '-')
         .replace(/ /g, '-')}.png`

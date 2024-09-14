@@ -111,57 +111,57 @@
   }
 
   .app-footer{
-    position: fixed;
-    bottom: calc(5em - 10px);
-    padding: 10px;
+    // position: fixed;
+    // bottom: calc(5em - 10px);
+    // padding: 10px;
 
-    // background-color: rgba(255, 0, 0, 0.24);
-    .play-bar-container{
+    // // background-color: rgba(255, 0, 0, 0.24);
+    // .play-bar-container{
 
       
-    }
-    .song-details-container{
-      grid-column: 1/-1;
-      width: 100%;
-      .song-text-container{
-        // display: none;
-      }
-      img{
-        border-radius: 5px;
-      }
+    // }
+    // .song-details-container{
+    //   grid-column: 1/-1;
+    //   width: 100%;
+    //   .song-text-container{
+    //     // display: none;
+    //   }
+    //   img{
+    //     border-radius: 5px;
+    //   }
 
-      .mobile-play-button{
-        display: flex;
-      }
-    }
+    //   .mobile-play-button{
+    //     display: flex;
+    //   }
+    // }
 
-    .control-container{
+    // .control-container{
 
-      .buttons-container{
-        display: none;
-      }
-    }
+    //   .buttons-container{
+    //     display: none;
+    //   }
+    // }
 
-    .time-container{
-      span{
-        display: none;
-      }
-      // position: relative;
-      .time-container{
-        position: absolute;
-        top: calc(3em + 8px);
+    // .time-container{
+    //   span{
+    //     display: none;
+    //   }
+    //   // position: relative;
+    //   .time-container{
+    //     position: absolute;
+    //     top: calc(3em + 8px);
 
-        // width: 50vh;
-        left: 0px;
-        right: 5px;
-        width: 95vw;
+    //     // width: 50vh;
+    //     left: 0px;
+    //     right: 5px;
+    //     width: 95vw;
 
-      }
-    }
+    //   }
+    // }
 
-    .buttons-volume-container{
-      display: none;
-    }
+    // .buttons-volume-container{
+    //   display: none;
+    // }
   }
 
   .side-bar{
@@ -179,7 +179,7 @@
     padding: 0.5rem;
     font-family: 'GothamLight';
     font-size: 0.7em;
-    z-index: 3;
+    z-index: 30;
 
   }
   

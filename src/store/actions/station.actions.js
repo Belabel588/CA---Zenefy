@@ -24,7 +24,7 @@ import { store } from '../store.js'
 export async function loadStations() {
   const filterBy = store.getState().stationModule.filterBy
 
-  store.dispatch({ type: SET_IS_LOADING, isLoading: true })
+  // store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
   try {
     const stations = await stationService.query(filterBy)
@@ -56,7 +56,7 @@ export async function loadStations() {
   } catch (err) {
     console.error('Error loading stations:', err)
   } finally {
-    store.dispatch({ type: SET_IS_LOADING, isLoading: false })
+    // store.dispatch({ type: SET_IS_LOADING, isLoading: false })
   }
 }
 
