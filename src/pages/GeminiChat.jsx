@@ -51,6 +51,7 @@ export function GeminiChat() {
     try {
       if (!prompt) return
       if (geminiLoader) return
+      setPrompt('')
 
       const newMsgs = msgs
       newMsgs.unshift({

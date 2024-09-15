@@ -64,13 +64,12 @@
         .msg {
 
             min-width: 50px;
-            width: 40%;
             text-align: center;
-          
+            
             min-width: 50px;
-
+            
             text-align: center;
-
+            
             background-color: $white;
             color: $grey-dark;
             padding: 10px;
@@ -80,9 +79,15 @@
             align-self: self-start;
             display: inline-block;
             position: relative;
-            max-width: 400px;
+            // max-width: 400px;
             text-align: start;
-          
+            // width: calc(30% - 90px);
+            width: fit-content;
+            max-width: 40%;
+            min-width: 100px;
+
+            
+
             // Animation for the typing dots
             &.typing {
               width: 40px;

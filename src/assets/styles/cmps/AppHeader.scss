@@ -127,7 +127,6 @@
                 transition: 0.1s;
                 // border: 2.5px solid transparent;
 
-
                 
                 &:hover{
                     background-color: $grey-medium;
@@ -159,34 +158,46 @@
                     color: $grey-light;
                     opacity: 1; /* Firefox */
                   }
-
-                .icon{
-                    font-size: 1.5em;
-                    color: $grey-light;
-                    &:hover{
-                        color: $white;
+                  .icon{
+                      font-size: 1.5em;
+                      color: $grey-light;
+                      &:hover{
+                          color: $white;
+                          
+                        }
                         
                     }
-                    
-                }
-                .browse{
-
-                }
-                .explore{
-                    fill: $white;
-                    &:hover{
-    
-                        transform: scale(1.05);
+                    .browse{
                     }
-
-                    &::before{
-                        content: '';
+                    .explore-container{
+                        display: flex;
+                        align-items: center;
                         position: relative;
-                        height: 20px;
-                        width: 1px;
-                        background-color: $grey-light;
-                    }
+                      svg{
+                        height: 25px;
+                      }
+                        .explore{
+                            fill: $white;
+                            &:hover{
+                                
+                                transform: scale(1.05);
+                            }
+                            
+                        }      
+                        &::before{
+                            content: '';
+                    position: absolute;
+                            right: 35px;
+                            border-radius: 5px;
+
+                    height: 28px;
+                    width: 1px;
+                    background-color: $grey-light;
+    
                 }
+
+                    }
+                        
           
             }
         }

@@ -220,14 +220,16 @@ export function AppHeader() {
             ref={inputRef} // Step 3: Bind the ref to the input field
             // value={searchTerm}
           />
-          {(searchTerm && (
-            <IoClose
-              onClick={() => {
-                inputRef.current.value = ''
-                setSearchTerm('')
-              }}
-            />
-          )) || <ExploreIcon isFocus={isFocus} />}
+          <div className='explore-container'>
+            {(searchTerm && (
+              <IoClose
+                onClick={() => {
+                  inputRef.current.value = ''
+                  setSearchTerm('')
+                }}
+              />
+            )) || <ExploreIcon isFocus={isFocus} />}
+          </div>
         </div>
       </div>
 
