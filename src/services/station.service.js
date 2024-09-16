@@ -1318,30 +1318,33 @@ function getSubCategories(category) {
 
   // Define subcategories for Music and Podcasts
   const musicSubCategories = [
-    'Pop', 'Hip-Hop', , 'Latin', ,
-    'Indie', 'R&B', 'K-pop', 
-
-
-  ];
+    'Pop', 'Hip-Hop', 'Rock', 'Latin', 'Indie', 
+    'R&B', 'K-pop', 'Dance Electric', 'Country', 
+    'Chill', 'Sleep', 'Party', 'Love', 'Metal', 
+    'Jazz', 'Anime', 'Gaming', 'Folk & Acoustic',
+    'Focus', 'Classical', 'Instrumental', 'Punk',
+    'Ambient', 'Blues', 'Afro', 'Funk & Disco'
+  ]
 
   const podcastSubCategories = [
     'Educational', 'Documentary', 'Comedy', 'Trending',
     'Kids & Family'
-  ];
+  ]
 
-  let subCategories;
+  let subCategories
   if (category === 'Music') {
-    subCategories = musicSubCategories;
+    subCategories = musicSubCategories
   } else if (category === 'Podcasts') {
-    subCategories = podcastSubCategories;
+    subCategories = podcastSubCategories
   } else {
-    return [];
+    return []
   }
 
   // Filter the categories with images to match the subcategories
   const filteredSubCategories = allCategoriesWithImages.filter(catWithImg =>
     subCategories.includes(catWithImg.category)
-  );
+  )
 
-  return filteredSubCategories;
+  return filteredSubCategories
 }
+

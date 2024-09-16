@@ -44,7 +44,7 @@ async function getPlaylistsByCategory(categoryName) {
   const accessToken = await getAccessToken();
   const listDB = `${categoryName}List`;
 
-  // Fetch categories to get the ID for the category name
+  
   const categoryRes = await fetch(`https://api.spotify.com/v1/browse/categories`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -79,29 +79,29 @@ async function getPlaylistsByCategory(categoryName) {
 
   // Create a list to hold the 3 stations
   const stationList = [];
-  
-  console.log('playlists ARE' , playlists);
+
+  console.log('playlists ARE', playlists);
   // Loop through each playlist and gather 5 songs for each station
   for (let i = 0; i < playlists.length; i++) {
     const playlist = playlists[i];
     const url = playlist.tracks.href;
-    
+
     // Fetch the tracks in the playlist
     const items = await searchItems(url);
     console.log('Fetched Items:', items);
-  
+
     // Get video list for the first track
     const songList = await getVideos(items[0].track.name);
     console.log('Song List:', songList);
-  
+
     // Use the createStationFromSearch function to create a station
     const station = await stationService.createStationFromSearch(songList, categoryName);
     console.log('STATION IS', station);
-  
+
     // Save each individual station
     const savedStation = await stationService.save(station);
     console.log('SAVED STATION IS', savedStation);
-  
+
     // Add the station to the list to return later
     stationList.push(savedStation);
     console.log('Updated Station List:', stationList);
@@ -129,9 +129,9 @@ async function getRandomFeaturedPlaylists() {
   // Shuffle playlists and pick up to 3 random ones that have titles and covers
   const shuffledPlaylists = featuredPlaylistsData.playlists.items.sort(() => 0.5 - Math.random());
   const filteredPlaylists = shuffledPlaylists.filter(playlist => playlist.name && playlist.images && playlist.images.length > 0);
-  
+
   const stationList = [];
-  
+
   for (let i = 0; i < filteredPlaylists.length && stationList.length < 3; i++) {
     const playlist = filteredPlaylists[i];
     const url = playlist.tracks.href;
@@ -149,7 +149,7 @@ async function getRandomFeaturedPlaylists() {
     console.log('STATION IS', station);
 
     // Validate the station before saving
-    if (station.title!== 'Untitled Station' && station.cover !== 'default_cover_url') {
+    if (station.title !== 'Untitled Station' && station.cover !== 'default_cover_url') {
       // Save each individual station
       const savedStation = await stationService.save(station);
       console.log('SAVED STATION IS', savedStation);
@@ -273,8 +273,6 @@ function createVideo(video) {
 
 async function getSpotify(search) {
 
-
-
   const token = await getAccessToken()
   const db = `${search}Spotify`
   const res = await query(db)
@@ -283,14 +281,15 @@ async function getSpotify(search) {
     return res
   }
 
-  
-  console.log('SEARCH INSIDE API SERVICE IS' , search);
-  
+
+  console.log('SEARCH INSIDE API SERVICE IS', search);
+
   let tracks = await searchTracks(search, token)
   const regex = new RegExp(search, 'i')
 
-  console.log('TRACKS INSIDE API SERVICE ARE' ,tracks);
-  
+  console.log('TRACKS INSIDE API SERVICE ARE', tracks);
+
+  // if a category is sent skip the regex filter below.
 
   tracks = tracks.filter(
     (track) =>
