@@ -6,10 +6,11 @@
 }
 
 .main-search-container {
+  overflow: auto;
   display: grid;
   grid-template-rows: 12rem 1fr 1fr 1fr;
   border-radius: 0.5rem;
-  height: fit-content;
+  height: calc(100vh - 170px);
 
 
   .discover-new-music {
@@ -137,3 +138,15 @@
     margin-bottom: 0;
   }
 }
+
+
+@media(max-width : 768px ) {
+  .sub-categories-container {
+    // height: 20vh;
+    // overflow-y: auto;
+  }
+  .main-search-container{
+    height: calc(100vh - 270px);
+  }
+}
+
