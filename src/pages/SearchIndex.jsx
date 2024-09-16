@@ -459,6 +459,7 @@ export function SearchIndex() {
                   {isPlaying && currItem.id === item.id ? (
                     <div
                       className='pause-button-container'
+                      key={`pause-${item.id}`}
                       onMouseEnter={() => {
                         isHover.current = true
                       }}
@@ -474,6 +475,7 @@ export function SearchIndex() {
                   ) : (
                     <div
                       className='play-button-container'
+                      key={`play-${item.id}`}
                       onMouseEnter={() => {
                         isHover.current = true
                       }}
@@ -517,7 +519,7 @@ export function SearchIndex() {
                   <span className='artist-name'>{item.artist}</span>
                 </div>
 
-                <button onClick={() => likeSong(item)}>
+                <button key={`like-${item.id}`} onClick={() => likeSong(item)}>
                   {likedItems.includes(item.id) ? <AddedIcon /> : <PlusIcon />}
                 </button>
 
@@ -525,6 +527,7 @@ export function SearchIndex() {
 
                 <HiOutlineDotsHorizontal
                   className='options-button'
+                  key={`options-${item.id}`}
                   onClick={(event) => handleClick(event, item)}
                 />
               </div>
