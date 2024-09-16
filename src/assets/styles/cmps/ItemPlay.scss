@@ -13,12 +13,24 @@
     max-width: 500px;
     animation: slideIn 0.3s;
     padding: 0.8em;
+    z-index: 5;
     @media (max-width:1120px) {
         position: absolute;
         right: 0;
         top: 74px;
         width: 400px;
         height: calc(100vh - 270px);
+        
+        @media (max-width:770px) {
+          // right: 0;
+          // left: 0;
+          height: calc(100vh);
+          top: 0;
+          position: absolute;
+          // bottom: 150px;
+          width: 100vw;
+          
+        }
         
       }
   

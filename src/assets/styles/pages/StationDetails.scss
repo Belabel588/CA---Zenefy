@@ -521,12 +521,13 @@
 
         // width: 250px;
         overflow: hidden;
+        width: 100%;
 
 
         
         .song-name{
-          // max-width: 250px;
           text-wrap: nowrap;
+          width: 100%;
           overflow: hidden;
           width: fit-content;
           color: $white;
@@ -542,6 +543,8 @@
       .album{
         grid-column: 4/5;
         justify-self: start;
+        width: 100%;
+        overflow: hidden;
         @media (max-width:770px) {
           display: none;
         }

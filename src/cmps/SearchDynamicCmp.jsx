@@ -12,8 +12,12 @@ export function SearchDynamicCmp() {
   const location = useLocation()
   const [searchResults, setSearchResults] = useState([])
 
-  const isLoading = useSelector((storeState) => storeState.stationModule.isLoading)
-  const stations = useSelector((storeState) => storeState.stationModule.stations)
+  const isLoading = useSelector(
+    (storeState) => storeState.stationModule.isLoading
+  )
+  const stations = useSelector(
+    (storeState) => storeState.stationModule.stations
+  )
 
   const backgroundColor = location.state?.backgroundColor || '#ffffff'
 
@@ -21,7 +25,7 @@ export function SearchDynamicCmp() {
   async function loadCategoryPlaylists(category) {
     try {
       const playlists = await apiService.getPlaylistsByCategory(category)
-      console.log('Playlists for category:', category, playlists)
+      // console.log('Playlists for category:', category, playlists)
       setSearchResults(playlists)
     } catch (error) {
       console.error('Error fetching playlists for category:', error)
@@ -29,11 +33,11 @@ export function SearchDynamicCmp() {
   }
 
   useEffect(() => {
-    console.log('LOADING CATEGORY', category)
+    // console.log('LOADING CATEGORY', category)
     loadCategoryPlaylists(category)
   }, [category])
 
-  console.log('Search Results:', searchResults)
+  // console.log('Search Results:', searchResults)
 
   return (
     <div className='main-search-container'>

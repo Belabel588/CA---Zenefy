@@ -51,7 +51,7 @@ export function StationDetails() {
   const currItem = useSelector(
     (stateSelector) => stateSelector.stationModule.currItem
   )
-  console.log(currItem)
+  // console.log(currItem)
 
   const { stationId } = useParams()
 
@@ -347,9 +347,7 @@ export function StationDetails() {
   async function onSelectStation(stationId) {
     const curr = await setCurrStation(stationId)
     const idToSet = curr.items[0].id
-    console.log(idToSet)
     await setCurrItem(idToSet, { ...curr })
-    console.log(currItem)
 
     setCurrItemIdx(0)
     setIsPlaying(true)
@@ -431,7 +429,8 @@ export function StationDetails() {
             <div className='play-container'>
               <div className='play-button-container'>
                 {(isPlaying &&
-                  JSON.stringify(currStation) === JSON.stringify(station) && (
+                  // JSON.stringify(currStation) === JSON.stringify(station) && (
+                  currStation._id === station._id && (
                     <BiPause
                       className='pause-button'
                       onClick={() => setIsPlaying(false)}
@@ -441,9 +440,7 @@ export function StationDetails() {
                     className='play-button'
                     onClick={() => {
                       if (station.items.length === 0) return
-                      if (
-                        JSON.stringify(currStation) === JSON.stringify(station)
-                      ) {
+                      if (currStation._id === station._id) {
                         setIsPlaying(true)
                         return
                       }

@@ -11,6 +11,7 @@ import { GoHome, GoHomeFill } from 'react-icons/go'
 import { IoSearchOutline } from 'react-icons/io5'
 import { PiBrowsersThin } from 'react-icons/pi'
 import { IoClose } from 'react-icons/io5'
+import { LuSparkles } from 'react-icons/lu'
 
 import { UserOptions } from './UserOptions.jsx'
 
@@ -20,7 +21,10 @@ import {
   SET_FILTER_BY,
   SET_IS_LOADING,
 } from '../store/reducers/station.reducer.js'
-import { setCurrSearch } from '../store/actions/station.actions.js'
+import {
+  setCurrSearch,
+  setIsLoading,
+} from '../store/actions/station.actions.js'
 
 import { loadStations, setIsActive } from '../store/actions/station.actions.js'
 
@@ -28,23 +32,23 @@ import { login, signup } from '../store/actions/user.actions.js'
 import { stationService } from '../services/station.service.js'
 
 export function AppHeader() {
-  const user = useSelector((storeState) => storeState.userModule.loggedinUser);
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
   const filterBy = useSelector(
     (storeState) => storeState.stationModule.filterBy
-  );
+  )
   const currSearch = useSelector(
     (stateSelector) => stateSelector.stationModule.currSearch
-  );
+  )
   const isActive = useSelector(
     (stateSelector) => stateSelector.stationModule.isActive
-  );
+  )
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const location = useLocation()
 
   const inputRef = useRef(null) // Step 1: Create a ref for the input field
-  
+
   const [isHome, setIsHome] = useState()
   const [isFocus, setIsFocus] = useState(false)
 
@@ -54,10 +58,10 @@ export function AppHeader() {
 
   useEffect(() => {
     if (location.pathname === '/') {
-      setIsHome(true);
-      setCurrSearch('');
+      setIsHome(true)
+      setCurrSearch('')
     } else {
-      setIsHome(false);
+      setIsHome(false)
     }
     setIsActive(false)
 
@@ -69,15 +73,14 @@ export function AppHeader() {
 
     // Step 2: Reset the input value on route change using the ref
     if (inputRef.current) {
-      inputRef.current.value = ''; // Clear the input value
+      inputRef.current.value = '' // Clear the input value
     }
   }, [location])
 
   const handleSearch = utilService.debounce(({ target }) => {
     const field = target.name
-    console.log(field)
+
     let value = target.value
-    console.log(value)
     setSearchTerm(value)
     // Dispatch action to update the filter in the Redux store
     // dispatch({
@@ -108,7 +111,7 @@ export function AppHeader() {
       await logout()
       await loadStations()
 
-      showSuccessMsg(`Bye now`)
+      // showSuccessMsg(`Bye now`)
     } catch (err) {
       showErrorMsg('Cannot logout')
     }
@@ -116,13 +119,13 @@ export function AppHeader() {
 
   function onSearchClick({ target }) {
     if (inputRef.current) {
-      
-
       inputRef.current.focus() // Focus the input field
       setIsFocus(true)
       setIsActive(true)
     }
-    navigate('/search')
+    if (location.pathname !== '/search') {
+      navigate('/search')
+    }
   }
 
   async function onLoginGuest() {
@@ -134,9 +137,9 @@ export function AppHeader() {
       navigate('/')
     } catch (err) {
       console.log(err)
-      showErrorMsg('Error login')
+      // showErrorMsg('Error login')
     } finally {
-      showSuccessMsg('Welcome')
+      // showSuccessMsg('Welcome')
     }
   }
 
@@ -169,11 +172,21 @@ export function AppHeader() {
   return (
     <header className='app-header full'>
       {isShown && <UserOptions options={options} isHover={isHover} />}
+      <button className='ai-button'>
+        <LuSparkles
+          className='ai-icon'
+          onClick={() => {
+            // onSetGeminiModal()
+            navigate('/generate')
+          }}
+        />
+      </button>
+
       <nav>
         <div
           onClick={async () => {
-            await loadStations()
             navigate('/')
+            await loadStations()
           }}
         >
           <div className='logo-container'>
@@ -186,8 +199,9 @@ export function AppHeader() {
           to='/'
           className='home-button-container'
           onClick={async () => {
-            await loadStations()
             navigate('/')
+
+            await loadStations()
           }}
         >
           {(isHome && <GoHomeFill className='home-button active' />) || (
@@ -205,14 +219,16 @@ export function AppHeader() {
             ref={inputRef} // Step 3: Bind the ref to the input field
             // value={searchTerm}
           />
-          {(searchTerm && (
-            <IoClose
-              onClick={() => {
-                inputRef.current.value = ''
-                setSearchTerm('')
-              }}
-            />
-          )) || <ExploreIcon isFocus={isFocus} />}
+          <div className='explore-container'>
+            {(searchTerm && (
+              <IoClose
+                onClick={() => {
+                  inputRef.current.value = ''
+                  setSearchTerm('')
+                }}
+              />
+            )) || <ExploreIcon isFocus={isFocus} />}
+          </div>
         </div>
       </div>
 
@@ -248,7 +264,6 @@ export function AppHeader() {
 }
 
 function ExploreIcon({ isFocus }) {
-  console.log(isFocus)
   if (isFocus) {
     return (
       <svg

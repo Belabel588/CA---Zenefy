@@ -38,12 +38,10 @@ export function SuggestedStations({ stations = '', color = '' }) {
     setIsPlaying(true)
   }
 
-  console.log('stations inside suggested stations',stations);
-  
+  // console.log('stations inside suggested stations',stations);
 
   // Use default color if none is provided
   const backgroundColor = color || '#191414' // Default color
-
 
   // Determine class names dynamically
   const containerClass = color
@@ -66,7 +64,7 @@ export function SuggestedStations({ stations = '', color = '' }) {
               if (isHover.current) return
               navigate(`/station/${station._id}`)
             }}
-          // Apply the background color here
+            // Apply the background color here
           >
             <div className='cover-container'>
               <div className='playlist-cover-overlay'></div>

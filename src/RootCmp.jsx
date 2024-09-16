@@ -26,6 +26,7 @@ import { AppFooterMobile } from './cmps/AppFooterMobile.jsx'
 import { PlayList } from './cmps/PlayList.jsx'
 import { MobileLibrary } from './pages/MobileLibrary.jsx'
 import { ItemPlay } from './cmps/ItemPlay.jsx'
+import { GeminiChat } from './pages/GeminiChat.jsx'
 
 export function RootCmp() {
   const isPlaylistShown = useSelector(
@@ -42,12 +43,13 @@ export function RootCmp() {
       <SideBar />
       <UserMsg />
       <LoginSignup />
-      <LoadingAnimation />
       {(isPlaylistShown && !isItemShown && <PlayList />) ||
         (isItemShown && !isPlaylistShown && <ItemPlay />)}
 
+      {/* <LoadingAnimation /> */}
       <div className='main-content'>
         <main>
+          <LoadingAnimation />
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/about' element={<AboutUs />} />
@@ -60,12 +62,15 @@ export function RootCmp() {
             <Route path='/user/:userId' element={<UserDetails />} />
             {/* <Route path='/login' element={<LoginSignup />} /> */}
             <Route path='/artist/:artistId' element={<ArtistDetails />} />
+            <Route path='/generate' element={<GeminiChat />} />
           </Routes>
         </main>
       </div>
 
       <AppFooterMobile />
-      <AppFooter className='app-footer' />
+      <div className='app-footer'>
+        <AppFooter />
+      </div>
     </section>
   )
 }

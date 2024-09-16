@@ -292,7 +292,7 @@ export function ItemDetails() {
                       JSON.stringify(currStation) !==
                       JSON.stringify(itemsStation)
                     ) {
-                      console.log(itemsStation)
+                      // console.log(itemsStation)
                       await setCurrStation(itemsStation._id)
                       await setCurrItem(item.id, itemsStation)
                     }

@@ -12,7 +12,6 @@ export function Sort({ filtered, setFiltered, isNav }) {
   const stations = useSelector(
     (storeState) => storeState.stationModule.stations
   )
-  console.log(stations)
 
   useEffect(() => {
     // Set the initial filtered stations list based on the stations in the store
@@ -43,7 +42,7 @@ export function Sort({ filtered, setFiltered, isNav }) {
   }
 
   function onSetCheckedLabel({ target }) {
-    console.log(target.id.slice(0, target.id.length - 4))
+    // console.log(target.id.slice(0, target.id.length - 4))
     setCheckedLabel(target.id.slice(0, target.id.length - 4))
   }
 

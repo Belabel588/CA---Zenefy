@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import ReactPlayer from 'react-player'
 import { Link, NavLink } from 'react-router-dom'
 import { useNavigate, useParams } from 'react-router'
+import { FastAverageColor } from 'fast-average-color'
 
 import { stationService } from '../services/station.service.js'
 import { utilService } from '../services/util.service.js'
@@ -254,8 +255,6 @@ export function AppFooter() {
       type: 'nowPlaying',
       icon: <ItemIcon />,
       onClick: () => {
-        console.log(isPlaylistShown)
-        console.log(isItemShown)
         setPlaylist(false)
         let stateToSet
         if (!isItemShown) {
@@ -264,7 +263,6 @@ export function AppFooter() {
           stateToSet = false
         }
         setIsItem(stateToSet)
-        console.log(isItemShown)
       },
       className: isItemShown ? 'active' : '',
     },
@@ -342,7 +340,7 @@ export function AppFooter() {
       const savedStation = await saveStation(station)
       await loadStations()
       setLikedStation(savedStation)
-      showSuccessMsg('Song removed')
+      // showSuccessMsg('Song removed')
     } catch (err) {
       console.log(err)
     } finally {
@@ -385,7 +383,7 @@ export function AppFooter() {
   }
 
   return (
-    <footer className='app-footer play-bar-container' ref={playBarRef}>
+    <footer className='play-bar-container' ref={playBarRef}>
       <div className='song-details-container'>
         <img src={currItem.cover} className='play-bar-cover' alt='' />
         <div className='song-text-container'>
@@ -575,7 +573,7 @@ const VolumeBar = ({ volume, setVolume, latestVolume }) => {
     const volumeToSet = +target.value
 
     latestVolume.current = volumeToSet
-    console.log(volumeToSet)
+
     setVolume(volumeToSet)
   }
 

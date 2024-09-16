@@ -77,7 +77,6 @@ export function AppLibrary() {
 
   useEffect(() => {
     setFilter(filterByToSet)
-    console.log(filterByToSet)
   }, [filterByToSet])
 
   const handleChange = utilService.debounce(({ target }) => {
@@ -188,7 +187,6 @@ export function AppLibrary() {
       if (!prompt) return
       if (geminiLoader) return
 
-      console.log(geminiRef.current)
       geminiRef.current.className = 'loading-button'
       setGeminiLoader(true)
       const geminiStation = await apiService.geminiGenerate(prompt)
@@ -204,7 +202,6 @@ export function AppLibrary() {
   }
   const [prompt, setPrompt] = useState('')
   function handlePromptChange({ target }) {
-    console.log(target.value)
     setPrompt(target.value)
   }
 
@@ -236,32 +233,35 @@ export function AppLibrary() {
             <LuSparkles
               className='ai-icon'
               onClick={() => {
-                onSetGeminiModal()
+                // onSetGeminiModal()
+                navigate('/generate')
               }}
             />
           </button>
           <button>
             <FaPlus className='plus-icon' onClick={onCreateNewStation} />
           </button>
-          {isGemini && (
-            <div className='gemini-modal-container'>
-              {!geminiLoader ? (
-                <span>Generate by prompt</span>
-              ) : (
-                <span>Generating...</span>
-              )}
-              <div className='user-interface'>
-                <input type='text' onChange={handlePromptChange} />
-                <button ref={geminiRef} onClick={handleUserPrompt}>
-                  {geminiLoader ? '' : 'Generate'}
-                </button>
-                {/* {!geminiLoader ? (
-                ) : (
-                  <button className='loading-button'></button>
-                )} */}
-              </div>
-            </div>
-          )}
+          {
+            // isGemini && (
+            //   <div className='gemini-modal-container'>
+            //     {!geminiLoader ? (
+            //       <span>Generate by prompt</span>
+            //     ) : (
+            //       <span>Generating...</span>
+            //     )}
+            //     <div className='user-interface'>
+            //       <input type='text' onChange={handlePromptChange} />
+            //       <button ref={geminiRef} onClick={handleUserPrompt}>
+            //         {geminiLoader ? '' : 'Generate'}
+            //       </button>
+            //       {/* {!geminiLoader ? (
+            //       ) : (
+            //         <button className='loading-button'></button>
+            //       )} */}
+            //     </div>
+            //   </div>
+            // )
+          }
         </div>
       </div>
       <Sort setFiltered={setFiltered} isNav={true} />

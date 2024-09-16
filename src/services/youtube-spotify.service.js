@@ -12,7 +12,8 @@ export const apiService = {
   searchStations,
   geminiGenerate,
 }
-const API_URL = 'AIzaSyD6_dPEXi9GqT4WJ4FDa0Qme3uUzYOIwfU'
+
+const API_URL = import.meta.env.VITE_YOUTUBE_API
 
 // Youtube
 async function getVideos(search, limit = null) {
@@ -31,7 +32,7 @@ async function getVideos(search, limit = null) {
     } else {
       videosWithDurations = await addVideoDurations(search)
     }
-    console.log(videosWithDurations)
+    // console.log(videosWithDurations)
     let list
     if (limit) {
       list = await createList(search, videosWithDurations, limit)
@@ -52,7 +53,7 @@ async function createList(search, videosWithDuration, limit = null) {
   try {
     const listDB = `${search}List`
     const listRes = await storageService.query(listDB)
-    console.log(listRes)
+
     // Return cached result if it already exists
     if (listRes[0] && listRes[0].length > 0) {
       return listRes[0]
@@ -63,7 +64,7 @@ async function createList(search, videosWithDuration, limit = null) {
     const videos = res[0]?.items || []
     const spotifyInfo = await getSpotify(search)
     const regex = new RegExp(search, 'i')
-    console.log(spotifyInfo)
+    // console.log(spotifyInfo)
 
     let counter
     if (limit) {
@@ -72,7 +73,7 @@ async function createList(search, videosWithDuration, limit = null) {
       counter = Math.min(spotifyInfo.length, videos.length)
     }
     let filteredTracks = spotifyInfo
-    console.log(videosWithDuration)
+    // console.log(videosWithDuration)
     // Create a list of matched videos and tracks
     const list = videos.slice(0, counter).map((video, i) => {
       // Find a matching track using regex and remove it from filteredTracks
@@ -89,21 +90,36 @@ async function createList(search, videosWithDuration, limit = null) {
 
       // Create the video object
       const currVideo = createVideo(video)
-      console.log(track)
-      console.log(video)
+      // console.log(track)
+      // console.log(video)
       // No filtering out of tracks; maintain the full list.
 
-      return {
-        url: currVideo.url,
-        name: track?.name || 'Title not available',
-        artist: track?.artist || 'Artist not available',
-        album: track?.album || 'Album not available',
-        cover:
-          track?.cover ||
-          'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
-        id: utilService.makeId(),
-        lyrics: track?.lyrics || 'Lyrics not available',
-        duration: videosWithDuration?.duration || '00:00',
+      if (limit) {
+        return {
+          url: currVideo.url,
+          name: track?.name || 'Title not available',
+          artist: track?.artist || 'Artist not available',
+          album: track?.album || 'Album not available',
+          cover:
+            track?.cover ||
+            'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+          id: utilService.makeId(),
+          lyrics: track?.lyrics || 'Lyrics not available',
+          duration: videosWithDuration.duration || '00:00',
+        }
+      } else {
+        return {
+          url: currVideo.url,
+          name: track?.name || 'Title not available',
+          artist: track?.artist || 'Artist not available',
+          album: track?.album || 'Album not available',
+          cover:
+            track?.cover ||
+            'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
+          id: utilService.makeId(),
+          lyrics: track?.lyrics || 'Lyrics not available',
+          duration: videosWithDuration[i].duration || '00:00',
+        }
       }
     })
 
@@ -132,7 +148,7 @@ async function addVideoDurations(search, limit = null) {
 
     const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds}&key=${API_URL}`
     const res = await axios.get(url)
-    console.log(res)
+    // console.log(res)
     const videoDetails = res.data.items
     if (!limit) {
       return localRes[0].items.map((video, index) => {
@@ -143,12 +159,12 @@ async function addVideoDurations(search, limit = null) {
       })
     } else {
       for (let i = 0; i < limit; i++) {
-        console.log(videoDetails[i])
+        // console.log(videoDetails[i])
         const duration = convertDuration(
           videoDetails[i].contentDetails.duration
         )
-        console.log(duration)
-        console.log({ ...video, duration })
+        // console.log(duration)
+        // console.log({ ...video, duration })
         return { ...video, duration }
       }
     }
@@ -182,7 +198,7 @@ async function getSpotify(search) {
 
     let tracks = await searchTracks(search, token)
     const regex = new RegExp(search, 'i')
-    console.log(tracks)
+    // console.log(tracks)
     tracks = tracks.filter((track) => {
       // Ensure fields exist before applying regex
       const name = track.name || ''
@@ -197,7 +213,7 @@ async function getSpotify(search) {
       )
     })
 
-    console.log(tracks)
+    // console.log(tracks)
 
     const tracksToSave = await Promise.all(
       tracks
@@ -283,7 +299,7 @@ async function getAccessToken() {
 }
 
 async function searchTracks(query, token) {
-  console.log(query)
+  // console.log(query)
   try {
     const response = await fetch(
       `https://api.spotify.com/v1/search?type=track&limit=5&q=${encodeURIComponent(
@@ -298,7 +314,7 @@ async function searchTracks(query, token) {
     )
 
     const data = await response.json()
-    console.log(data.tracks.items)
+    // console.log(data.tracks.items)
     return data.tracks.items
   } catch (error) {
     console.error('Error searching for tracks:', error)
@@ -375,18 +391,18 @@ async function geminiGenerate(searchTerm) {
   try {
     // Get generated results from Gemini API
     const songs = await geminiApiService.generate(searchTerm)
-    console.log(songs)
+    // console.log(songs)
     const videoPromises = songs.map((song) => getVideos(song, 1))
-    console.log(videoPromises)
+    // console.log(videoPromises)
     const resolved = await Promise.all(videoPromises)
-    console.log(resolved)
+    // console.log(resolved)
     const filteredResults = resolved.filter((video) => video.url)
     const station = await stationService.createStationFromGemini(
       filteredResults,
       searchTerm
     )
     const savedStation = await stationService.save(station)
-    console.log(savedStation)
+    // console.log(savedStation)
     return savedStation
   } catch (err) {
     console.error('Error in geminiGenerate:', err)

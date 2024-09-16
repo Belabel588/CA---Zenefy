@@ -1,44 +1,54 @@
 // LoadingAnimation.scss
 
 .back-shadow{
-  background-color: rgba(0, 0, 0, 0.65);
-  // background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.803);
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10;
   display: flex;
   align-items: center;
   justify-items: center;
-
+  z-index: 30;
+  
 }
 .loading-container{
-  position: absolute;
+  background-color: $dark-mode-background;
+  z-index: 30;
+  // position: absolute;
+  position: relative;
   display: flex;
   align-items: center;
   justify-items: center;
-  left: 50%;
-  top: calc(50% - 80px);
-
-// height: 100%;
-// width: 100%;
+  // left: 50%;
+  // top: calc(50% - 80px);
+  
+  z-index: 30;
+  
+  height: calc(100vh - 170px);
+  // height: 100%;
+  width: 100%;
+  
 }
 .loading-animation {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    width: 80px;  // Increase the width to scale up
-    height: 50px; // Increase the height to scale up
-    width: fit-content;  // Increase the width to scale up
-    height: fit-content; // Increase the height to scale up
-    gap: 5px;
-    position: absolute;
-    // top: 50%;
-    // left: 58%;
-    // transform: translate(-50%, -50%); // Center the animation horizontally and vertically
-    
+  
+  justify-self: center;
+  align-self: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 80px;  // Increase the width to scale up
+  height: 50px; // Increase the height to scale up
+  width: fit-content;  // Increase the width to scale up
+  height: fit-content; // Increase the height to scale up
+  gap: 5px;
+  position: absolute;
+  // top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); // Center the animation horizontally and vertically
+
+  
   }
   
   .bar {
