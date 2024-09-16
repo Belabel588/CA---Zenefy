@@ -272,6 +272,9 @@ function createVideo(video) {
 }
 
 async function getSpotify(search) {
+
+
+
   const token = await getAccessToken()
   const db = `${search}Spotify`
   const res = await query(db)
@@ -280,8 +283,14 @@ async function getSpotify(search) {
     return res
   }
 
+  
+  console.log('SEARCH INSIDE API SERVICE IS' , search);
+  
   let tracks = await searchTracks(search, token)
   const regex = new RegExp(search, 'i')
+
+  console.log('TRACKS INSIDE API SERVICE ARE' ,tracks);
+  
 
   tracks = tracks.filter(
     (track) =>

@@ -154,6 +154,7 @@ export function SearchIndex() {
 
   useEffect(() => {
     const fetchSearchResults = async () => {
+      if(!currSearch) return
       try {
         // console.log(currSearch)
         setIsLoading(true)
