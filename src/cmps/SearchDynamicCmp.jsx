@@ -9,12 +9,12 @@ import { LoadingAnimation } from '../cmps/LoadingAnimation'
 
 export function SearchDynamicCmp() {
   const { category } = useParams() // Get category from URL params
-  const dispatch = useDispatch()
   const location = useLocation()
   const [searchResults, setSearchResults] = useState([])
   const [artistSearchResults, setArtistSearchResults] = useState([])
   const [categoryNotFoundErr, setCategoryNotFoundErr] = useState('')
   const [subCategories, setSubCategories] = useState([])
+
 
   const isLoading = useSelector((storeState) => storeState.stationModule.isLoading)
   const stations = useSelector((storeState) => storeState.stationModule.stations)
@@ -58,44 +58,56 @@ export function SearchDynamicCmp() {
   // Load playlists by category and handle results
   async function loadCategoryPlaylists(category) {
     if (category === 'Music') {
-      console.log('Category is Music');
-      const subCategoriesList = stationService.getSubCategories('Music')
-      console.log(subCategoriesList);
+        console.log('Category is Music');
+        const subCategoriesList = stationService.getSubCategories('Music');
+        console.log(subCategoriesList);
 
-      setSubCategories(subCategoriesList)
-      setIsLoading(false)
-
-      return
+        try {
+            setIsLoading(true);
+            const playlists = await apiService.getRandomFeaturedPlaylists();
+            console.log('Playlists for music:', playlists);
+            setSearchResults(playlists);
+            setSubCategories(subCategoriesList);
+            setIsLoading(false); // Set isLoading to false only after successful data fetching
+        } catch (error) {
+            console.error('Error fetching playlists for category:', error);
+            setCategoryNotFoundErr('Available in premium purchase');
+            // Optionally, you could set `isLoading` to false here if you want to stop loading even on error
+            setIsLoading(false);
+        }
+        return;
     }
+    
     if (category === 'Podcasts') {
-      console.log('Category is Podcasts');
-      const subCategoriesList = stationService.getSubCategories('Podcasts')
-      console.log(subCategoriesList);
+        console.log('Category is Podcasts');
+        const subCategoriesList = stationService.getSubCategories('Podcasts');
+        console.log(subCategoriesList);
 
-      setSubCategories(subCategoriesList)
-      setIsLoading(false)
-
-      return
+        setSubCategories(subCategoriesList);
+        setIsLoading(false); // Set isLoading to false after setting subcategories
+        return;
     }
 
     try {
-      setIsLoading(true)
-      const playlists = await apiService.getPlaylistsByCategory(category)
-      console.log('Playlists for category:', category, playlists)
-      setSearchResults(playlists)
+        setIsLoading(true);
+        const playlists = await apiService.getPlaylistsByCategory(category);
+        console.log('Playlists for category:', category, playlists);
+        setSearchResults(playlists);
+        setIsLoading(false); // Set isLoading to false only after successful data fetching
     } catch (error) {
-      console.error('Error fetching playlists for category:', error)
-      setCategoryNotFoundErr('Available in premium purchase')
+        console.error('Error fetching playlists for category:', error);
+        setCategoryNotFoundErr('Available in premium purchase');
+        // Optionally, you could set `isLoading` to false here if you want to stop loading even on error
+        setIsLoading(false);
     }
-    finally {
-      setIsLoading(false)
-    }
-  }
+}
+
 
   useEffect(() => {
     console.log('LOADING CATEGORY', category)
+    setIsLoading(true)
     loadCategoryPlaylists(category)
-  }, [])
+  }, [category])
 
   console.log('Search Results:', searchResults)
   console.log(categoryNotFoundErr);
@@ -107,10 +119,11 @@ export function SearchDynamicCmp() {
       </section>
       {subCategories.length > 0 && (
         <>
-          <div className='music-podcast-playlist-container gradient' style={{ backgroundColor }}>
+          {!isLoading && <div className='music-podcast-playlist-container gradient' style={{ backgroundColor }}>
             <h1 >Discover new {category.toLowerCase()}</h1>
-          </div>
-          <div className='sub-categories-container' >
+            <SuggestedStations stations={searchResults} color={backgroundColor} />
+          </div>}
+          {(category === 'Music' || category === 'Podcast') && <div className='sub-categories-container' >
             <ul className='sub-categories-list'>
               {subCategories.map((subCategory, idx) => (
                 <Link
@@ -127,7 +140,7 @@ export function SearchDynamicCmp() {
                 </Link>
               ))}
             </ul>
-          </div>
+          </div>}
         </>
       )}
       {!isLoading && !subCategories.length && (
@@ -136,11 +149,6 @@ export function SearchDynamicCmp() {
             {categoryNotFoundErr ? categoryNotFoundErr : 'Discover new music'}
           </h1>
           <SuggestedStations stations={searchResults} color={backgroundColor} />
-        </div>
-      )}
-      {!isLoading && (
-        <div className="playlists-you-might-like">
-          <h1></h1>
         </div>
       )}
     </div>

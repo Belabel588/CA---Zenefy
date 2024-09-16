@@ -9,6 +9,7 @@ export const apiService = {
   getArtistByName,
   searchStations,
   getPlaylistsByCategory,
+  getRandomFeaturedPlaylists,
 }
 const API_URL2 = 'AIzaSyD5ya6TB4gnb47HnJwVKZB1xyKY4E71j5o'
 const API_URL = 'AIzaSyD5ya6TB4gnb47HnJwVKZB1xyKY4E71j5o'
@@ -110,6 +111,63 @@ async function getPlaylistsByCategory(categoryName) {
   // Return the entire list of stations
   return stationList;
 }
+
+async function getRandomFeaturedPlaylists() {
+  const accessToken = await getAccessToken();
+  const listDB = 'RandomFeaturedPlaylists';
+
+  // Fetch featured playlists with a limit of 20
+  const featuredPlaylistsRes = await fetch('https://api.spotify.com/v1/browse/featured-playlists?limit=20', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  const featuredPlaylistsData = await featuredPlaylistsRes.json();
+  console.log('Featured Playlists Data:', featuredPlaylistsData);
+
+  // Shuffle playlists and pick up to 3 random ones that have titles and covers
+  const shuffledPlaylists = featuredPlaylistsData.playlists.items.sort(() => 0.5 - Math.random());
+  const filteredPlaylists = shuffledPlaylists.filter(playlist => playlist.name && playlist.images && playlist.images.length > 0);
+  
+  const stationList = [];
+  
+  for (let i = 0; i < filteredPlaylists.length && stationList.length < 3; i++) {
+    const playlist = filteredPlaylists[i];
+    const url = playlist.tracks.href;
+
+    // Fetch the tracks in the playlist
+    const items = await searchItems(url);
+    console.log('Fetched Items:', items);
+
+    // Get video list for the first track
+    const songList = await getVideos(items[0].track.name);
+    console.log('Song List:', songList);
+
+    // Use the createStationFromSearch function to create a station
+    const station = await stationService.createStationFromSearch(songList, 'Featured');
+    console.log('STATION IS', station);
+
+    // Validate the station before saving
+    if (station.title!== 'Untitled Station' && station.cover !== 'default_cover_url') {
+      // Save each individual station
+      const savedStation = await stationService.save(station);
+      console.log('SAVED STATION IS', savedStation);
+
+      // Add the station to the list to return later
+      stationList.push(savedStation);
+      console.log('Updated Station List:', stationList);
+    } else {
+      console.log('Skipping station due to missing title or cover:', station);
+    }
+  }
+
+  // Return the entire list of stations
+  return stationList;
+}
+
+
+
 
 async function searchItems(url) {
   const accessToken = await getAccessToken(); // Replace with your Spotify API access token

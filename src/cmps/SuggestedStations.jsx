@@ -11,6 +11,7 @@ import {
   setIsPlaying,
   setCurrItem,
   setCurrColor,
+  setIsLoading,
 } from '../store/actions/station.actions.js'
 
 import { PlayingAnimation } from './PlayingAnimation.jsx'
@@ -38,8 +39,8 @@ export function SuggestedStations({ stations = '', color = '' }) {
     setIsPlaying(true)
   }
 
-  console.log('stations inside suggested stations',stations);
-  
+  console.log('stations inside suggested stations', stations);
+
 
   // Use default color if none is provided
   const backgroundColor = color || '#191414' // Default color
