@@ -55,7 +55,6 @@
         .typing{
             font-size: 2em;
             color: $white;
-            
 
             *{
                 margin: 0px;
@@ -86,12 +85,13 @@
             max-width: 40%;
             min-width: 100px;
 
+
             
 
             // Animation for the typing dots
             &.typing {
-              width: 40px;
-              background-color: #ddd;
+              width: 30px;
+              background-color: $white;
               border-radius: 20px;
               padding: 10px;
               height: 20px;
@@ -121,7 +121,8 @@
                 left: 25px;
                 animation: typing 1.2s infinite ease-in-out 0.2s;
               }
-          
+
+
               &::after {
                 content: "";
                 display: inline-block;
@@ -135,6 +136,10 @@
                 animation: typing 1.2s infinite ease-in-out 0.4s;
               }
             }
+          }
+
+          .msg.typing{
+            min-width: 60px;
           }
           
           @keyframes typing {
@@ -164,7 +169,9 @@
       justify-content: space-between;
       align-items: center;
       margin-top: 15px;
-
+      // width: 50%;
+      // justify-self: center;
+      // align-self: center;
   
       input {
         flex: 1;
@@ -196,13 +203,13 @@
       button {
 
         background-color: $green; // Spotify's signature green
-        color: #fff;
+        color: $white;
         border: none;
         border-radius: 4px;
         cursor: pointer;
         font-size: 1rem;
         transition: background-color 0.3s ease;
-        padding: 1em 0.5em;
+        padding: 0.5em 0.5em;
         &:hover {
           background-color: #17a347; // Darker green on hover
           border-radius: 6px;

@@ -93,7 +93,7 @@ export function MobileLibrary() {
 
   useEffect(() => {
     setFilter(filterByToSet)
-    console.log(filterByToSet)
+    // console.log(filterByToSet)
   }, [filterByToSet])
 
   const handleChange = utilService.debounce(({ target }) => {

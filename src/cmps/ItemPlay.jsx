@@ -61,7 +61,6 @@ export function ItemPlay() {
   useEffect(() => {
     function handleResize() {
       setWindowDimensions(getWindowDimensions())
-      console.log(windowDimensions.width)
     }
 
     window.addEventListener('resize', handleResize)
@@ -72,7 +71,7 @@ export function ItemPlay() {
   }, [windowDimensions])
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window
-    // console.log(width)
+
     return {
       width,
       height,

@@ -255,8 +255,6 @@ export function AppFooter() {
       type: 'nowPlaying',
       icon: <ItemIcon />,
       onClick: () => {
-        console.log(isPlaylistShown)
-        console.log(isItemShown)
         setPlaylist(false)
         let stateToSet
         if (!isItemShown) {
@@ -265,7 +263,6 @@ export function AppFooter() {
           stateToSet = false
         }
         setIsItem(stateToSet)
-        console.log(isItemShown)
       },
       className: isItemShown ? 'active' : '',
     },
@@ -576,7 +573,7 @@ const VolumeBar = ({ volume, setVolume, latestVolume }) => {
     const volumeToSet = +target.value
 
     latestVolume.current = volumeToSet
-    console.log(volumeToSet)
+
     setVolume(volumeToSet)
   }
 

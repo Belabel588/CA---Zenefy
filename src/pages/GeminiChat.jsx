@@ -135,6 +135,14 @@ export function GeminiChat() {
       )}
 
       <ul className='msgs-container'>
+        <div className='user-interface'>
+          <input type='text' onChange={handlePromptChange} />
+          <div className='button-container'>
+            <button ref={geminiRef} onClick={handleUserPrompt}>
+              {geminiLoader ? '' : 'Generate'}
+            </button>
+          </div>
+        </div>
         {msgs.map((msg) => {
           return (
             <li key={msg.id} className={msg.className}>
@@ -143,15 +151,6 @@ export function GeminiChat() {
           )
         })}
       </ul>
-
-      <div className='user-interface'>
-        <input type='text' onChange={handlePromptChange} />
-        <div className='button-container'>
-          <button ref={geminiRef} onClick={handleUserPrompt}>
-            {geminiLoader ? '' : 'Generate'}
-          </button>
-        </div>
-      </div>
     </div>
   )
 }

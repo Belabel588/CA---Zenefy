@@ -89,6 +89,8 @@ export function LoginSignup() {
           {/* </div> */}
 
           <img src={zenefyLogo} alt='' />
+          {/* <h2>{isSignup ? 'Signup to Zenefy' : 'Login to Zenefy'}</h2> */}
+
           <h3>{isSignup ? 'Signup' : 'Login'}</h3>
           <div className='btns'>
             <a
@@ -132,7 +134,6 @@ export function LoginSignup() {
               {isSignup ? 'Signup' : 'Login'}
             </button>
           </form>
-
           <button onClick={onLoginGuest} className='guest-login-button'>
             Guest?
           </button>

@@ -79,9 +79,8 @@ export function AppHeader() {
 
   const handleSearch = utilService.debounce(({ target }) => {
     const field = target.name
-    console.log(field)
+
     let value = target.value
-    console.log(value)
     setSearchTerm(value)
     // Dispatch action to update the filter in the Redux store
     // dispatch({
@@ -265,7 +264,6 @@ export function AppHeader() {
 }
 
 function ExploreIcon({ isFocus }) {
-  console.log(isFocus)
   if (isFocus) {
     return (
       <svg

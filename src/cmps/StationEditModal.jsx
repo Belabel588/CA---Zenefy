@@ -34,8 +34,6 @@ export function StationEditModal({
   const [coverSrc, setCoverSrc] = useState()
 
   useEffect(() => {
-    console.log(station)
-    console.log(coverSrc)
     setEditStation({ ...station })
   }, [station, coverSrc])
 

@@ -77,7 +77,6 @@ export function AppLibrary() {
 
   useEffect(() => {
     setFilter(filterByToSet)
-    console.log(filterByToSet)
   }, [filterByToSet])
 
   const handleChange = utilService.debounce(({ target }) => {
@@ -188,7 +187,6 @@ export function AppLibrary() {
       if (!prompt) return
       if (geminiLoader) return
 
-      console.log(geminiRef.current)
       geminiRef.current.className = 'loading-button'
       setGeminiLoader(true)
       const geminiStation = await apiService.geminiGenerate(prompt)
@@ -204,7 +202,6 @@ export function AppLibrary() {
   }
   const [prompt, setPrompt] = useState('')
   function handlePromptChange({ target }) {
-    console.log(target.value)
     setPrompt(target.value)
   }
 

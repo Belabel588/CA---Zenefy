@@ -78,7 +78,7 @@ export function SearchIndex() {
   const currSearch = useSelector(
     (stateSelector) => stateSelector.stationModule.currSearch
   )
-  console.log(currSearch)
+  // console.log(currSearch)
   const isActive = useSelector(
     (stateSelector) => stateSelector.stationModule.isActive
   )
