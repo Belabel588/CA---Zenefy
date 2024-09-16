@@ -534,6 +534,7 @@ export function SearchIndex() {
             ))}
           </div>
         </section>
+
         <div className='suggested-artist-stations'>
           <b>Featuring</b>
           <SuggestedStations stations={randomStations} />

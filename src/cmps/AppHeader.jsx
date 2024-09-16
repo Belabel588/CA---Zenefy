@@ -72,8 +72,11 @@ export function AppHeader() {
     }
 
     // Step 2: Reset the input value on route change using the ref
-    if (inputRef.current) {
-      inputRef.current.value = '' // Clear the input value
+    // if (inputRef.current) {
+    //   inputRef.current.value = '' // Clear the input value
+    // }
+    if (currSearch) {
+      inputRef.current.value = currSearch
     }
   }, [location])
 
@@ -220,7 +223,7 @@ export function AppHeader() {
             // value={searchTerm}
           />
           <div className='explore-container'>
-            {(searchTerm && (
+            {(searchTerm && location.pathname === '/search' && (
               <IoClose
                 onClick={() => {
                   inputRef.current.value = ''
