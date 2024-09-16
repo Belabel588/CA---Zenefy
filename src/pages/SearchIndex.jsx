@@ -78,6 +78,7 @@ export function SearchIndex() {
   const currSearch = useSelector(
     (stateSelector) => stateSelector.stationModule.currSearch
   )
+  // console.log(currSearch)
   const isActive = useSelector(
     (stateSelector) => stateSelector.stationModule.isActive
   )
@@ -89,6 +90,8 @@ export function SearchIndex() {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const [isGemeni, setIsGemeni] = useState(false)
 
   const categoriesWithImages = stationService.getCategoriesWithImages()
   const [randomStations, setRandomStations] = useState([])
@@ -125,9 +128,8 @@ export function SearchIndex() {
     return tagColors[index % tagColors.length]
   }
 
-
   const tagElements = categoriesWithImages.map((category, idx) => {
-    const backgroundColor = generateColor(idx);
+    const backgroundColor = generateColor(idx)
 
     return (
       <Link
@@ -156,8 +158,8 @@ export function SearchIndex() {
     const fetchSearchResults = async () => {
       if(!currSearch) return
       try {
-        // console.log(currSearch)
         setIsLoading(true)
+
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
         const artists = await apiService.getArtistByName(currSearch)
@@ -166,10 +168,11 @@ export function SearchIndex() {
       } catch (error) {
         console.error('Failed to fetch search results:', error)
       } finally {
-        setIsLoading(false)
+        // setIsLoading(false)
       }
     }
 
+    if (!currSearch) return
     fetchSearchResults()
   }, [currSearch])
 
@@ -208,11 +211,13 @@ export function SearchIndex() {
         setRandomStations(stationsToReturn)
       } catch (error) {
         console.error('Error fetching stations:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchStations()
-  }, [searchResults])
+  }, [searchResults, currSearch])
 
   useEffect(() => {
     const userStationsToSet = stations.filter((station) =>
@@ -234,9 +239,10 @@ export function SearchIndex() {
       const savedStation = await stationService.save(refactored)
 
       setSearchedStation(savedStation)
-      dispatch({ type: SET_IS_LOADING, isLoading: false })
     } catch (error) {
       console.error('Error refactoring search results:', error)
+    } finally {
+      // dispatch({ type: SET_IS_LOADING, isLoading: false })
     }
   }
 
@@ -281,10 +287,10 @@ export function SearchIndex() {
       )
 
       setUserStations([...userStationsToSet])
-      showSuccessMsg('Song added')
+      // showSuccessMsg('Song added')
     } catch (err) {
       console.log(err)
-      showErrorMsg(`Couldn't like song`)
+      // showErrorMsg(`Couldn't like song`)
     } finally {
       setIsLoading(false)
     }
@@ -361,12 +367,32 @@ export function SearchIndex() {
     setIsPlaying(true)
   }
 
+  function onSetIsGemeni({ target }) {
+    if (isGemeni) {
+      setIsGemeni(false)
+    } else {
+      setIsGemeni(true)
+    }
+  }
+
   return currSearch === '' ? (
     <section className='search-section'>
       <h1>Browse all</h1>
-      <ul className='search-list'>
-        {tagElements}
-      </ul>
+      {/* <div className='search-header-container'>
+
+        <div className='ai-container'>
+          <span class='label'>AI Mode</span>
+          <label class='ai-checkbox'>
+            <input
+              type='checkbox'
+              checked={isGemeni}
+              onChange={onSetIsGemeni}
+            />
+            <span class='slider'></span>
+          </label>
+        </div>
+      </div> */}
+      <ul className='search-list'>{tagElements}</ul>
     </section>
   ) : loading ? (
     <LoadingAnimation />
@@ -431,9 +457,10 @@ export function SearchIndex() {
                 onDoubleClick={() => onPlaySearchedSong(item.id)}
               >
                 <div className='img-container'>
-                  {(isPlaying && currItem.id === item.id && (
+                  {isPlaying && currItem.id === item.id ? (
                     <div
                       className='pause-button-container'
+                      key={`pause-${item.id}`}
                       onMouseEnter={() => {
                         isHover.current = true
                       }}
@@ -446,9 +473,10 @@ export function SearchIndex() {
                         onClick={() => setIsPlaying(false)}
                       />
                     </div>
-                  )) || (
+                  ) : (
                     <div
                       className='play-button-container'
+                      key={`play-${item.id}`}
                       onMouseEnter={() => {
                         isHover.current = true
                       }}
@@ -464,14 +492,14 @@ export function SearchIndex() {
                             return
                           }
                           onSelectStation(searchedStation._id)
-
                           onPlaySearchedSong(item.id)
                         }}
                       />
                     </div>
                   )}
-                  <img src={item.cover} alt='' />
+                  <img src={item.cover} alt={item.name} />
                 </div>
+
                 <div className='song-details'>
                   <div className='name-container'>
                     <span
@@ -481,8 +509,9 @@ export function SearchIndex() {
                           : 'item-name'
                       }
                       onClick={() => {
-                        if (isHover.current) return
-                        navigate(`/item/${item.id}`)
+                        if (!isHover.current) {
+                          navigate(`/item/${item.id}`)
+                        }
                       }}
                     >
                       {item.name}
@@ -490,20 +519,23 @@ export function SearchIndex() {
                   </div>
                   <span className='artist-name'>{item.artist}</span>
                 </div>
-                <button onClick={() => likeSong(item)}>
-                  {(likedItems.includes(item.id) && <AddedIcon />) || (
-                    <PlusIcon />
-                  )}
+
+                <button key={`like-${item.id}`} onClick={() => likeSong(item)}>
+                  {likedItems.includes(item.id) ? <AddedIcon /> : <PlusIcon />}
                 </button>
+
                 <span className='time'>{item.duration || '00:00'}</span>
+
                 <HiOutlineDotsHorizontal
                   className='options-button'
-                  onClick={() => handleClick(event, item)}
+                  key={`options-${item.id}`}
+                  onClick={(event) => handleClick(event, item)}
                 />
               </div>
-            ))}{' '}
+            ))}
           </div>
         </section>
+
         <div className='suggested-artist-stations'>
           <b>Featuring</b>
           <SuggestedStations stations={randomStations} />

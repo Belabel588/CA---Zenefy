@@ -99,6 +99,7 @@ function _setLoggedinUser(user) {
     imgUrl: user.imgUrl,
     // prefs: user.prefs,
   }
+
   sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
   return userToSave
 }

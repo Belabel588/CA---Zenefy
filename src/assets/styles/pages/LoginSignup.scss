@@ -3,12 +3,13 @@
 	display: grid;
 	width: min(80%, 300px);
 	// margin: auto;
-	min-height: 300px;
+	// min-height: 300px;
+
 	align-items: center;
 	justify-items: center;
-	gap: 0.5em;
+	gap: 2em;
 
-	padding: 1em;
+	padding: 0em 1em 0em 1em;
 	input{
 		margin: 0;
 	}
@@ -88,7 +89,7 @@
 	border-radius: 8px;
 	// top: calc(50% - 80px);
 	background-color: $grey-dark;
-	// gap: 1em;
+	gap: 1em;
 	align-items: center;
 	width: 400px;
 	img{
@@ -129,8 +130,8 @@
 	text-align: center;
 	cursor: pointer;
 	transition: background 0.3s ease, transform 0.2s ease;
-
-  
+	width: 100px;
+	margin: 0px;
 	&:hover {
 	  background: linear-gradient(135deg, #1ed760, #1db954);
 	  transform: scale(1.05);
@@ -146,3 +147,4 @@ a{
 	color: $white;
 }
 }
+

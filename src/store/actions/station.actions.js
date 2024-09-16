@@ -17,13 +17,14 @@ import {
   SET_IS_ACTIVE,
   SET_FILTER_BY,
   SET_PLAYLIST,
+  SET_IS_ITEM,
 } from '../reducers/station.reducer.js'
 import { store } from '../store.js'
 
 export async function loadStations() {
   const filterBy = store.getState().stationModule.filterBy
 
-  store.dispatch({ type: SET_IS_LOADING, isLoading: true })
+  // store.dispatch({ type: SET_IS_LOADING, isLoading: true })
 
   try {
     const stations = await stationService.query(filterBy)
@@ -34,9 +35,17 @@ export async function loadStations() {
       const stationIds = loggedInUser.likedStationsIds
       let userStations
       if (stationIds && stationIds.length > 0) {
-        userStations = stations.filter((station) =>
-          loggedInUser.likedStationsIds.includes(station._id)
-        )
+        // userStations = stations.filter((station) =>
+        //   loggedInUser.likedStationsIds.includes(station._id)
+        // )
+        userStations = stationIds
+          .map((stationId) => {
+            const stationToReturn = stations.find(
+              (station) => station._id === stationId
+            )
+            return stationToReturn || null // Return null if station is not found
+          })
+          .filter((station) => station) // Filter out any null values
       } else {
         userStations = []
       }
@@ -47,7 +56,7 @@ export async function loadStations() {
   } catch (err) {
     console.error('Error loading stations:', err)
   } finally {
-    store.dispatch({ type: SET_IS_LOADING, isLoading: false })
+    // store.dispatch({ type: SET_IS_LOADING, isLoading: false })
   }
 }
 
@@ -107,7 +116,7 @@ export async function setCurrItem(itemId, currStation, isDoubleClick = false) {
         currItem: itemToSet,
         currItemIdx: idx,
       })
-      return
+      return itemToSet
     }
 
     const idx = currStation.items.findIndex((item) => item.id === itemId)
@@ -172,4 +181,8 @@ export function setFilter(filterBy) {
 export function setPlaylist(stateToSet) {
   const isPlaylistShown = stateToSet
   store.dispatch({ type: SET_PLAYLIST, isPlaylistShown: isPlaylistShown })
+}
+export function setIsItem(stateToSet) {
+  const isItemShown = stateToSet
+  store.dispatch({ type: SET_IS_ITEM, isItemShown: isItemShown })
 }

@@ -25,6 +25,7 @@ export const stationService = {
   getDefaultCurrItem,
   getDefaultCurrStation,
   getRandomArtist,
+  createStationFromGemini,
   getSubCategories,
 }
 window.cs = stationService
@@ -70,10 +71,6 @@ async function remove(stationIdToRemove) {
 }
 
 async function save(station) {
-
-
-
-
   const loggedInUser = userService.getLoggedinUser()
 
   var stationToSave
@@ -100,11 +97,11 @@ async function save(station) {
     }
 
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
-
   } else {
     // var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {
-      title: station.title || `My playlist #${loggedInUser.likedStationsIds.length}`,
+      title:
+        station.title || `My playlist #${loggedInUser.likedStationsIds.length}`,
       items: station.items || [],
       cover:
         station.cover ||
@@ -118,14 +115,12 @@ async function save(station) {
 
     savedStation = await storageService.post(STORAGE_KEY, stationToSave)
 
-
     if (!station.isSearched) {
       loggedInUser.likedStationsIds.push(stationToSave._id)
 
       await updateUser(loggedInUser)
     }
   }
-
 
   return savedStation
 }
@@ -202,6 +197,7 @@ async function createStationFromSearch(searchResults, keyWord) {
   // Create a new station object
   const user = userService.getLoggedinUser()
   // if()
+  // console.log(searchResults)
 
   const station = {
     keyWord,
@@ -293,6 +289,43 @@ function getRandomArtist() {
 
   const randomIndex = Math.floor(Math.random() * artists.length)
   return artists[randomIndex]
+}
+
+async function createStationFromGemini(searchResults, keyWord) {
+  // Create a new station object
+  const user = userService.getLoggedinUser()
+  // if()
+
+  const station = {
+    keyWord,
+    // isSearched: true,
+    stationType: searchResults.stationType || 'music', // Assuming the station type is always 'music'
+    title: `Gemini Playlist`, // Use the artist's name as the station title, fallback to 'Untitled Station'
+    preview: `This playlist was created with the power of AI. Prompt - ${keyWord}`,
+    items: searchResults.map((result) => ({
+      artist: result.artist,
+      id: result.id, // Generate a unique ID for each item
+      name: result.name,
+      album: result.album,
+      url: result.url,
+      cover: result.cover,
+      addedBy: 'user1', // Assuming a default user, replace with actual user ID if available
+      likedBy: [], // Empty likedBy array
+      addedAt: Date.now(), // Current timestamp
+      lyrics: result.lyrics,
+      duration: result.duration || '00:00',
+    })),
+    cover: searchResults[0]?.cover || 'default_cover_url', // Use the first song's cover as the station cover, fallback to a default URL
+    tags: [], // Empty tags array
+    createdBy: {
+      fullname: searchResults[0]?.artist || 'Unknown Artist', // Use the artist's name
+      imgUrl: searchResults[0]?.cover || 'default_artist_image_url', // Use the artist's cover as their image, fallback to a default URL
+    },
+    likedByUsers: [], // Empty likedByUsers array
+    addedAt: Date.now(), // Current timestamp
+  }
+
+  return station
 }
 
 function _createStations() {
@@ -1225,7 +1258,7 @@ function getCategoriesWithImages() {
   // Assuming the images are located in a folder named 'assets/images' in your project
   const categoryImages = categories.map(
     (category) =>
-      `../../../public/spotify-pics/${category
+      `/spotify-pics/${category
         .toLowerCase()
         .replace(/ & /g, '-')
         .replace(/ /g, '-')}.png`
@@ -1237,8 +1270,6 @@ function getCategoriesWithImages() {
     image: categoryImages[index],
   }))
 }
-
-
 
 function getDefaultCurrItem() {
   return {

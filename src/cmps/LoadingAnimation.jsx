@@ -11,16 +11,16 @@ export function LoadingAnimation() {
 
   if (isLoading)
     return (
-      <div className='back-shadow'>
-        <div className='loading-container'>
-          <div className='loading-animation'>
-            <div className='bar'></div>
-            <div className='bar'></div>
-            <div className='bar'></div>
-            <div className='bar'></div>
-            <div className='bar'></div>
-          </div>
+      // <div className='back-shadow'>
+      <div className='loading-container'>
+        <div className='loading-animation'>
+          <div className='bar'></div>
+          <div className='bar'></div>
+          <div className='bar'></div>
+          <div className='bar'></div>
+          <div className='bar'></div>
         </div>
       </div>
+      // </div>
     )
 }

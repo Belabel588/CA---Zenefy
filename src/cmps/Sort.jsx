@@ -23,7 +23,7 @@ export function Sort({ filtered, setFiltered, isNav }) {
     // Filter stations based on the selected label
 
     const filteredStations = filterStations(checkedLabel)
-    console.log(filteredStations)
+
     // Set the filtered stations list in the local state
     // setFilteredStations(filteredStations)
     setFiltered(filteredStations)
@@ -42,7 +42,7 @@ export function Sort({ filtered, setFiltered, isNav }) {
   }
 
   function onSetCheckedLabel({ target }) {
-    console.log(target.id.slice(0, target.id.length - 4))
+    // console.log(target.id.slice(0, target.id.length - 4))
     setCheckedLabel(target.id.slice(0, target.id.length - 4))
   }
 

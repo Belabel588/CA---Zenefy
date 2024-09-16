@@ -7,6 +7,7 @@
     // background-color: #1ed760;
     height: calc(100vh - 170px);
     @media (max-width:770px) {
+      height: calc(100vh - 230px);
       
       overflow-y: scroll;
     }
@@ -113,8 +114,21 @@
     position: relative;
     background-color: $background-black;
     // background-color: black;
-        height: calc(100% - 18vw);
-        overflow: auto;
+        height: calc(100% - 15vw);
+        @media (max-width:1320px) {
+          height: calc(100% - 18vw);
+          
+    }
+        @media (max-width:850px) {
+          height: calc(100% - 25vw);
+          
+    }
+    overflow: auto;
+    @media (max-width:770px) {
+
+      overflow: visible;
+      
+}
     .gradient{
       background: linear-gradient(180deg,  rgba(25, 20, 20, 0.151),rgba(25, 20, 20, 0.741) ,rgb(25, 20, 20));
       background: linear-gradient(
@@ -228,13 +242,23 @@
     .info-container{
       grid-column: 1/-1;
       display: grid;
+      grid-template-columns: 20px auto 1fr 1fr 0.5fr 0.5fr 50px 20px;
       grid-template-columns: 20px 50px 1fr 1fr 0.5fr 0.5fr 50px 20px;
+      
+      @media (max-width:1070px) {
+        
+        
+        grid-template-columns: 20px 50px 1fr 0.8fr 0.5fr 0.25fr;
+        
+
+      }
+
       border-bottom: 1px solid #dddddd37;
       // padding: 0em 1.5em 0em 1.5em;
       width: 100%;
       align-items: center;
       justify-items: center;
-      padding: 0.5em 0.5em 0.5em 0.5em;
+      padding: 0.5em 0.5em 0.5em 0.8em;
 
 
       
@@ -275,19 +299,20 @@
         display: none;
       }
       justify-self: start;
-      // margin-inline-start: -1em;
+      margin-inline-start: -1em;
 
       
     }
     
     .time{
-      @media (max-width:770px) {
+      @media (max-width:1170px) {
         
 
         
         display: none;
       }
       justify-self: start;
+      margin-inline-start: -1em;
     }
 
   
@@ -298,6 +323,13 @@
 
         display: grid;
         grid-template-columns: 20px auto 1fr 1fr 0.5fr 0.5fr 50px 20px;
+        @media (max-width:1070px) {
+        
+        
+          grid-template-columns: 20px 50px 1fr 1fr 0.5fr 0.5fr;
+          
+  
+        }
         gap: 1em;
         align-items: center;
         justify-items: start;
@@ -489,12 +521,13 @@
 
         // width: 250px;
         overflow: hidden;
+        width: 100%;
 
 
         
         .song-name{
-          // max-width: 250px;
           text-wrap: nowrap;
+          width: 100%;
           overflow: hidden;
           width: fit-content;
           color: $white;
@@ -510,6 +543,8 @@
       .album{
         grid-column: 4/5;
         justify-self: start;
+        width: 100%;
+        overflow: hidden;
         @media (max-width:770px) {
           display: none;
         }
@@ -518,14 +553,16 @@
       .date-added{
         grid-column: 5/6;
         justify-self: start;
+        margin-inline-start: 0.0em;
         @media (max-width:770px) {
-            display: none;
+          display: none;
         }
       }
       
       .time{
         grid-column: 6/7;
         justify-self: start;
+        margin-inline-start: 0.0em;
         @media (max-width:770px) {
          display: none;   
         }

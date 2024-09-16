@@ -68,7 +68,7 @@ export function ArtistDetails({}) {
   const isHover = useRef(false)
 
   useEffect(() => {
-    console.log(artistId)
+    // console.log(artistId)
     loadArtistStations()
   }, [artistId])
 
@@ -76,7 +76,9 @@ export function ArtistDetails({}) {
     try {
       setIsLoading(true)
       const artistItems = await apiService.searchStations(artist.name)
+      // console.log(artistItems)
       const station = await stationService.createStationFromSearch(artistItems)
+      // console.log(station)
       const savedStation = await stationService.save(station)
       setLikedStation()
       setStation(savedStation)
@@ -88,7 +90,7 @@ export function ArtistDetails({}) {
   }
 
   async function onSelectStation(stationId) {
-    console.log(stationId)
+    // console.log(stationId)
     await setCurrStation(stationId)
     await setCurrItem(0, currStation)
     setIsPlaying(true)
@@ -166,7 +168,7 @@ export function ArtistDetails({}) {
           icon: <FaPlus />,
           onClick: () => {
             setIsVisible(false)
-            console.log(station)
+            // console.log(station)
             // onCreateNewStation(station._id)
           },
         },

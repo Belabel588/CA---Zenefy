@@ -10,17 +10,13 @@ align-items: center;
 justify-items: center;
 
 padding: 0px 0.5em 1em 0.5em;
-z-index: 4;
+z-index: 30;
 
-@media (max-width:770px) {
-    border-radius: 8px;
-    margin: 0em 0.4em 0em 0.4em;
-    margin-inline-start: 0.5em;
-    margin-inline-end: 0.5em;
+@media (max-width:768px) {
     
-  
-    
+    grid-column: 1/-1;
 }
+
 
 
 
@@ -36,22 +32,12 @@ z-index: 4;
     justify-items: center;
     gap: 0.5em;
     align-self: end;
-
-    @media (max-width:770px) {
-        display: grid;
-            grid-template-columns: 50px 1fr 40px 40px;
-            // background-color: red;
-            .song-text-container{
-                justify-self: start;
-            }
-    
-            .mobile-play-container{
-                justify-self: end;
-                align-self: end;
-            }
-
+    @media (max-width:768px) {
+        display: none;
         
     }
+
+  
 
     .mobile-play-button{
         display: none;
@@ -104,10 +90,21 @@ svg{
     grid-template-rows: repeat(2,auto);
     justify-items: center;
     align-items: center;
+    @media (max-width:768px) {
+    
+        grid-column: 1/-1;
+    }
+    
     
     .buttons-container{
 
+        @media (max-width:768px) {
+            // margin: 0 auto;
+            width: 100%;
+            grid-column: 1/-1;
 
+        }
+        
         // justify-content: space-around;
         display: flex;
         align-items: center;
@@ -312,6 +309,10 @@ svg{
     align-items: center;
     justify-items: center;
     // gap: 0.5em;
+    @media (max-width:768px) {
+        display: none;
+        
+    }
 
     button{
         &:hover{
@@ -341,6 +342,13 @@ i{
 
 .active{
     position: relative;
+    display: grid;
+    grid-template-rows: auto 5px;
+    align-items: center;
+    justify-items: center;
+    height: 45px;
+
+
     i{
 
         color: $green;
@@ -350,7 +358,13 @@ i{
     
             color: $green;
         }
+        svg{
+            fill: $green;
+        }
 
+    }
+    svg{
+        fill: $green;
     }
     &::after{
         content: '';
@@ -359,8 +373,9 @@ i{
         border-radius: 50px;
         background-color: $green;
         position: absolute;
-        top: 2em;
-        right: 1.15em;
+        // top: 2em;
+        // right: 1.15em;
+        grid-row: 2/3;
     }
 }
 
@@ -443,6 +458,98 @@ i{
 }
 
 
+@media (max-width:768px) {
+    
 
-
+.app-footer{
+    z-index: 30;
+     position: fixed;
+     bottom: calc(5em - 10px);
+     
+     
+     
+     // background-color: rgba(255, 0, 0, 0.24);
+     .play-bar-container{
+        padding: 10px;
+@media (max-width:770px) {
+    border-radius: 8px;
+    margin: 0em 0.4em 0em 0.4em;
+    margin-inline-start: 0.5em;
+    margin-inline-end: 0.5em;
+    
   
+    
+}
+
+      
+    }
+    .song-details-container{
+      grid-column: 1/-1;
+      width: 100%; 
+      
+      @media (max-width:770px) {
+          display: grid;
+          grid-template-columns: 50px 1fr 40px 40px;
+        //   padding: 0.5em;
+            // background-color: red;
+            .song-text-container{
+                justify-self: start;
+            }
+    
+            .mobile-play-container{
+                justify-self: end;
+                align-self: end;
+            }
+
+        
+    }
+      .song-text-container{
+        // display: none;
+      }
+      img{
+        border-radius: 5px;
+      }
+
+      .mobile-play-button{
+        display: flex;
+      }
+    }
+
+    .control-container{
+
+
+      .buttons-container{
+        display: none;
+      }
+      
+      .time-container{
+          span{
+              display: none;
+            }
+            display: grid;
+            // position: relative;
+
+            .time-container{
+                position: absolute;
+                // position: static;
+                // top: calc(3em + 8px);
+                bottom: 0px;
+                left: 10px;
+                right: 5px;
+                width: 97vw;
+                // width: 50vh;
+                @media (max-width:550px) {
+                    
+                    width: 95vw;
+                }
+        
+            }
+        }
+    }
+
+    .buttons-volume-container{
+      display: none;
+    }
+} 
+}
+

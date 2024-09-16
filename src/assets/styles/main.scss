@@ -23,6 +23,7 @@
 @import "pages/UserDetails";
 @import "pages/TaskDetails";
 @import "pages/LoginSignup";
+@import "pages/MobileLibrary";
 
 // Components
 @import "cmps/list";
@@ -63,6 +64,8 @@
 @import "cmps/SuggestedArtists.scss";
 @import "pages/ArtistDetails.scss";
 @import "cmps/PlayList.scss";
+@import "cmps/ItemPlay.scss";
+@import "pages/GeminiChat.scss";
 
 
 @import "basics/layout";

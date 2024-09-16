@@ -8,9 +8,24 @@
   height: calc(100vh - 170px);
   overflow-y: auto;
   
+
   @media (max-width:770px) {
     
     width: 90vw;
+  }
+
+  .search-header-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+
+    .ai-container{
+      display: flex;
+      align-items: center;
+      gap: 1em;
+
+    }
   }
 
   /* Dark background for a Spotify-like look */
@@ -558,8 +573,70 @@
     position: relative;
     z-index: 1;
   }
+
+  
 }
 
+.ai-checkbox {
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  height: 34px;
 
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $grey-light;
+    transition: 0.4s;
+    border-radius: 34px;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+  }
+
+  input:checked + .slider {
+    background-color: $green;
+    background: linear-gradient(135deg, #3246ff,  #9b00b0);
+
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(26px);
+    background-color: $green;
+  }
+
+  .label {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    font-size: 14px;
+    color: #00d4ff;
+    font-weight: bold;
+    transition: color 0.4s;
+  }
+
+  input:checked + .slider + .label {
+    color: #fff;
+  }
+}
 
 

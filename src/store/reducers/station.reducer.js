@@ -16,6 +16,7 @@ export const SET_LIKED_STATION = 'SET_LIKED_STATION'
 export const SET_CURR_SEARCH = 'SET_CURR_SEARCH'
 export const SET_IS_ACTIVE = 'SET_IS_ACTIVE'
 export const SET_PLAYLIST = 'SET_PLAYLIST'
+export const SET_IS_ITEM = 'SET_IS_ITEM'
 
 const initialState = {
   stations: [],
@@ -30,6 +31,7 @@ const initialState = {
   currSearch: '',
   isActive: false,
   isPlaylistShown: false,
+  isItemShown: false,
 }
 
 export function stationReducer(state = initialState, action = {}) {
@@ -90,6 +92,8 @@ export function stationReducer(state = initialState, action = {}) {
       return { ...state, isActive: action.isActive }
     case SET_PLAYLIST:
       return { ...state, isPlaylistShown: action.isPlaylistShown }
+    case SET_IS_ITEM:
+      return { ...state, isItemShown: action.isItemShown }
 
     default:
       return state
