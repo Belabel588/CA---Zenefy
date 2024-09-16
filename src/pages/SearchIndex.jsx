@@ -264,7 +264,7 @@ export function SearchIndex() {
     if (!user) return
     // console.log(itemToEdit)
     try {
-      setIsLoading(true)
+      // setIsLoading(true)
       const likedStation = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
@@ -291,7 +291,7 @@ export function SearchIndex() {
       console.log(err)
       // showErrorMsg(`Couldn't like song`)
     } finally {
-      setIsLoading(false)
+      // setIsLoading(false)
     }
   }
 
