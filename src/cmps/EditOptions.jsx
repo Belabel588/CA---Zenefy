@@ -51,7 +51,7 @@ export function EditOptions({
 
   async function onAddToStation(stationId) {
     try {
-      setIsLoading(true)
+      // setIsLoading(true)
       // handleClickOutside()
       // setIsVisible(false)
       const station = await stationService.getById(stationId)
@@ -68,13 +68,13 @@ export function EditOptions({
     } catch (err) {
       console.log(err)
     } finally {
-      setIsLoading(false)
+      // setIsLoading(false)
       setAddToPlaylist(false)
     }
   }
   async function onRemoveItem(stationId) {
     try {
-      setIsLoading(true)
+      // setIsLoading(true)
       // handleClickOutside()
       // setIsVisible(false)
       const station = await stationService.getById(stationId)
@@ -92,7 +92,7 @@ export function EditOptions({
     } catch (err) {
       console.log(err)
     } finally {
-      setIsLoading(false)
+      // setIsLoading(false)
     }
   }
 

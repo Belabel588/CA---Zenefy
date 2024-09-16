@@ -329,7 +329,7 @@ export function AppFooter() {
 
   async function onRemoveItem(stationId) {
     try {
-      setIsLoading(true)
+      // setIsLoading(true)
       // handleClickOutside()
       // setIsVisible(false)
       const station = await stationService.getById(stationId)
@@ -344,7 +344,7 @@ export function AppFooter() {
     } catch (err) {
       console.log(err)
     } finally {
-      setIsLoading(false)
+      // setIsLoading(false)
     }
   }
   const [windowDimensions, setWindowDimensions] = useState(

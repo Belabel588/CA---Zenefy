@@ -136,7 +136,7 @@ export function GeminiChat() {
 
       <ul className='msgs-container'>
         <div className='user-interface'>
-          <input type='text' onChange={handlePromptChange} />
+          <input type='text' onChange={handlePromptChange} value={prompt} />
           <div className='button-container'>
             <button ref={geminiRef} onClick={handleUserPrompt}>
               {geminiLoader ? '' : 'Generate'}
