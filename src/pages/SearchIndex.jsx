@@ -156,10 +156,11 @@ export function SearchIndex() {
 
   useEffect(() => {
     const fetchSearchResults = async () => {
-      if(!currSearch) return
+      if (!currSearch) return
       try {
         setIsLoading(true)
 
+        setSearchResults([{}, {}, {}, {}])
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
         const artists = await apiService.getArtistByName(currSearch)
@@ -168,7 +169,7 @@ export function SearchIndex() {
       } catch (error) {
         console.error('Failed to fetch search results:', error)
       } finally {
-        // setIsLoading(false)
+        setIsLoading(false)
       }
     }
 
@@ -263,13 +264,11 @@ export function SearchIndex() {
   async function likeSong(itemToEdit) {
     if (itemToEdit.url === '') return
     if (!user) return
-    // console.log(itemToEdit)
     try {
-      // setIsLoading(true)
       const likedStation = stations.find(
         (station) => station.isLiked && station.createdBy._id === user._id
       )
-      // console.log(likedStation)
+
       if (likedStation.items.find((item) => item.id === itemToEdit.id)) return
 
       likedStation.items.push(itemToEdit)
@@ -287,12 +286,8 @@ export function SearchIndex() {
       )
 
       setUserStations([...userStationsToSet])
-      // showSuccessMsg('Song added')
     } catch (err) {
       console.log(err)
-      // showErrorMsg(`Couldn't like song`)
-    } finally {
-      // setIsLoading(false)
     }
   }
 
@@ -402,7 +397,15 @@ export function SearchIndex() {
         <section className='info'>
           <h1>Top result</h1>
           <div className='station-container'>
-            <img src={searchResults[0]?.cover} alt={searchResults[0]?.artist} />
+            <div className='img-container preloader'>
+              {!searchResults[0].cover && <div className='wave'></div>}
+              {!searchResults[0].cover && <div className='wave'></div>}
+              {!searchResults[0].cover && <div className='wave'></div>}
+              <img
+                src={searchResults[0]?.cover}
+                alt={searchResults[0]?.artist}
+              />
+            </div>
             <h2>{searchResults[0]?.artist}</h2>
             <h6>Artist</h6>
             {isPlaying && currStation._id === searchedStation._id ? (
@@ -456,7 +459,10 @@ export function SearchIndex() {
                 className='song-item'
                 onDoubleClick={() => onPlaySearchedSong(item.id)}
               >
-                <div className='img-container'>
+                <div className='img-container preloader'>
+                  {!item.cover && <div className='wave'></div>}
+                  {!item.cover && <div className='wave'></div>}
+                  {!item.cover && <div className='wave'></div>}
                   {isPlaying && currItem.id === item.id ? (
                     <div
                       className='pause-button-container'

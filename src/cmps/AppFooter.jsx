@@ -162,6 +162,7 @@ export function AppFooter() {
       setCurrItemIdx(currIdx)
       setCurrentTime(0)
       playerRef.current.seekTo(0)
+      setIsPlaying(true)
 
       return
     }
@@ -172,6 +173,7 @@ export function AppFooter() {
         [currIdx]
       )
       setCurrItemIdx(idxToSet)
+      setIsPlaying(true)
       return
     }
 
@@ -181,6 +183,7 @@ export function AppFooter() {
       idxToSet = currIdx + 1
       setCurrItemIdx(idxToSet)
     }
+    setIsPlaying(true)
   }
 
   function prev() {

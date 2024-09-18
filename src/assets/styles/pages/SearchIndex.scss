@@ -138,8 +138,14 @@
   // height: 300px;
   gap: 1em;
   /* Adds some spacing between the grid columns */
+  .img-container{
 
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
   img {
+
     width: 100px;
     height: 100px;
     object-fit: cover;
@@ -158,7 +164,7 @@
     h2,
     h6,
     img {
-      margin-left: 20px;
+      // margin-left: 20px;
     }
 
 
@@ -636,6 +642,45 @@
 
   input:checked + .slider + .label {
     color: #fff;
+  }
+}
+
+
+.preloader {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(124, 124, 124); 
+  overflow: hidden;
+
+  .wave {
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3); // Light effect
+    opacity: 0.7;
+    transform: translateX(-50%);
+    animation: wave-animation 3s infinite linear;
+
+    &:nth-child(2) {
+      bottom: 10%;
+      background: rgba(255, 255, 255, 0.2); // Slightly different opacity
+      animation: wave-animation 5s infinite linear;
+    }
+  }
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: rotate(10deg) translateY(250px) translateX(-25%) ;
+    // transform: rotate(10deg);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
   }
 }
 

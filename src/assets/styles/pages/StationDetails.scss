@@ -38,7 +38,23 @@
     border-top-right-radius: 0.5rem;
     container-type: inline-size;
 
+    .cover-container{
+      min-height: 120px;
+      min-width: 120px;
+  
+      border-radius: 5px;
+      height: calc(12vw);
+      width: 12vw;
+  
+  
+      max-width: 200px;
+      max-height: 200px;
+  
+      object-fit: scale-down;
+  
+      margin: 1em 0.5em 0.5em 1em;
 
+    }
     .station-cover{
       min-height: 120px;
       min-width: 120px;
@@ -53,7 +69,7 @@
 
       object-fit: scale-down;
 
-      margin: 1em 0.5em 0.5em 1em;
+      // margin: 1em 0.5em 0.5em 1em;
       @media (max-width:770px) {
         width: 400px;
         height: 400px;
@@ -494,6 +510,25 @@
         gap: 1em;
 
         
+      }
+      .img-container{
+        border-radius: 5px;
+        height: calc(4vw);
+        width: 4vw;
+        object-fit:scale-down;
+        // background-color: $green;
+  
+        max-width: 50px;
+        max-height: 50px;
+
+        @media (max-width:770px) {
+        
+          max-width: none;
+        
+          width: 50px;
+          height: 50px;
+        }
+
       }
       img{
         border-radius: 5px;

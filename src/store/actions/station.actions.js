@@ -125,6 +125,7 @@ export async function setCurrItem(itemId, currStation, isDoubleClick = false) {
       currItem: item,
       currItemIdx: idx,
     })
+    return item
   } else {
     const item = currStation.items[0]
 
@@ -133,6 +134,7 @@ export async function setCurrItem(itemId, currStation, isDoubleClick = false) {
       currItem: { ...item },
       currItemIdx: 0,
     })
+    return item
   }
 }
 

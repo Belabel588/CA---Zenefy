@@ -400,7 +400,12 @@ export function StationDetails() {
         />
 
         <header className='station-header' ref={headerRef}>
-          <img className='station-cover' src={station.cover} />
+          <div className='cover-container preloader'>
+            {!station.cover && <div className='wave'></div>}
+            {!station.cover && <div className='wave'></div>}
+            {!station.cover && <div className='wave'></div>}
+            <img className='station-cover' src={station.cover} />
+          </div>
 
           <div className='title-container'>
             <span>Playlist</span>
@@ -533,7 +538,13 @@ export function StationDetails() {
                       )}
                     </div>
                   </div>
-                  <img src={item.cover} alt='' />
+                  <div className='img-container preloader'>
+                    {!station.cover && <div className='wave'></div>}
+                    {!station.cover && <div className='wave'></div>}
+                    {!station.cover && <div className='wave'></div>}
+
+                    <img src={item.cover} alt='' />
+                  </div>
                   <div className='name-artist-container'>
                     <Link
                       to={`/item/${item.id}`}

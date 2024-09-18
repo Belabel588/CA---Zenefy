@@ -98,11 +98,12 @@ async function save(station) {
 
     savedStation = await storageService.put(STORAGE_KEY, stationToSave)
   } else {
+    const items = station.items.filter((item) => item)
     // var stations = await storageService.query(STORAGE_KEY)
     const stationToSave = {
       title:
         station.title || `My playlist #${loggedInUser.likedStationsIds.length}`,
-      items: station.items || [],
+      items: items || [],
       cover:
         station.cover ||
         'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2?v=v2',
@@ -204,19 +205,23 @@ async function createStationFromSearch(searchResults, keyWord) {
     isSearched: true,
     stationType: searchResults.stationType || 'music', // Assuming the station type is always 'music'
     title: searchResults[0]?.artist || 'Untitled Station', // Use the artist's name as the station title, fallback to 'Untitled Station'
-    items: searchResults.map((result) => ({
-      artist: result.artist,
-      id: result.id || utilService.makeId(), // Generate a unique ID for each item
-      name: result.name,
-      album: result.album,
-      url: result.url,
-      cover: result.cover,
-      addedBy: 'user1', // Assuming a default user, replace with actual user ID if available
-      likedBy: [], // Empty likedBy array
-      addedAt: Date.now(), // Current timestamp
-      lyrics: result.lyrics,
-      duration: result.duration || '00:00',
-    })),
+    items: searchResults.map((result) => {
+      if (!result) return
+
+      return {
+        artist: result.artist,
+        id: result.id || utilService.makeId(), // Generate a unique ID for each item
+        name: result.name,
+        album: result.album,
+        url: result.url,
+        cover: result.cover,
+        addedBy: 'user1', // Assuming a default user, replace with actual user ID if available
+        likedBy: [], // Empty likedBy array
+        addedAt: Date.now(), // Current timestamp
+        lyrics: result.lyrics,
+        duration: result.duration || '00:00',
+      }
+    }),
     cover: searchResults[0]?.cover || 'default_cover_url', // Use the first song's cover as the station cover, fallback to a default URL
     tags: [], // Empty tags array
     createdBy: {
@@ -1345,21 +1350,44 @@ function getDefaultCurrStation() {
 }
 
 function getSubCategories(category) {
-  const allCategoriesWithImages = getCategoriesWithImages();
+  const allCategoriesWithImages = getCategoriesWithImages()
 
   // Define subcategories for Music and Podcasts
   const musicSubCategories = [
-    'Pop', 'Hip-Hop', 'Rock', 'Latin', 'Indie', 
-    'R&B', 'K-pop', 'Dance Electric', 'Country', 
-    'Chill', 'Sleep', 'Party', 'Love', 'Metal', 
-    'Jazz', 'Anime', 'Gaming', 'Folk & Acoustic',
-    'Focus', 'Classical', 'Instrumental', 'Punk',
-    'Ambient', 'Blues', 'Afro', 'Funk & Disco'
+    'Pop',
+    'Hip-Hop',
+    'Rock',
+    'Latin',
+    'Indie',
+    'R&B',
+    'K-pop',
+    'Dance Electric',
+    'Country',
+    'Chill',
+    'Sleep',
+    'Party',
+    'Love',
+    'Metal',
+    'Jazz',
+    'Anime',
+    'Gaming',
+    'Folk & Acoustic',
+    'Focus',
+    'Classical',
+    'Instrumental',
+    'Punk',
+    'Ambient',
+    'Blues',
+    'Afro',
+    'Funk & Disco',
   ]
 
   const podcastSubCategories = [
-    'Educational', 'Documentary', 'Comedy', 'Trending',
-    'Kids & Family'
+    'Educational',
+    'Documentary',
+    'Comedy',
+    'Trending',
+    'Kids & Family',
   ]
 
   let subCategories
@@ -1372,10 +1400,9 @@ function getSubCategories(category) {
   }
 
   // Filter the categories with images to match the subcategories
-  const filteredSubCategories = allCategoriesWithImages.filter(catWithImg =>
+  const filteredSubCategories = allCategoriesWithImages.filter((catWithImg) =>
     subCategories.includes(catWithImg.category)
   )
 
   return filteredSubCategories
 }
-

@@ -76,9 +76,12 @@ export function ArtistDetails({}) {
     try {
       setIsLoading(true)
       const artistItems = await apiService.searchStations(artist.name)
-      // console.log(artistItems)
-      const station = await stationService.createStationFromSearch(artistItems)
-      // console.log(station)
+      console.log(artistItems)
+      const station = await stationService.createStationFromSearch(
+        artistItems,
+        artist.name
+      )
+      console.log(station)
       const savedStation = await stationService.save(station)
       setLikedStation()
       setStation(savedStation)
