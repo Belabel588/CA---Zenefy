@@ -52,13 +52,21 @@ button{
     height: 1rem;
   
     color:$grey-light;
+
     
   }
   &:hover{
     .ai-icon{
       
       color: $green;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      
+  
+        transform: rotate(360deg) scale(2);
+        box-shadow: 0 0 20px 5px rgba(133, 52, 219, 0.8);
+        background-color: rgba(133, 52, 219, 0.40);
     }
+
   }
   
   margin: 0px;
@@ -74,14 +82,17 @@ button{
   // margin-right: 0.5rem;
   // margin-bottom: 0.8rem;
   color:$grey-light;
+  
+  
+}
+button > .ai-icon{
+
+}
 
 
-  }
 
-
-
-  .liked-songs-station{
-width:5rem;
+.liked-songs-station{
+  width:5rem;
 height:5rem;
 border-radius: 0.5rem;
   }

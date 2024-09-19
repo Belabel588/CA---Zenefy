@@ -56,7 +56,8 @@ export function EditOptions({
       // setIsVisible(false)
       const station = await stationService.getById(stationId)
       if (station.items.find((item) => item.id === itemToEdit.id)) return
-      station.items.push(itemToEdit)
+      const newItem = { ...itemToEdit, addedAt: new Date() }
+      station.items.push(newItem)
       const savedStation = await saveStation(station)
 
       if (pageStation._id === savedStation._id) {

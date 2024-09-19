@@ -228,7 +228,9 @@ export function ItemPlay() {
       const songIdx = likedSongsIds.findIndex((id) => id === itemToEdit.id)
       likedSongsIds.splice(songIdx, 1)
     } else {
-      likedStation.items.push(itemToEdit)
+      const newItem = { ...itemToEdit, addedAt: new Date() }
+
+      likedStation.items.push(newItem)
       likedSongsIds.push(itemToEdit.id)
     }
 

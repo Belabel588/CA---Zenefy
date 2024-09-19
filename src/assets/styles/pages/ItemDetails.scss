@@ -10,15 +10,16 @@
 
 .item-header{
     // background: linear-gradient(180deg, #7300ff, #191414);
-
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: end;
 
     width:100%;
-    height: calc(18vw);
-    height: 30%;
+    // height: calc(18vw);
+    // height: 40%;
     min-height: 150px;
+
 
 
     border-top-left-radius: 0.5rem;

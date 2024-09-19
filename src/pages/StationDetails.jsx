@@ -112,6 +112,7 @@ export function StationDetails() {
     setCoverColor()
     loadStation(stationId)
     setCurrColorPage(currColor)
+    console.log(station)
   }, [stationId, params])
 
   useEffect(() => {
@@ -154,10 +155,13 @@ export function StationDetails() {
     setIsPlaying(true)
   }
 
-  function toggleModal() {
+  function toggleModal(ev) {
     if (station.isLiked) return
     if (modalRef.current.style.display !== 'flex') {
       modalRef.current.style.display = 'flex'
+      const x = ev.clientX
+      const y = ev.clientY
+      setModalPosition({ x, y })
     } else {
       modalRef.current.style.display = 'none'
     }
@@ -220,10 +224,10 @@ export function StationDetails() {
         {
           text: 'Edit',
           icon: <FiEdit2 />,
-          onClick: () => {
+          onClick: (event) => {
             setIsVisible(false)
 
-            toggleModal()
+            toggleModal(event)
           },
         },
         {
@@ -366,15 +370,74 @@ export function StationDetails() {
   }
   const artists = []
 
+  const [isDrag, setIsDrag] = useState(false)
+  const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 })
+  const offsetRef = useRef({ x: 0, y: 0 })
+  const requestRef = useRef(null)
+
+  function onMouseDown(ev) {
+    const rect = modalRef.current.getBoundingClientRect()
+    console.log(rect)
+    // Calculate the offset from where the mouse is clicked within the modal
+    offsetRef.current = {
+      x: ev.clientX - rect.left,
+      y: ev.clientY - rect.top,
+    }
+
+    setIsDrag(true)
+  }
+
+  function onDragModal(ev) {
+    // const rect = ev.target.getBoundingClientRect()
+    const x = ev.clientX - offsetRef.current.x
+    const y = ev.clientY - offsetRef.current.y
+    // const x = ev.clientX
+    // const y = ev.clientY
+    setModalPosition({ x, y })
+
+    requestRef.current = requestAnimationFrame(() => {
+      setModalPosition({ x, y })
+    })
+  }
+
+  function onMouseUp() {
+    setIsDrag(false)
+    if (requestRef.current) cancelAnimationFrame(requestRef.current)
+  }
+
+  useEffect(() => {
+    if (isDrag) {
+      document.addEventListener('mousemove', onDragModal)
+      document.addEventListener('mouseup', onMouseUp)
+    } else {
+      document.removeEventListener('mousemove', onDragModal)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', onDragModal)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+  }, [isDrag])
+
   if (!isLoading)
     return (
       <section className='station-details-container'>
-        <StationEditModal
-          station={station}
-          modalRef={modalRef}
-          toggleModal={toggleModal}
-          saveStation={sendToSaveStation}
-        />
+        <div
+          className='station-edit-container'
+          onMouseDown={(event) => {
+            onMouseDown(event)
+          }}
+        >
+          <StationEditModal
+            station={station}
+            modalRef={modalRef}
+            toggleModal={toggleModal}
+            saveStation={sendToSaveStation}
+            position={modalPosition}
+            isDrag={isDrag}
+          />
+        </div>
         <EditOptions
           setLikedStation={setLikedStation}
           options={options}
@@ -409,7 +472,10 @@ export function StationDetails() {
 
           <div className='title-container'>
             <span>Playlist</span>
-            <b className='station-title' onClick={toggleModal}>
+            <b
+              className='station-title'
+              onClick={(event) => toggleModal(event)}
+            >
               {station.title}
             </b>
             {(station.preview && (
@@ -561,7 +627,7 @@ export function StationDetails() {
                   </div>
                   <span className='album'>{item.album}</span>
                   <span className='date-added'>
-                    {Date(item.addedAt).toLocaleString('he').slice(0, 13)}
+                    {new Date(item.addedAt).toLocaleString('he').slice(0, 16)}
                   </span>
                   <span className='time' key={utilService.makeId()}>
                     {item.duration}

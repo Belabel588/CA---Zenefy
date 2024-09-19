@@ -315,7 +315,9 @@ export function AppFooter() {
     const likedStation = stations.find(
       (station) => station.isLiked && station.createdBy._id === user._id
     )
-    likedStation.items.push(itemToAdd)
+    const newItem = { ...itemToAdd, addedAt: new Date() }
+
+    likedStation.items.push(newItem)
 
     try {
       const saved = await saveStation(likedStation)

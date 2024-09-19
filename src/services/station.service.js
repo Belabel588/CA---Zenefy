@@ -163,6 +163,7 @@ async function getItemsStation(itemId) {
   stations.map((station) => {
     // if (stationToReturn) return stationToReturn
     station.items.map((item) => {
+      if (!item) return
       if (item.id === itemId) {
         stationToReturn = station
       }

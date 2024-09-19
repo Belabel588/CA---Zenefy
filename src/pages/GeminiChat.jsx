@@ -25,9 +25,14 @@ import { IoCloseOutline } from 'react-icons/io5'
 import { LuSparkles } from 'react-icons/lu'
 import { LuDot } from 'react-icons/lu'
 
-export function GeminiChat() {
+export function GeminiChat({
+  isGemini,
+  setIsGemini,
+  position,
+  isDrag,
+  modalRef,
+}) {
   const navigate = useNavigate()
-  const [isGemini, setIsGemini] = useState(false)
 
   const [generateButton, setGenerateButton] = useState()
   const inputRef = useRef()
@@ -39,13 +44,10 @@ export function GeminiChat() {
   useEffect(() => {
     setGeminiMsg()
   }, [])
-  function onSetGeminiModal() {
-    if (isGemini) {
-      setIsGemini(false)
-    } else {
-      setIsGemini(true)
-    }
-  }
+
+  useEffect(() => {
+    console.log(position)
+  }, [position])
 
   async function handleUserPrompt() {
     try {
@@ -82,15 +84,15 @@ export function GeminiChat() {
   const geminiRef = useRef()
 
   function setGeminiMsg() {
-    const first = [
-      {
-        text: <div></div>,
-        className: 'msg typing',
-        id: utilService.makeId(),
-      },
-    ]
+    // const first = [
+    //   {
+    //     text: <div></div>,
+    //     className: 'msg typing',
+    //     id: utilService.makeId(),
+    //   },
+    // ]
 
-    setMsgs(first)
+    // setMsgs(first)
 
     const geminiMsg = {
       text: `You can generate a playlist with any prompt`,
@@ -101,7 +103,7 @@ export function GeminiChat() {
     newMsgs.push(geminiMsg)
     setTimeout(() => {
       setMsgs(newMsgs)
-    }, 3000)
+    }, 1500)
   }
 
   function onSetGenerate() {
@@ -123,7 +125,23 @@ export function GeminiChat() {
   }
 
   return (
-    <div className='gemini-modal-container'>
+    <div
+      className='gemini-modal-container'
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        cursor: isDrag ? 'grabbing' : 'grab',
+        transition: isDrag ? 'none' : 'all 0.2s ease',
+      }}
+      ref={modalRef}
+    >
+      <div className='close-button'>
+        <IoCloseOutline
+          onClick={() => {
+            setIsGemini(false)
+          }}
+        />
+      </div>
       {!geminiLoader ? (
         <div>
           <span>Generate by prompt</span>

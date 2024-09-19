@@ -62,7 +62,7 @@ export function RootCmp() {
             <Route path='/user/:userId' element={<UserDetails />} />
             {/* <Route path='/login' element={<LoginSignup />} /> */}
             <Route path='/artist/:artistId' element={<ArtistDetails />} />
-            <Route path='/generate' element={<GeminiChat />} />
+            {/* <Route path='/generate' element={<GeminiChat />} /> */}
           </Routes>
         </main>
       </div>

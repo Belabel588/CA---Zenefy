@@ -81,18 +81,22 @@ export function ItemDetails() {
         setArtist(artistToSet)
         setCurrArtist(artistToSet)
         const color = await setCurrColor(itemToSet.cover)
-
-        headerRef.current.style.backgroundColor = color
-        gradientRef.current.style.backgroundColor = color
       } catch (err) {
         console.log(err)
       } finally {
-        setIsLoading(false)
       }
     }
 
     fetchItem()
   }, [itemId])
+
+  useEffect(() => {
+    headerRef.current.style.backgroundColor = currColor
+    console.log(gradientRef.current)
+    setIsLoading(false)
+    // headerRef.current.style.backgroundColor = currColor
+    // gradientRef.current.style.backgroundColor = currColor
+  }, [currColor])
 
   async function onCreateNewStation() {
     const emptyStation = stationService.getEmptyStation()
@@ -206,7 +210,9 @@ export function ItemDetails() {
       const songIdx = likedSongsIds.findIndex((id) => id === itemToEdit.id)
       likedSongsIds.splice(songIdx, 1)
     } else {
-      likedStation.items.push(itemToEdit)
+      const newItem = { ...itemToEdit, addedAt: new Date() }
+
+      likedStation.items.push(newItem)
       likedSongsIds.push(itemToEdit.id)
     }
 

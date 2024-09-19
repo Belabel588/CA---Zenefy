@@ -29,6 +29,8 @@ export function StationEditModal({
   modalRef,
   toggleModal,
   saveStation,
+  position,
+  isDrag,
 }) {
   const [editStation, setEditStation] = useState({})
   const [coverSrc, setCoverSrc] = useState()
@@ -75,7 +77,16 @@ export function StationEditModal({
   const fileRef = useRef()
 
   return (
-    <div className='modal-container' ref={modalRef}>
+    <div
+      className='modal-container'
+      ref={modalRef}
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        cursor: isDrag ? 'grabbing' : 'grab',
+        transition: isDrag ? 'none' : 'all 0.2s ease',
+      }}
+    >
       <div className='head-container'>
         <b>Edit details</b>
         <IoMdClose className='close-button' onClick={toggleModal} />

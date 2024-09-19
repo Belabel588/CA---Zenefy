@@ -21,6 +21,7 @@ import { apiService } from '../services/youtube-spotify.service.js'
 import { StationEditModal } from './StationEditModal.jsx'
 import { StationList } from '../cmps/StationList.jsx'
 import { Sort } from './Sort.jsx'
+import { GeminiChat } from '../pages/GeminiChat.jsx'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { BiPlay } from 'react-icons/bi'
@@ -174,38 +175,65 @@ export function AppLibrary() {
 
   const [isGemini, setIsGemini] = useState(false)
 
-  function onSetGeminiModal() {
+  function onSetGeminiModal(ev) {
     if (isGemini) {
       setIsGemini(false)
     } else {
       setIsGemini(true)
+      // console.log(ev)
+      setPosition({ x: ev.pageX, y: ev.pageY })
     }
   }
 
-  async function handleUserPrompt() {
-    try {
-      if (!prompt) return
-      if (geminiLoader) return
+  const modalRef = useRef()
 
-      geminiRef.current.className = 'loading-button'
-      setGeminiLoader(true)
-      const geminiStation = await apiService.geminiGenerate(prompt)
+  const [isDrag, setIsDrag] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const offsetRef = useRef({ x: 0, y: 0 })
+  const requestRef = useRef(null)
 
-      navigate(`/station/${geminiStation._id}`)
-    } catch (err) {
-      console.log(err)
-    } finally {
-      geminiRef.current.className = ''
-      setIsGemini(false)
-      setGeminiLoader(false)
+  function onMouseDown(ev) {
+    const rect = modalRef.current.getBoundingClientRect()
+
+    // Calculate the offset from where the mouse is clicked within the modal
+    offsetRef.current = {
+      x: ev.clientX - rect.left,
+      y: ev.clientY - rect.top,
     }
-  }
-  const [prompt, setPrompt] = useState('')
-  function handlePromptChange({ target }) {
-    setPrompt(target.value)
+
+    setIsDrag(true)
   }
 
-  const geminiRef = useRef()
+  function onDragModal(ev) {
+    // const rect = ev.target.getBoundingClientRect()
+    const x = ev.clientX - offsetRef.current.x
+    const y = ev.clientY - offsetRef.current.y
+    setPosition({ x, y })
+
+    requestRef.current = requestAnimationFrame(() => {
+      setPosition({ x, y })
+    })
+  }
+
+  function onMouseUp() {
+    setIsDrag(false)
+    if (requestRef.current) cancelAnimationFrame(requestRef.current)
+  }
+
+  useEffect(() => {
+    if (isDrag) {
+      document.addEventListener('mousemove', onDragModal)
+      document.addEventListener('mouseup', onMouseUp)
+    } else {
+      document.removeEventListener('mousemove', onDragModal)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', onDragModal)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+  }, [isDrag])
 
   return (
     <div className='library-container'>
@@ -232,9 +260,9 @@ export function AppLibrary() {
           <button>
             <LuSparkles
               className='ai-icon'
-              onClick={() => {
-                // onSetGeminiModal()
-                navigate('/generate')
+              onClick={(event) => {
+                onSetGeminiModal(event)
+                // navigate('/generate')
               }}
             />
           </button>
@@ -261,6 +289,25 @@ export function AppLibrary() {
             //     </div>
             //   </div>
             // )
+            isGemini && (
+              <div
+                className='gemini-container'
+                onMouseDown={(event) => {
+                  onMouseDown(event)
+                }}
+                // onMouseUp={() => onMouseUp()}
+                // onMouseLeave={() => setIsDrag(false)}
+                // onMouseMove={(event) => isDrag && onDragModal(event)}
+              >
+                <GeminiChat
+                  isGemini={isGemini}
+                  setIsGemini={setIsGemini}
+                  position={position}
+                  isDrag={isDrag}
+                  modalRef={modalRef}
+                />
+              </div>
+            )
           }
         </div>
       </div>
