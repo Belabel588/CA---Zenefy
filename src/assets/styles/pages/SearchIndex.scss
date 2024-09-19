@@ -304,7 +304,6 @@
     background-color: $dark-mode-background;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     /* Distribute songs evenly within the grid */
     overflow-y: auto;
     /* Allows scrolling if there are more songs */

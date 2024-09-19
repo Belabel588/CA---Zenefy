@@ -43,9 +43,12 @@ export function SearchIndex() {
   const [defaultFilterBy, setFilterBy] = useState(
     stationService.getDefaultFilter()
   )
-  const [searchResults, setSearchResults] = useState({
-    items: [{}, {}, {}, {}],
-  })
+  const [searchResults, setSearchResults] = useState([
+    { cover: '' },
+    { cover: '' },
+    { cover: '' },
+    { cover: '' },
+  ])
   const [refactoredResults, setRefactoredResults] = useState([])
   const [searchedStation, setSearchedStation] = useState({
     items: [{}, {}, {}, {}],
@@ -156,11 +159,20 @@ export function SearchIndex() {
 
   useEffect(() => {
     const fetchSearchResults = async () => {
-      if (!currSearch) return
+      if (!currSearch) {
+        setSearchedStation({ ...searchedStation, items: [{}, {}, {}, {}] })
+        console.log(searchedStation)
+        return
+      }
       try {
         setIsLoading(true)
 
-        setSearchResults([{}, {}, {}, {}])
+        setSearchResults([
+          { cover: '' },
+          { cover: '' },
+          { cover: '' },
+          { cover: '' },
+        ])
         const results = await apiService.getVideos(currSearch)
         setSearchResults(results)
         const artists = await apiService.getArtistByName(currSearch)
@@ -173,7 +185,19 @@ export function SearchIndex() {
       }
     }
 
-    if (!currSearch) return
+    if (!currSearch) {
+      setSearchResults([
+        { cover: '' },
+        { cover: '' },
+        { cover: '' },
+        { cover: '' },
+      ])
+      setSearchedStation({
+        items: [{ cover: '' }, { cover: '' }, { cover: '' }, { cover: '' }],
+      })
+      console.log(searchedStation)
+      return
+    }
     fetchSearchResults()
   }, [currSearch])
 
@@ -399,13 +423,14 @@ export function SearchIndex() {
           <h1>Top result</h1>
           <div className='station-container'>
             <div className='img-container preloader'>
-              {!searchResults[0].cover && <div className='wave'></div>}
-              {!searchResults[0].cover && <div className='wave'></div>}
-              {!searchResults[0].cover && <div className='wave'></div>}
-              <img
-                src={searchResults[0]?.cover}
-                alt={searchResults[0]?.artist}
-              />
+              {(!searchResults[0].cover && <div className='wave'></div> && (
+                  <div className='wave'></div>
+                ) && <div className='wave'></div>) || (
+                <img
+                  src={searchResults[0]?.cover}
+                  alt={searchResults[0]?.artist}
+                />
+              )}
             </div>
             <h2>{searchResults[0]?.artist}</h2>
             <h6>Artist</h6>
@@ -461,9 +486,11 @@ export function SearchIndex() {
                 onDoubleClick={() => onPlaySearchedSong(item.id)}
               >
                 <div className='img-container preloader'>
-                  {!item.cover && <div className='wave'></div>}
-                  {!item.cover && <div className='wave'></div>}
-                  {!item.cover && <div className='wave'></div>}
+                  {(!searchResults[0].cover && <div className='wave'></div> && (
+                      <div className='wave'></div>
+                    ) && <div className='wave'></div>) || (
+                    <img src={item.cover} alt={item.name} />
+                  )}
                   {isPlaying && currItem.id === item.id ? (
                     <div
                       className='pause-button-container'
@@ -504,7 +531,6 @@ export function SearchIndex() {
                       />
                     </div>
                   )}
-                  <img src={item.cover} alt={item.name} />
                 </div>
 
                 <div className='song-details'>
