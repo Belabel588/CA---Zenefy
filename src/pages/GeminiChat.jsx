@@ -45,10 +45,6 @@ export function GeminiChat({
     setGeminiMsg()
   }, [])
 
-  useEffect(() => {
-    console.log(position)
-  }, [position])
-
   async function handleUserPrompt() {
     try {
       if (!prompt) return
@@ -132,6 +128,7 @@ export function GeminiChat({
         top: `${position.y}px`,
         cursor: isDrag ? 'grabbing' : 'grab',
         transition: isDrag ? 'none' : 'all 0.2s ease',
+        zIndex: '100',
       }}
       ref={modalRef}
     >

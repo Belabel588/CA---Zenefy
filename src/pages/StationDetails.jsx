@@ -112,7 +112,6 @@ export function StationDetails() {
     setCoverColor()
     loadStation(stationId)
     setCurrColorPage(currColor)
-    console.log(station)
   }, [stationId, params])
 
   useEffect(() => {
@@ -379,7 +378,6 @@ export function StationDetails() {
 
   function onMouseDown(ev) {
     const rect = modalRef.current.getBoundingClientRect()
-    console.log(rect)
     // Calculate the offset from where the mouse is clicked within the modal
     offsetRef.current = {
       x: ev.clientX - rect.left,

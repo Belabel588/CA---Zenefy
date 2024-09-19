@@ -85,6 +85,7 @@ export function StationEditModal({
         top: `${position.y}px`,
         cursor: isDrag ? 'grabbing' : 'grab',
         transition: isDrag ? 'none' : 'all 0.2s ease',
+        zIndex: isDrag ? '100' : '50',
       }}
     >
       <div className='head-container'>

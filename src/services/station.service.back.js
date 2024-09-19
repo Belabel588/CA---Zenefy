@@ -270,7 +270,7 @@ function getCategoriesWithImages() {
     (category) =>
       `/spotify-pics/${category
         .toLowerCase()
-        .replace(/ & /g, '-')
+        .replace(/&/g, 'and')
         .replace(/ /g, '-')}.png`
   )
 

@@ -12,19 +12,18 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 0.3em;
     background-color: $grey-darkest; // Dark semi-transparent background
     border-radius: 10px;
-    // width: 400px;
+    width: 400px;
     // height: auto;
     // border: 1px solid $white;
     color: $white;
     z-index: 5;
-    gap: 1em;
+    gap: 0.5em;
     border-top: 3px solid #84a1eb5d;
     border-left: 3px solid #84a1eb5d;
-    // transition: 0.2s;
-    // cursor: grab;
+
     &:hover{
       
       border-top: 3px solid #84a1ebda;
@@ -34,7 +33,7 @@
 
     .close-button{
       position: absolute;
-      top: 0.5em;
+      top: 0.35em;
       right: 1em;
       font-size: 1.5em;
       height: 30px;
@@ -54,16 +53,20 @@
     }
 
     span {
-      font-size: 1.5em;
+      font-size: 1.2em;
       font-weight: bold;
-      //   margin-bottom: 1rem;
+
+
+
       color: $white;
     }
     .generating{
         font-size: 1em;
         align-self: center;
         justify-self: center;
-        width: 200px;
+        width: 155px;
+
+        // text-align: center;
 
     }
 
