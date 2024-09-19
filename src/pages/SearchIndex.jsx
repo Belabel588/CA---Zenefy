@@ -271,7 +271,8 @@ export function SearchIndex() {
 
       if (likedStation.items.find((item) => item.id === itemToEdit.id)) return
 
-      likedStation.items.push(itemToEdit)
+      const itemToSave = { ...itemToEdit, addedAt: new Date() }
+      likedStation.items.push(itemToSave)
 
       const stationToSave = await saveStation(likedStation)
 
