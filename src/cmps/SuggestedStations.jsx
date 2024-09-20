@@ -46,7 +46,7 @@ export function SuggestedStations({ stations = '', color = '' }) {
 
   // Determine class names dynamically
   const containerClass = color
-    ? 'suggested-stations-container gradient'
+    ? 'suggested-stations-container gradientt'
     : 'suggested-stations-container'
 
   let counter = 0
