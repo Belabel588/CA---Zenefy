@@ -25,7 +25,8 @@ async function likeSong(itemToLike) {
 
     const userToSave = { ...user, likedSongsIds }
     await updateUser(userToSave)
-    setLikedStation()
+
+    onSetLikedStation()
   } catch (err) {
     console.log(err)
   }
