@@ -29,6 +29,7 @@
     height: calc(155%);
     height: calc(120vh);
     height: calc(100vh - 170px);
+
     @media (max-width:770px) {
         height: calc(100vh + 500px);
         overflow-y: hidden;
