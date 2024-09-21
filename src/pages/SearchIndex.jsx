@@ -260,42 +260,30 @@ export function SearchIndex() {
   }, [searchedStation])
 
   async function handleSearchResults(searchResults) {
-    console.log(searchResults)
+    // if (!searchResults[0].url) {
+    //   const emptyStation = {
+    //     ...stationService.getEmptyStation(),
+    //     title: 'Could not find',
+    //     items: [{ name: 'Could not find', cover: '' }],
+    //   }
+    //   setTimeout(() => {
+    //     // setSearchedStation(emptyStation)
+    //   }, 2500)
+    //   return
+    // }
 
-    if (!searchResults[0].url) {
-      const emptyStation = {
-        ...stationService.getEmptyStation(),
-        title: 'Could not find',
-        items: [{ name: 'Could not find', cover: '' }],
-      }
-      setTimeout(() => {
-        // setSearchedStation(emptyStation)
-      }, 2500)
-      return
-    }
     try {
-      let refactored
-      const defaultFilter = stationService.getDefaultFilter()
-      const keywordStations = await stationService.query({
-        ...defaultFilter,
-        txt: currSearch,
-      })
-      if (keywordStations[0]) {
-        refactored = keywordStations[0]
-      } else {
-        refactored = await stationService.createStationFromSearch(
+      if (searchResults[0].url) {
+        console.log(searchResults)
+        const refactored = await stationService.createStationFromSearch(
           searchResults,
           filterBy.txt
         )
-      }
+        setRefactoredResults(refactored)
+        const savedStation = await stationService.save(refactored)
 
-      setRefactoredResults(refactored)
-      let savedStation
-      if (!keywordStations[0]) {
-        savedStation = await stationService.save(refactored)
+        setSearchedStation(savedStation)
       }
-
-      setSearchedStation(savedStation)
     } catch (error) {
       console.error('Error refactoring search results:', error)
     } finally {
