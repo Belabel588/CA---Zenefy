@@ -203,6 +203,13 @@ export function AppHeader() {
 
   useEffect(() => {
     const { width } = windowDimensions
+    if (width > 770) {
+      searchRef.current.style.backgroundColor = '#343434'
+      inputRef.current.style.color = 'white'
+      searchContainerRef.current.style.color = 'white'
+      searchRef.current.style.fill = 'white'
+      searchRef.current.style.color = 'white'
+    }
     if (width <= 770 && location.pathname !== '/search') {
       searchContainerRef.current.style.display = 'none'
     } else {
@@ -213,11 +220,11 @@ export function AppHeader() {
       searchContainerRef.current.style.color = 'white'
       searchContainerRef.current.style.backgroundColor = 'black'
       searchRef.current.style.backgroundColor = 'white'
-      searchRef.current.style.backgroundColor = '#343434'
       searchRef.current.style.fill = 'white'
       searchRef.current.style.color = 'white'
+      searchRef.current.style.backgroundColor = '#343434'
       inputRef.current.style.color = 'white'
-    } else if (!currSearch) {
+    } else if (width <= 770 && !currSearch) {
       console.log(currSearch)
       searchContainerRef.current.style.top = '70px'
       searchContainerRef.current.style.color = '#343434'
@@ -232,7 +239,7 @@ export function AppHeader() {
     }
   }, [
     windowDimensions.width,
-    inputRef.current.value,
+    // inputRef.current.value,
     currSearch,
     location.pathname,
   ])

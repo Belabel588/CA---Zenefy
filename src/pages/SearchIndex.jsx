@@ -173,9 +173,14 @@ export function SearchIndex() {
           { cover: '' },
           { cover: '' },
         ])
-        const results = await apiService.getVideos(currSearch)
-        setSearchResults(results)
+        let results = await apiService.getVideos(currSearch)
+
         const artists = await apiService.getArtistByName(currSearch)
+        if (!results[0].url) {
+          results = await apiService.getVideos(artists[0].name)
+        }
+        setSearchResults(results)
+
         setCurrArtists(artists)
         setArtists(artists)
       } catch (error) {
@@ -185,19 +190,19 @@ export function SearchIndex() {
       }
     }
 
-    if (!currSearch) {
-      setSearchResults([
-        { cover: '' },
-        { cover: '' },
-        { cover: '' },
-        { cover: '' },
-      ])
-      setSearchedStation({
-        items: [{ cover: '' }, { cover: '' }, { cover: '' }, { cover: '' }],
-      })
-      console.log(searchedStation)
-      return
-    }
+    // if (!currSearch) {
+    //   setSearchResults([
+    //     { cover: '' },
+    //     { cover: '' },
+    //     { cover: '' },
+    //     { cover: '' },
+    //   ])
+    //   setSearchedStation({
+    //     items: [{ cover: '' }, { cover: '' }, { cover: '' }, { cover: '' }],
+    //   })
+    //   console.log(searchedStation)
+    //   return
+    // }
     fetchSearchResults()
   }, [currSearch])
 
@@ -255,11 +260,25 @@ export function SearchIndex() {
   }, [searchedStation])
 
   async function handleSearchResults(searchResults) {
+    console.log(searchResults)
+
+    if (!searchResults[0].url) {
+      const emptyStation = {
+        ...stationService.getEmptyStation(),
+        title: 'Could not find',
+        items: [{ name: 'Could not find', cover: '' }],
+      }
+      setTimeout(() => {
+        // setSearchedStation(emptyStation)
+      }, 2500)
+      return
+    }
     try {
       const refactored = await stationService.createStationFromSearch(
         searchResults,
         filterBy.txt
       )
+
       setRefactoredResults(refactored)
       const savedStation = await stationService.save(refactored)
 
