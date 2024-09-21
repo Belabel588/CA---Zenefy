@@ -274,13 +274,26 @@ export function SearchIndex() {
       return
     }
     try {
-      const refactored = await stationService.createStationFromSearch(
-        searchResults,
-        filterBy.txt
-      )
+      let refactored
+      const defaultFilter = stationService.getDefaultFilter()
+      const keywordStations = await stationService.query({
+        ...defaultFilter,
+        txt: currSearch,
+      })
+      if (keywordStations[0]) {
+        refactored = keywordStations[0]
+      } else {
+        refactored = await stationService.createStationFromSearch(
+          searchResults,
+          filterBy.txt
+        )
+      }
 
       setRefactoredResults(refactored)
-      const savedStation = await stationService.save(refactored)
+      let savedStation
+      if (!keywordStations[0]) {
+        savedStation = await stationService.save(refactored)
+      }
 
       setSearchedStation(savedStation)
     } catch (error) {
