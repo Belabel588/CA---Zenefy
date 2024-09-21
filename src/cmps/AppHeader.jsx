@@ -172,6 +172,71 @@ export function AppHeader() {
   }
 
   document.addEventListener('mousedown', handleClickOutside)
+
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  )
+  const searchRef = useRef()
+  const searchContainerRef = useRef()
+  const iconSearchRef = useRef()
+
+  useEffect(() => {
+    async function handleResize() {
+      setWindowDimensions(getWindowDimensions())
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      // getAllStations()
+    }
+  }, [windowDimensions])
+
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window
+    // console.log(width)
+    return {
+      width,
+      height,
+    }
+  }
+
+  useEffect(() => {
+    const { width } = windowDimensions
+    if (width <= 770 && location.pathname !== '/search') {
+      searchContainerRef.current.style.display = 'none'
+    } else {
+      searchContainerRef.current.style.display = 'flex'
+    }
+    if (width <= 770 && currSearch !== '') {
+      searchContainerRef.current.style.top = '0'
+      searchContainerRef.current.style.color = 'white'
+      searchContainerRef.current.style.backgroundColor = 'black'
+      searchRef.current.style.backgroundColor = 'white'
+      searchRef.current.style.backgroundColor = '#343434'
+      searchRef.current.style.fill = 'white'
+      searchRef.current.style.color = 'white'
+      inputRef.current.style.color = 'white'
+    } else if (!currSearch) {
+      console.log(currSearch)
+      searchContainerRef.current.style.top = '70px'
+      searchContainerRef.current.style.color = '#343434'
+      searchContainerRef.current.style.backgroundColor = 'transparent'
+      searchRef.current.style.backgroundColor = 'white'
+      searchRef.current.style.color = '#343434'
+      searchRef.current.style.fill = '#343434'
+      searchRef.current.style.color = 'black'
+      inputRef.current.style.color = '#343434'
+      // iconSearchRef.current.style.color = '#343434'
+      console.log(searchRef.current)
+    }
+  }, [
+    windowDimensions.width,
+    inputRef.current.value,
+    currSearch,
+    location.pathname,
+  ])
+
   return (
     <header className='app-header full'>
       {isShown && <UserOptions options={options} isHover={isHover} />}
@@ -197,7 +262,7 @@ export function AppHeader() {
           </div>
         </div>
       </nav>
-      <div className='home-search-container'>
+      <div className='home-search-container' ref={searchContainerRef}>
         <div
           to='/'
           className='home-button-container'
@@ -211,8 +276,12 @@ export function AppHeader() {
             <GoHome className='home-button' />
           )}
         </div>
-        <div className='search-container' onClick={onSearchClick}>
-          <IoSearchOutline className='icon search' />
+        <div
+          className='search-container'
+          onClick={onSearchClick}
+          ref={searchRef}
+        >
+          <IoSearchOutline className='icon search' ref={iconSearchRef} />
           <input
             type='text'
             name='txt'

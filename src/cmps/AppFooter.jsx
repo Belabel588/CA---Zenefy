@@ -352,10 +352,11 @@ export function AppFooter() {
       // setIsLoading(false)
     }
   }
+  const playBarRef = useRef()
+
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions()
   )
-  const playBarRef = useRef()
 
   useEffect(() => {
     async function handleResize() {

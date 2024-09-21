@@ -93,8 +93,8 @@
 
             cursor: pointer;
 
-         
-
+            
+            
             .home-button-container{
                 background-color: $grey-dark;
                 padding: 0.6em;
@@ -109,14 +109,14 @@
                 .home-button{
                     font-size: 1.5em;
                     justify-self: center;
-
+                    
                 }
                 .home-button.active{
                     color: $white;
                 }
             }
             .search-container{
-              
+                
                 padding: 0.6em;
                 background-color: $grey-dark;
                 border-radius: 50px;
@@ -126,81 +126,123 @@
                 gap: 0.6em;
                 transition: 0.1s;
                 // border: 2.5px solid transparent;
-
+                
                 
                 &:hover{
                     background-color: $grey-medium;
                     outline: 1px solid $grey-light;
                 }
-
+                
                 &:has(input:focus){
                     outline: 2.5px solid $white;
-
-       
+                    
+                    
                 }
-
+                
                 input{
-                   background-color: transparent;
-                   border: none; 
-                   min-width: 25vw;
-                   color: $white;
-
+                    background-color: transparent;
+                    border: none; 
+                    min-width: 25vw;
+                    color: $white;
+                    
                     font-size: 0.9em;
-
+                    
                     cursor: pointer;
-                   &:focus{
-                    outline: none;
-               
-
-                   }
+                    &:focus{
+                        outline: none;
+                        
+                        
+                    }
                 }
                 ::placeholder {
                     color: $grey-light;
                     opacity: 1; /* Firefox */
-                  }
-                  .icon{
-                      font-size: 1.5em;
-                      color: $grey-light;
-                      &:hover{
-                          color: $white;
-                          
+                }
+                .icon{
+                    font-size: 1.5em;
+                    color: $grey-light;
+                    &:hover{
+                        color: $white;
+                        
+                    }
+                    
+                }
+                .browse{
+                }
+                .explore-container{
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    width: 25px;
+                    font-size: 1.5em;
+                    svg{
+                        height: 25px;
+                    }
+                    .explore{
+                        fill: $white;
+                        &:hover{
+                            
+                            transform: scale(1.05);
                         }
                         
-                    }
-                    .browse{
-                    }
-                    .explore-container{
-                        display: flex;
-                        align-items: center;
-                        position: relative;
-                        width: 25px;
-                        font-size: 1.5em;
-                      svg{
-                        height: 25px;
-                      }
-                        .explore{
-                            fill: $white;
-                            &:hover{
-                                
-                                transform: scale(1.05);
-                            }
-                            
-                        }      
-                        &::before{
-                            content: '';
-                    position: absolute;
-                            right: 35px;
-                            border-radius: 5px;
-
-                    height: 28px;
-                    width: 1px;
-                    background-color: $grey-light;
-    
-                }
-
-                    }
+                    }      
+                    &::before{
+                        content: '';
+                        position: absolute;
+                        right: 35px;
+                        border-radius: 5px;
                         
-          
+                        height: 28px;
+                        width: 1px;
+                        background-color: $grey-light;
+                        
+                        @media (max-width:770px) {
+                            display: none;
+                            
+                        }
+                    }
+                    
+                }
+                
+                
+            }
+            @media (max-width:770px) {
+                position: absolute;
+                top: 80px;
+                z-index: 10;
+                justify-self: center;
+                padding: 1em;
+                padding-right: 2em;
+                padding-left: 0.8em;
+
+                .search-container{
+
+                    border-radius: 8px;
+                    // padding-top: 3px;
+                    // padding-bottom: 3px;
+                    // width: 200px;
+                    width: 75vw;
+                    background-color: $white;
+
+
+                    .search{
+                        color: $grey-dark;
+
+                        height: 20px;
+
+                    }
+                    input{
+                        width: 100%;
+                    }
+                    .explore{
+                        display: none;
+
+                    }
+                }
+                .home-button-container{
+                    display: none;
+                }
+                
             }
         }
 

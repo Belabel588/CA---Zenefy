@@ -55,6 +55,19 @@
       margin: 1em 0.5em 0.5em 1em;
 
     }
+    .cover-container{
+
+      @media (max-width:770px) {
+        width: 400px;
+        height: 400px;
+        justify-self: center;
+  
+        margin: 1em 0em 0em 0em;
+        
+        
+        
+      }
+    }
     .station-cover{
       min-height: 120px;
       min-width: 120px;
@@ -75,7 +88,7 @@
         height: 400px;
         justify-self: center;
 
-        margin: 1em 0em 0em 0em;
+        // margin: 1em 0em 0em 0em;
         
         
         

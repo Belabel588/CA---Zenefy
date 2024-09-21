@@ -52,131 +52,151 @@ async function getVideos(search, limit = null) {
 }
 
 async function getPlaylistsByCategory(categoryName) {
-  const accessToken = await getAccessToken();
-  const listDB = `${categoryName}List`;
+  const accessToken = await getAccessToken()
+  const listDB = `${categoryName}List`
 
-  
-  const categoryRes = await fetch(`https://api.spotify.com/v1/browse/categories`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  const categoryRes = await fetch(
+    `https://api.spotify.com/v1/browse/categories`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
 
-  const categoryData = await categoryRes.json();
-  console.log('categoryData', categoryData);
+  const categoryData = await categoryRes.json()
+  console.log('categoryData', categoryData)
 
-
-  const category = categoryData.categories.items.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
+  const category = categoryData.categories.items.find(
+    (cat) => cat.name.toLowerCase() === categoryName.toLowerCase()
+  )
 
   if (!category) {
-    throw new Error('Category not found');
+    throw new Error('Category not found')
   }
 
-  const categoryId = category.id;
-  console.log(categoryId);
+  const categoryId = category.id
+  console.log(categoryId)
 
   // Fetch playlists based on category ID and limit to 5 items
-  const playlistsRes = await fetch(`https://api.spotify.com/v1/browse/categories/${categoryId}/playlists?limit=5`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  const playlistsRes = await fetch(
+    `https://api.spotify.com/v1/browse/categories/${categoryId}/playlists?limit=5`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
 
-  const playlistsData = await playlistsRes.json();
-  console.log(playlistsData);
+  const playlistsData = await playlistsRes.json()
+  console.log(playlistsData)
 
   // Get the first 3 playlists
-  const playlists = playlistsData.playlists.items.slice(0, 3);
+  const playlists = playlistsData.playlists.items.slice(0, 3)
 
   // Create a list to hold the 3 stations
-  const stationList = [];
+  const stationList = []
 
-  console.log('playlists ARE', playlists);
+  console.log('playlists ARE', playlists)
   // Loop through each playlist and gather 5 songs for each station
   for (let i = 0; i < playlists.length; i++) {
-    const playlist = playlists[i];
-    const url = playlist.tracks.href;
+    const playlist = playlists[i]
+    const url = playlist.tracks.href
 
     // Fetch the tracks in the playlist
-    const items = await searchItems(url);
-    console.log('Fetched Items:', items);
+    const items = await searchItems(url)
+    console.log('Fetched Items:', items)
 
     // Get video list for the first track
-    const songList = await getVideos(items[0].track.name);
-    console.log('Song List:', songList);
+    const songList = await getVideos(items[0].track.name)
+    console.log('Song List:', songList)
 
     // Use the createStationFromSearch function to create a station
-    const station = await stationService.createStationFromSearch(songList, categoryName);
-    console.log('STATION IS', station);
+    const station = await stationService.createStationFromSearch(
+      songList,
+      categoryName
+    )
+    console.log('STATION IS', station)
 
     // Save each individual station
-    const savedStation = await stationService.save(station);
-    console.log('SAVED STATION IS', savedStation);
+    const savedStation = await stationService.save(station)
+    console.log('SAVED STATION IS', savedStation)
 
     // Add the station to the list to return later
-    stationList.push(savedStation);
-    console.log('Updated Station List:', stationList);
+    stationList.push(savedStation)
+    console.log('Updated Station List:', stationList)
   }
 
-
   // Return the entire list of stations
-  return stationList;
+  return stationList
 }
 
 async function getRandomFeaturedPlaylists() {
-  const accessToken = await getAccessToken();
-  const listDB = 'RandomFeaturedPlaylists';
+  const accessToken = await getAccessToken()
+  const listDB = 'RandomFeaturedPlaylists'
 
   // Fetch featured playlists with a limit of 20
-  const featuredPlaylistsRes = await fetch('https://api.spotify.com/v1/browse/featured-playlists?limit=20', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
+  const featuredPlaylistsRes = await fetch(
+    'https://api.spotify.com/v1/browse/featured-playlists?limit=20',
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  )
 
-  const featuredPlaylistsData = await featuredPlaylistsRes.json();
-  console.log('Featured Playlists Data:', featuredPlaylistsData);
+  const featuredPlaylistsData = await featuredPlaylistsRes.json()
+  console.log('Featured Playlists Data:', featuredPlaylistsData)
 
   // Shuffle playlists and pick up to 3 random ones that have titles and covers
-  const shuffledPlaylists = featuredPlaylistsData.playlists.items.sort(() => 0.5 - Math.random());
-  const filteredPlaylists = shuffledPlaylists.filter(playlist => playlist.name && playlist.images && playlist.images.length > 0);
-  
-  const stationList = [];
-  
+  const shuffledPlaylists = featuredPlaylistsData.playlists.items.sort(
+    () => 0.5 - Math.random()
+  )
+  const filteredPlaylists = shuffledPlaylists.filter(
+    (playlist) => playlist.name && playlist.images && playlist.images.length > 0
+  )
+
+  const stationList = []
+
   for (let i = 0; i < filteredPlaylists.length && stationList.length < 3; i++) {
-    const playlist = filteredPlaylists[i];
-    const url = playlist.tracks.href;
+    const playlist = filteredPlaylists[i]
+    const url = playlist.tracks.href
 
     // Fetch the tracks in the playlist
-    const items = await searchItems(url);
-    console.log('Fetched Items:', items);
+    const items = await searchItems(url)
+    console.log('Fetched Items:', items)
 
     // Get video list for the first track
-    const songList = await getVideos(items[0].track.name);
-    console.log('Song List:', songList);
+    const songList = await getVideos(items[0].track.name)
+    console.log('Song List:', songList)
 
     // Use the createStationFromSearch function to create a station
-    const station = await stationService.createStationFromSearch(songList, 'Featured');
-    console.log('STATION IS', station);
+    const station = await stationService.createStationFromSearch(
+      songList,
+      'Featured'
+    )
+    console.log('STATION IS', station)
 
     // Validate the station before saving
-    if (station.title!== 'Untitled Station' && station.cover !== 'default_cover_url') {
+    if (
+      station.title !== 'Untitled Station' &&
+      station.cover !== 'default_cover_url'
+    ) {
       // Save each individual station
-      const savedStation = await stationService.save(station);
-      console.log('SAVED STATION IS', savedStation);
+      const savedStation = await stationService.save(station)
+      console.log('SAVED STATION IS', savedStation)
 
       // Add the station to the list to return later
-      stationList.push(savedStation);
-      console.log('Updated Station List:', stationList);
+      stationList.push(savedStation)
+      console.log('Updated Station List:', stationList)
     } else {
-      console.log('Skipping station due to missing title or cover:', station);
+      console.log('Skipping station due to missing title or cover:', station)
     }
   }
 
   // Return the entire list of stations
-  return stationList;
+  return stationList
 }
-
 
 async function createList(search, videosWithDuration, limit = null) {
   try {
@@ -485,6 +505,7 @@ async function searchStations(search) {
   const data = await response.json()
   const url = data.playlists.items[0].tracks.href
   const items = await searchItems(url)
+  console.log(items)
 
   const list = await Promise.all(
     items.slice(0, 5).map(async (item) => {

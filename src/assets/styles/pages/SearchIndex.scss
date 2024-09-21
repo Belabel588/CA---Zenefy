@@ -160,6 +160,10 @@
     padding: 10px;
     background-color: $dark-mode-background;
     
+    @media (max-width:770px) {
+      display: none;
+      
+    }
     
     h2,
     h6,
@@ -308,6 +312,12 @@
     overflow-y: auto;
     /* Allows scrolling if there are more songs */
     padding: 10px;
+
+    @media (max-width:770px) {
+      grid-column: 1/-1;
+
+      
+    }
   }
 
   .song-item {
