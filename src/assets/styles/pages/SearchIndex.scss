@@ -554,9 +554,16 @@
 
 }
 
-.artists-container{
+.search-artists-container{
+  grid-column: 1/-1;
+  height: 355px;
+  overflow-y: hidden;
   b{
     margin-inline-start: 0.8em;
+
+  }
+  .artists-container{
+
   }
 }
 }

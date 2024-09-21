@@ -592,7 +592,7 @@ export function SearchIndex() {
           <b>Featuring</b>
           <SuggestedStations stations={randomStations} />
         </div>
-        <div className='artists-container'>
+        <div className='search-artists-container'>
           <b>Artists</b>
           <SuggestedArtists artists={artists} />
         </div>
