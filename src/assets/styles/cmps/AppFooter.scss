@@ -1,0 +1,27 @@
+.app-footer{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+ 
+
+    // padding: rem(10px) 1rem;
+
+
+    p {
+        margin: 0;
+    }
+    
+    span {
+        font-size: .8em;
+        
+        &.local-services {
+            color: $clr1;
+        }
+        
+        &.remote-services {
+            color: $clr5;
+        }
+    }
+    
+}

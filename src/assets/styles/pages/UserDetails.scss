@@ -1,0 +1,103 @@
+.user-details {
+    height: calc(100vh - 170px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    .user-header-container{
+        // background: linear-gradient(180deg, #7300ff, #191414);
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+        // background-color: rgb(148, 238, 238);
+    
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: end;
+    
+        width:100%;
+        min-height: 300px;
+        height: calc(15vw + 100px);
+        max-height: 500px;
+    
+        padding-bottom: 1em;
+    
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        container-type: inline-size;
+
+    
+    
+    
+        .user-img{
+          min-height: 200px;
+          min-width: 200px;
+    
+
+          height: calc(14vw);
+          width: 14vw;
+    
+    
+          max-width: 400px;
+          max-height: 400px;
+    
+        //   object-fit: scale-down;
+        object-fit: cover;
+        border-radius: 50%;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    
+          margin: 1em 0.5em 0.5em 1em;
+          // background-color: $green;
+        }
+        .title-container{
+     
+          margin: 1em 0.5em 0.5em 1em;
+    
+          display: flex;
+          flex-direction: column;
+          font-family: 'GothamBlackBold';
+          
+       
+    
+    
+          *{
+    
+            margin: 0px;
+          }
+          span{
+            font-family: 'GothamLight';
+            
+            
+            font-size: 0.8em;
+          }
+          
+          
+          .user-name{
+              font-size: calc(4vw);
+
+              @media (min-width:1200px) {
+                font-size: 5em;
+              }
+              justify-self: end;
+              height: fit-content;
+            }
+            line-height: 4em;
+    
+            .user-stations{
+                font-size: 0.8em;
+            }
+    
+        }
+      }
+
+      .artists-container{
+        padding: 1em;
+        height: 320px;
+      }
+      .suggest{
+        margin-inline-start: 3.5em;
+        
+      }
+      .suggested-stations-container{
+        margin-inline-start: 2.5em;
+
+      }
+}
