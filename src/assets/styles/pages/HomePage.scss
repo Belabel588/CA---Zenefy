@@ -6,7 +6,7 @@
     container-type: inline-size;
     transition: 2s;
     // position: relative;
-    
+    background: linear-gradient(0deg, #191414 70%, 90%, #4a0e8b00 100%);   
     @media (max-width:770px) {
         height: calc(100vh - 250px);
         overflow-x: hidden;
@@ -39,6 +39,10 @@
     z-index: -1;
     opacity: 1;
     background: linear-gradient(0deg, #191414 70%, 90%, #4a0e8b00 100%);   
+    // background: linear-gradient(0deg, #191414 70%, rgba(74, 14, 139, 0) 100%);
+
+
+
 }
 
 
@@ -277,3 +281,4 @@
     }
  
 }
+
