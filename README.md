@@ -4,6 +4,12 @@
 
 Welcome to the Zenefy project! This full-stack application replicates key features of Spotify, combining a React frontend with a Node.js backend. Explore music, manage playlists, and experience a unique AI playlist generator.
 
+### 🌐 Deployment
+
+The project is deployed on Render. Check it out here:
+
+https://zenefy.onrender.com/
+
 ### 🌟 Key Features
 
 - **Frontend**:
@@ -56,8 +62,31 @@ Welcome to the Zenefy project! This full-stack application replicates key featur
 4. **Start the backend server:**
    npm start
 
-### 🌐 Deployment
 
-The project is deployed on Render. Check it out here:
+## Pictures
 
-https://zenefy.onrender.com/
+### Home Page
+
+<img width="2051" alt="Home Page" src="https://github.com/user-attachments/assets/e6f99420-3185-4697-b5a3-75fb3b578b66" />
+
+### Playlist Page
+
+<img width="2051" alt="Playlist Page" src="https://github.com/user-attachments/assets/09dd048b-d6f9-4a1f-bc9a-bf7dedc990ba" />
+
+### Search Page
+
+<img width="2046" alt="Search Page" src="https://github.com/user-attachments/assets/560cd6d2-9bfa-4b43-b5c9-4253f15c0165" />
+
+### Artist Page
+
+<img width="2051" alt="Artist Page" src="https://github.com/user-attachments/assets/8e136119-8fb5-4568-bdb1-9ee12cf2e4b3" />
+
+### Discover Page
+
+<img width="2050" alt="Discover Page" src="https://github.com/user-attachments/assets/74ba8bd8-9260-4a72-860e-1ea9ef587f40" />
+
+### User Page
+
+<img width="2053" alt="User Page" src="https://github.com/user-attachments/assets/15a367ab-df09-4364-a38a-fefd579561aa" />
+
+
